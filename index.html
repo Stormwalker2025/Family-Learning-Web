@@ -3,29 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vocabulary Learning</title>
+    <title>🎓 English Vocabulary Learning System</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 20px;
+            color: #333;
         }
         
         .container {
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
         }
         
         .card {
-            background: white;
-            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
             padding: 30px;
             margin-bottom: 20px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
         }
+        
+        .card:hover { transform: translateY(-2px); }
         
         .login-card {
             max-width: 400px;
@@ -33,72 +38,184 @@
             text-align: center;
         }
         
-        h1, h2 { color: #333; margin-bottom: 20px; }
-        
-        input, button {
-            width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 16px;
-        }
-        
-        button {
-            background: #667eea;
-            color: white;
-            border: none;
-            cursor: pointer;
-            font-weight: bold;
-        }
-        
-        button:hover { background: #5a67d8; }
-        
-        .word-item {
-            background: #f8f9fa;
-            padding: 20px;
-            margin: 10px 0;
-            border-radius: 8px;
-            border-left: 4px solid #667eea;
-        }
-        
-        .word-title { font-size: 24px; font-weight: bold; color: #667eea; }
-        .word-meaning { color: #666; margin: 10px 0; }
-        .word-example { font-style: italic; color: #888; margin: 10px 0; }
-        
-        .learn-btn {
-            width: auto;
-            padding: 8px 16px;
-            background: #28a745;
-            float: right;
-        }
-        
-        .learned { background: #d4edda; }
-        .learned .learn-btn { background: #6c757d; }
-        
-        .hidden { display: none; }
-        
-        .status {
-            padding: 10px;
-            border-radius: 5px;
-            margin: 10px 0;
-            text-align: center;
-        }
-        
-        .status.success { background: #d4edda; color: #155724; }
-        .status.error { background: #f8d7da; color: #721c24; }
-        
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        h1, h2, h3 { color: #333; margin-bottom: 20px; }
+        
+        input, button, select {
+            padding: 12px 20px;
+            margin: 8px 0;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        button {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            min-width: 120px;
+        }
+        
+        button:hover { transform: translateY(-2px); }
+        button:disabled { 
+            background: #ccc; 
+            cursor: not-allowed; 
+            transform: none;
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #28a745, #20c997);
+        }
+        
+        .btn-warning {
+            background: linear-gradient(135deg, #ffc107, #fd7e14);
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, #dc3545, #e83e8c);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            border-left: 4px solid #667eea;
+        }
+        
+        .stat-number {
+            font-size: 32px;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .stat-label {
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .study-card {
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .word-display {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 40px;
+            margin: 30px 0;
+            border-left: 6px solid #667eea;
+        }
+        
+        .word-title {
+            font-size: 48px;
+            font-weight: bold;
+            color: #667eea;
             margin-bottom: 20px;
         }
         
+        .word-meaning {
+            font-size: 20px;
+            color: #666;
+            margin-bottom: 15px;
+        }
+        
+        .word-example {
+            font-style: italic;
+            color: #888;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        
+        .study-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        
+        .mode-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+        
+        .hidden { display: none; }
+        
+        .status {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            text-align: center;
+            font-weight: 500;
+        }
+        
+        .status.success { background: #d4edda; color: #155724; }
+        .status.error { background: #f8d7da; color: #721c24; }
+        .status.info { background: #d1ecf1; color: #0c5460; }
+        .status.warning { background: #fff3cd; color: #856404; }
+        
+        .progress-bar {
+            background: #e9ecef;
+            border-radius: 10px;
+            height: 10px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+        
         .logout-btn {
-            width: auto;
             background: #dc3545;
             padding: 8px 16px;
+            font-size: 14px;
+        }
+        
+        .speak-btn {
+            background: #17a2b8;
+            padding: 8px 16px;
+            margin-left: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .container { padding: 10px; }
+            .word-title { font-size: 36px; }
+            .study-buttons { flex-direction: column; }
+            .mode-buttons { flex-direction: column; }
         }
     </style>
 </head>
@@ -106,10 +223,10 @@
     <div class="container">
         <!-- Login Section -->
         <div id="loginSection" class="card login-card">
-            <h1>🎓 Vocabulary Learning</h1>
-            <p>Enter your name to start learning!</p>
-            <input type="text" id="nameInput" placeholder="Your name" maxlength="20">
-            <button onclick="login()">Start Learning</button>
+            <div class="logo">🎓 Vocabulary Learning</div>
+            <p style="margin: 20px 0; color: #666;">Master English words with spaced repetition!</p>
+            <input type="text" id="nameInput" placeholder="Enter your name" maxlength="20" style="width: 100%;">
+            <button onclick="login()" style="width: 100%;">🚀 Start Learning</button>
             <div id="loginStatus"></div>
         </div>
 
@@ -117,14 +234,81 @@
         <div id="mainSection" class="hidden">
             <div class="card">
                 <div class="header">
-                    <h2>Welcome, <span id="userName"></span>! 👋</h2>
-                    <button class="logout-btn" onclick="logout()">Logout</button>
+                    <div class="logo">🎓 Vocabulary Learning</div>
+                    <div>
+                        <span style="color: #667eea; font-weight: 600;">Hello, <span id="userName"></span>!</span>
+                        <button class="logout-btn" onclick="logout()">Logout</button>
+                    </div>
                 </div>
+                
+                <!-- Statistics -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalWords">0</div>
+                        <div class="stat-label">Total Words</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="learnedWords">0</div>
+                        <div class="stat-label">Learned</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="studyingWords">0</div>
+                        <div class="stat-label">Studying</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="dueToday">0</div>
+                        <div class="stat-label">Due Today</div>
+                    </div>
+                </div>
+                
                 <div id="mainStatus"></div>
             </div>
 
+            <!-- Mode Selection -->
             <div class="card">
-                <h2>📚 Vocabulary Words</h2>
+                <h2 style="text-align: center;">📚 Choose Learning Mode</h2>
+                <div class="mode-buttons">
+                    <button class="btn-secondary" onclick="startLearning()" id="learnBtn">
+                        📖 Learn New Words
+                    </button>
+                    <button class="btn-warning" onclick="startReview()" id="reviewBtn">
+                        🔄 Review Words
+                    </button>
+                    <button onclick="showAllWords()">📝 View All Words</button>
+                </div>
+            </div>
+
+            <!-- Study Section -->
+            <div id="studySection" class="card study-card hidden">
+                <div id="studyContent">
+                    <div class="word-display" id="wordCard">
+                        <div class="word-title" id="currentWord">Loading...</div>
+                        <button class="speak-btn" onclick="speakWord()" id="speakBtn">🔊 Speak</button>
+                        <div class="word-meaning hidden" id="wordMeaning"></div>
+                        <div class="word-example hidden" id="wordExample"></div>
+                    </div>
+                    
+                    <div id="studyControls">
+                        <button class="btn-secondary" onclick="showAnswer()">💡 Show Answer</button>
+                        <div class="study-buttons hidden" id="answerButtons">
+                            <button class="btn-secondary" onclick="markCorrect()">✅ I Know This</button>
+                            <button class="btn-danger" onclick="markIncorrect()">❌ I Don't Know</button>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                    </div>
+                    
+                    <p style="text-align: center; color: #666; margin-top: 10px;">
+                        <span id="currentIndex">0</span> / <span id="totalCount">0</span>
+                    </p>
+                </div>
+            </div>
+
+            <!-- All Words Section -->
+            <div id="allWordsSection" class="card hidden">
+                <h2>📚 All Vocabulary Words</h2>
                 <div id="wordsList">Loading words...</div>
             </div>
         </div>
@@ -132,11 +316,20 @@
 
     <script>
         let currentUser = null;
-        let words = [];
+        let currentWords = [];
+        let currentWordIndex = 0;
+        let currentMode = 'learn';
+        let stats = {};
+        
         const API = window.location.origin;
 
-        // Test connection on load
+        // Initialize app
         window.onload = async () => {
+            await testConnection();
+            checkSavedLogin();
+        };
+
+        async function testConnection() {
             try {
                 const response = await fetch(`${API}/api/health`);
                 const data = await response.json();
@@ -145,7 +338,20 @@
                 console.error('❌ Server connection failed:', error);
                 showStatus('loginStatus', 'Connection failed. Please refresh the page.', 'error');
             }
-        };
+        }
+
+        function checkSavedLogin() {
+            const saved = localStorage.getItem('currentUser');
+            if (saved) {
+                try {
+                    currentUser = JSON.parse(saved);
+                    showMainSection();
+                    loadStats();
+                } catch (error) {
+                    localStorage.removeItem('currentUser');
+                }
+            }
+        }
 
         async function login() {
             const name = document.getElementById('nameInput').value.trim();
@@ -154,7 +360,7 @@
                 return;
             }
 
-            showStatus('loginStatus', 'Logging in...', '');
+            showStatus('loginStatus', 'Logging in...', 'info');
 
             try {
                 const response = await fetch(`${API}/api/login`, {
@@ -167,8 +373,9 @@
                 
                 if (result.success) {
                     currentUser = result.user;
+                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
                     showMainSection();
-                    loadWords();
+                    loadStats();
                 } else {
                     showStatus('loginStatus', 'Login failed', 'error');
                 }
@@ -184,74 +391,215 @@
             document.getElementById('userName').textContent = currentUser.name;
         }
 
-        async function loadWords() {
-            showStatus('mainStatus', 'Loading words...', '');
-
+        async function loadStats() {
             try {
-                // Get all words
-                const wordsResponse = await fetch(`${API}/api/words`);
-                words = await wordsResponse.json();
-
-                // Get user progress
-                const progressResponse = await fetch(`${API}/api/progress/${currentUser.id}`);
-                const progress = await progressResponse.json();
-
-                displayWords(progress);
-                showStatus('mainStatus', `Loaded ${words.length} words`, 'success');
+                const response = await fetch(`${API}/api/stats/${currentUser.id}`);
+                stats = await response.json();
+                
+                document.getElementById('totalWords').textContent = stats.total;
+                document.getElementById('learnedWords').textContent = stats.learned;
+                document.getElementById('studyingWords').textContent = stats.studying;
+                document.getElementById('dueToday').textContent = stats.dueToday;
+                
+                // Update button states
+                document.getElementById('reviewBtn').textContent = 
+                    `🔄 Review Words (${stats.dueToday})`;
+                    
+                if (stats.dueToday === 0) {
+                    document.getElementById('reviewBtn').disabled = true;
+                }
+                
+                showStatus('mainStatus', 'Ready to learn! Choose a mode below.', 'success');
             } catch (error) {
-                console.error('Error loading words:', error);
-                showStatus('mainStatus', 'Failed to load words', 'error');
+                console.error('Error loading stats:', error);
+                showStatus('mainStatus', 'Failed to load statistics', 'error');
             }
         }
 
-        function displayWords(wordsWithProgress) {
+        async function startLearning() {
+            currentMode = 'learn';
+            try {
+                const response = await fetch(`${API}/api/learning/${currentUser.id}?limit=10`);
+                currentWords = await response.json();
+                
+                if (currentWords.length === 0) {
+                    showStatus('mainStatus', 'No new words to learn today! Try reviewing instead.', 'warning');
+                    return;
+                }
+                
+                currentWordIndex = 0;
+                showStudySection();
+                displayCurrentWord();
+            } catch (error) {
+                console.error('Error starting learning:', error);
+                showStatus('mainStatus', 'Failed to load learning words', 'error');
+            }
+        }
+
+        async function startReview() {
+            currentMode = 'review';
+            try {
+                const response = await fetch(`${API}/api/review/${currentUser.id}`);
+                currentWords = await response.json();
+                
+                if (currentWords.length === 0) {
+                    showStatus('mainStatus', 'No words due for review today! Great job! 🎉', 'success');
+                    return;
+                }
+                
+                currentWordIndex = 0;
+                showStudySection();
+                displayCurrentWord();
+            } catch (error) {
+                console.error('Error starting review:', error);
+                showStatus('mainStatus', 'Failed to load review words', 'error');
+            }
+        }
+
+        function showStudySection() {
+            document.getElementById('studySection').classList.remove('hidden');
+            document.getElementById('allWordsSection').classList.add('hidden');
+        }
+
+        function displayCurrentWord() {
+            if (currentWordIndex >= currentWords.length) {
+                // Session completed
+                document.getElementById('studySection').classList.add('hidden');
+                loadStats();
+                showStatus('mainStatus', 
+                    `🎉 ${currentMode === 'learn' ? 'Learning' : 'Review'} session completed! Great work!`, 
+                    'success');
+                return;
+            }
+            
+            const word = currentWords[currentWordIndex];
+            document.getElementById('currentWord').textContent = word.word;
+            document.getElementById('wordMeaning').textContent = word.meaning;
+            document.getElementById('wordExample').textContent = `"${word.example}"`;
+            
+            // Hide answer initially
+            document.getElementById('wordMeaning').classList.add('hidden');
+            document.getElementById('wordExample').classList.add('hidden');
+            document.getElementById('answerButtons').classList.add('hidden');
+            
+            // Update progress
+            document.getElementById('currentIndex').textContent = currentWordIndex + 1;
+            document.getElementById('totalCount').textContent = currentWords.length;
+            const progress = ((currentWordIndex) / currentWords.length) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+        }
+
+        function showAnswer() {
+            document.getElementById('wordMeaning').classList.remove('hidden');
+            document.getElementById('wordExample').classList.remove('hidden');
+            document.getElementById('answerButtons').classList.remove('hidden');
+        }
+
+        async function markCorrect() {
+            await studyWord(true);
+        }
+
+        async function markIncorrect() {
+            await studyWord(false);
+        }
+
+        async function studyWord(correct) {
+            const word = currentWords[currentWordIndex];
+            
+            try {
+                const response = await fetch(`${API}/api/study`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        userId: currentUser.id,
+                        wordId: word.id,
+                        correct: correct
+                    })
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    currentWordIndex++;
+                    setTimeout(() => displayCurrentWord(), 1000);
+                } else {
+                    showStatus('mainStatus', 'Failed to save progress', 'error');
+                }
+            } catch (error) {
+                console.error('Error studying word:', error);
+                showStatus('mainStatus', 'Failed to save progress', 'error');
+            }
+        }
+
+        async function showAllWords() {
+            document.getElementById('studySection').classList.add('hidden');
+            document.getElementById('allWordsSection').classList.remove('hidden');
+            
+            try {
+                const response = await fetch(`${API}/api/progress/${currentUser.id}`);
+                const words = await response.json();
+                displayAllWords(words);
+            } catch (error) {
+                console.error('Error loading all words:', error);
+                document.getElementById('wordsList').innerHTML = 
+                    '<p style="color: red;">Failed to load words</p>';
+            }
+        }
+
+        function displayAllWords(words) {
             const container = document.getElementById('wordsList');
             container.innerHTML = '';
 
-            wordsWithProgress.forEach(word => {
-                const isLearned = word.learned === 1;
+            if (words.length === 0) {
+                container.innerHTML = '<p>No words available.</p>';
+                return;
+            }
+
+            words.forEach(word => {
+                const status = word.learned === 1 ? '✅ Learned' : 
+                              word.learning_level > 0 ? `📚 Level ${word.learning_level}` : '🆕 New';
+                
                 const div = document.createElement('div');
-                div.className = `word-item ${isLearned ? 'learned' : ''}`;
+                div.style.cssText = `
+                    background: #f8f9fa; padding: 20px; margin: 10px 0; 
+                    border-radius: 10px; border-left: 4px solid #667eea;
+                `;
                 
                 div.innerHTML = `
-                    <div class="word-title">${word.word}</div>
-                    <div class="word-meaning">${word.meaning}</div>
-                    <div class="word-example">"${word.example || 'No example'}"</div>
-                    <button class="learn-btn" onclick="markLearned(${word.id})" 
-                            ${isLearned ? 'disabled' : ''}>
-                        ${isLearned ? '✅ Learned' : '📝 Mark as Learned'}
-                    </button>
-                    <div style="clear: both;"></div>
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                        <div style="flex: 1;">
+                            <div style="font-size: 24px; font-weight: bold; color: #667eea; margin-bottom: 10px;">
+                                ${word.word}
+                                <button onclick="speakWord('${word.word}')" style="background: #17a2b8; color: white; border: none; padding: 5px 10px; border-radius: 5px; margin-left: 10px; cursor: pointer;">🔊</button>
+                            </div>
+                            <div style="color: #666; margin-bottom: 8px;">${word.meaning}</div>
+                            <div style="font-style: italic; color: #888;">"${word.example || 'No example'}"</div>
+                        </div>
+                        <div style="text-align: right; color: #667eea; font-weight: 600;">
+                            ${status}
+                        </div>
+                    </div>
                 `;
                 
                 container.appendChild(div);
             });
         }
 
-        async function markLearned(wordId) {
-            try {
-                const response = await fetch(`${API}/api/learn`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ userId: currentUser.id, wordId })
-                });
-
-                const result = await response.json();
-                
-                if (result.success) {
-                    loadWords(); // Reload to update display
-                    showStatus('mainStatus', 'Word marked as learned! 🎉', 'success');
-                } else {
-                    showStatus('mainStatus', 'Failed to save progress', 'error');
-                }
-            } catch (error) {
-                console.error('Error marking word as learned:', error);
-                showStatus('mainStatus', 'Failed to save progress', 'error');
+        function speakWord(word) {
+            const wordToSpeak = word || document.getElementById('currentWord').textContent;
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(wordToSpeak);
+                utterance.lang = 'en-US';
+                utterance.rate = 0.8;
+                speechSynthesis.speak(utterance);
+            } else {
+                showStatus('mainStatus', 'Speech synthesis not supported in this browser', 'warning');
             }
         }
 
         function logout() {
             currentUser = null;
+            localStorage.removeItem('currentUser');
             document.getElementById('mainSection').classList.add('hidden');
             document.getElementById('loginSection').classList.remove('hidden');
             document.getElementById('nameInput').value = '';
@@ -263,7 +611,7 @@
             element.innerHTML = `<div class="status ${type}">${message}</div>`;
             
             if (type === 'success') {
-                setTimeout(() => element.innerHTML = '', 3000);
+                setTimeout(() => element.innerHTML = '', 5000);
             }
         }
     </script>
