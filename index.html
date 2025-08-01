@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vocabulary Learning</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .login-card {
+            max-width: 400px;
+            margin: 100px auto;
+            text-align: center;
+        }
+        
+        h1, h2 { color: #333; margin-bottom: 20px; }
+        
+        input, button {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        button:hover { background: #5a67d8; }
+        
+        .word-item {
+            background: #f8f9fa;
+            padding: 20px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .word-title { font-size: 24px; font-weight: bold; color: #667eea; }
+        .word-meaning { color: #666; margin: 10px 0; }
+        .word-example { font-style: italic; color: #888; margin: 10px 0; }
+        
+        .learn-btn {
+            width: auto;
+            padding: 8px 16px;
+            background: #28a745;
+            float: right;
+        }
+        
+        .learned { background: #d4edda; }
+        .learned .learn-btn { background: #6c757d; }
+        
+        .hidden { display: none; }
+        
+        .status {
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            text-align: center;
+        }
+        
+        .status.success { background: #d4edda; color: #155724; }
+        .status.error { background: #f8d7da; color: #721c24; }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .logout-btn {
+            width: auto;
+            background: #dc3545;
+            padding: 8px 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Login Section -->
+        <div id="loginSection" class="card login-card">
+            <h1>🎓 Vocabulary Learning</h1>
+            <p>Enter your name to start learning!</p>
+            <input type="text" id="nameInput" placeholder="Your name" maxlength="20">
+            <button onclick="login()">Start Learning</button>
+            <div id="loginStatus"></div>
+        </div>
+
+        <!-- Main Section -->
+        <div id="mainSection" class="hidden">
+            <div class="card">
+                <div class="header">
+                    <h2>Welcome, <span id="userName"></span>! 👋</h2>
+                    <button class="logout-btn" onclick="logout()">Logout</button>
+                </div>
+                <div id="mainStatus"></div>
+            </div>
+
+            <div class="card">
+                <h2>📚 Vocabulary Words</h2>
+                <div id="wordsList">Loading words...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentUser = null;
+        let words = [];
+        const API = window.location.origin;
+
+        // Test connection on load
+        window.onload = async () => {
+            try {
+                const response = await fetch(`${API}/api/health`);
+                const data = await response.json();
+                console.log('✅ Server connected:', data);
+            } catch (error) {
+                console.error('❌ Server connection failed:', error);
+                showStatus('loginStatus', 'Connection failed. Please refresh the page.', 'error');
+            }
+        };
+
+        async function login() {
+            const name = document.getElementById('nameInput').value.trim();
+            if (!name) {
+                showStatus('loginStatus', 'Please enter your name', 'error');
+                return;
+            }
+
+            showStatus('loginStatus', 'Logging in...', '');
+
+            try {
+                const response = await fetch(`${API}/api/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name })
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    currentUser = result.user;
+                    showMainSection();
+                    loadWords();
+                } else {
+                    showStatus('loginStatus', 'Login failed', 'error');
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                showStatus('loginStatus', 'Login failed. Please try again.', 'error');
+            }
+        }
+
+        function showMainSection() {
+            document.getElementById('loginSection').classList.add('hidden');
+            document.getElementById('mainSection').classList.remove('hidden');
+            document.getElementById('userName').textContent = currentUser.name;
+        }
+
+        async function loadWords() {
+            showStatus('mainStatus', 'Loading words...', '');
+
+            try {
+                // Get all words
+                const wordsResponse = await fetch(`${API}/api/words`);
+                words = await wordsResponse.json();
+
+                // Get user progress
+                const progressResponse = await fetch(`${API}/api/progress/${currentUser.id}`);
+                const progress = await progressResponse.json();
+
+                displayWords(progress);
+                showStatus('mainStatus', `Loaded ${words.length} words`, 'success');
+            } catch (error) {
+                console.error('Error loading words:', error);
+                showStatus('mainStatus', 'Failed to load words', 'error');
+            }
+        }
+
+        function displayWords(wordsWithProgress) {
+            const container = document.getElementById('wordsList');
+            container.innerHTML = '';
+
+            wordsWithProgress.forEach(word => {
+                const isLearned = word.learned === 1;
+                const div = document.createElement('div');
+                div.className = `word-item ${isLearned ? 'learned' : ''}`;
+                
+                div.innerHTML = `
+                    <div class="word-title">${word.word}</div>
+                    <div class="word-meaning">${word.meaning}</div>
+                    <div class="word-example">"${word.example || 'No example'}"</div>
+                    <button class="learn-btn" onclick="markLearned(${word.id})" 
+                            ${isLearned ? 'disabled' : ''}>
+                        ${isLearned ? '✅ Learned' : '📝 Mark as Learned'}
+                    </button>
+                    <div style="clear: both;"></div>
+                `;
+                
+                container.appendChild(div);
+            });
+        }
+
+        async function markLearned(wordId) {
+            try {
+                const response = await fetch(`${API}/api/learn`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userId: currentUser.id, wordId })
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    loadWords(); // Reload to update display
+                    showStatus('mainStatus', 'Word marked as learned! 🎉', 'success');
+                } else {
+                    showStatus('mainStatus', 'Failed to save progress', 'error');
+                }
+            } catch (error) {
+                console.error('Error marking word as learned:', error);
+                showStatus('mainStatus', 'Failed to save progress', 'error');
+            }
+        }
+
+        function logout() {
+            currentUser = null;
+            document.getElementById('mainSection').classList.add('hidden');
+            document.getElementById('loginSection').classList.remove('hidden');
+            document.getElementById('nameInput').value = '';
+            document.getElementById('loginStatus').innerHTML = '';
+        }
+
+        function showStatus(elementId, message, type) {
+            const element = document.getElementById(elementId);
+            element.innerHTML = `<div class="status ${type}">${message}</div>`;
+            
+            if (type === 'success') {
+                setTimeout(() => element.innerHTML = '', 3000);
+            }
+        }
+    </script>
+</body>
+</html>

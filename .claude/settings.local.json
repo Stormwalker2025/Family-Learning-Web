@@ -36,7 +36,11 @@
       "Bash(git remote set-url:*)",
       "Bash(git push:*)",
       "WebFetch(domain:family-learning-web.onrender.com)",
-      "Bash(timeout 10 npm start)"
+      "Bash(timeout 10 npm start)",
+      "Bash(npm install)",
+      "Bash(timeout 8 npm start)",
+      "Bash(cp:*)",
+      "Bash(ls:*)"
     ],
     "deny": []
   }
