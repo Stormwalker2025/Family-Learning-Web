@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "allow": [
+      "Bash(node server.js)",
+      "Bash(curl:*)",
+      "Bash(npm start)",
+      "Bash(tasklist:*)",
+      "Bash(taskkill:*)",
+      "Bash(pkill:*)",
+      "Bash(true)",
+      "Bash(node:*)",
+      "Bash(del test-server.js)",
+      "Bash(rm:*)",
+      "Bash(npm run dev:*)",
+      "Bash(set PORT=3006)",
+      "Bash(lsof:*)",
+      "Bash(del vocabulary.db)",
+      "Bash(copy vocabulary.db vocabulary_backup.db)",
+      "Bash(grep:*)",
+      "Bash(wmic process where:*)",
+      "Bash(npm run start:*)",
+      "Bash(PORT=3001 npm start)",
+      "Bash(set PORT=3001)",
+      "Bash(start http://localhost:3001)",
+      "Bash(cmd /c start http://localhost:3001)",
+      "Bash(netsh advfirewall firewall show rule:*)",
+      "Bash(netsh:*)",
+      "Bash(npm ls:*)",
+      "Bash(timeout 15 npm start)",
+      "Bash(git init:*)",
+      "Bash(git add:*)"
+    ],
+    "deny": []
+  }
+}
