@@ -41,7 +41,8 @@
       "Bash(timeout 8 npm start)",
       "Bash(cp:*)",
       "Bash(ls:*)",
-      "Bash(timeout 5 npm start)"
+      "Bash(timeout 5 npm start)",
+      "Bash(timeout 3 npm start)"
     ],
     "deny": []
   }
