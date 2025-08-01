@@ -1064,7 +1064,11 @@
         const MAX_DAILY_REVIEW = 100; // Maximum daily review words for everyone
         
         // API Base URL - dynamically determine based on current host
-        const API_BASE_URL = `${window.location.protocol}//${window.location.hostname}:3000/api`;
+        // Detect if running locally or in production
+        const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+        const API_BASE_URL = isLocal 
+            ? `${window.location.protocol}//${window.location.hostname}:3001/api`
+            : `${window.location.protocol}//${window.location.hostname}/api`;
         
         // Debug: Log the API URL
         console.log('API Base URL:', API_BASE_URL);
