@@ -1078,23 +1078,33 @@
             const statusEl = document.getElementById('connectionStatus');
             try {
                 console.log('Testing server connection...');
+                console.log('API URL:', `${API_BASE_URL}/health`);
+                
                 const response = await fetch(`${API_BASE_URL}/health`, { 
                     method: 'GET',
-                    headers: { 'Content-Type': 'application/json' }
+                    headers: { 'Content-Type': 'application/json' },
+                    mode: 'cors'
                 });
                 console.log('Connection test result:', response.status, response.statusText);
                 
                 if (response.ok) {
+                    const data = await response.json();
+                    console.log('Health check data:', data);
                     if (statusEl) {
                         statusEl.innerHTML = '✅ Server connected';
                         statusEl.style.color = '#4CAF50';
                     }
                     return true;
                 } else {
-                    throw new Error(`HTTP ${response.status}`);
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
                 }
             } catch (error) {
                 console.error('Connection test failed:', error);
+                console.error('Error details:', {
+                    name: error.name,
+                    message: error.message,
+                    stack: error.stack
+                });
                 if (statusEl) {
                     statusEl.innerHTML = `❌ Connection failed: ${error.message}`;
                     statusEl.style.color = '#f44336';
@@ -1111,7 +1121,13 @@
             // Test server connection first
             const connected = await testConnection();
             if (!connected) {
-                console.warn('Server connection failed. Some features may not work.');
+                console.warn('Server connection failed. Running in offline mode.');
+                // Update status to show offline mode
+                const statusEl = document.getElementById('connectionStatus');
+                if (statusEl) {
+                    statusEl.innerHTML = '⚠️ Running in offline mode - basic functions available';
+                    statusEl.style.color = '#ff9800';
+                }
             }
             
             checkApiStatus();
@@ -1210,46 +1226,61 @@
                 return;
             }
             
+            // Try server login first, fallback to offline mode
             try {
                 console.log('Attempting login with URL:', `${API_BASE_URL}/auth/login`);
                 
-                // Login to server (no level needed anymore)
                 const response = await fetch(`${API_BASE_URL}/auth/login`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username })
+                    body: JSON.stringify({ username }),
+                    signal: AbortSignal.timeout(5000) // 5 second timeout
                 });
                 
                 console.log('Login response status:', response.status);
                 
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                if (response.ok) {
+                    const result = await response.json();
+                    console.log('Login result:', result);
+                    
+                    if (result.user) {
+                        currentUser = { 
+                            id: result.user.id,
+                            username, 
+                            dailyNewWords: STUDENT_ACCOUNTS[username].dailyNewWords,
+                            serverConnected: true
+                        };
+                        
+                        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                        loadUserProgress();
+                        showMainSection();
+                        return; // Success - exit function
+                    }
                 }
                 
-                const result = await response.json();
-                console.log('Login result:', result);
+                // If we reach here, server login failed - use offline mode
+                throw new Error('Server login failed');
                 
-                if (result.user) {
-                    currentUser = { 
-                        id: result.user.id,
-                        username, 
-                        dailyNewWords: STUDENT_ACCOUNTS[username].dailyNewWords
-                    };
-                    
-                    // Save login state to localStorage
-                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
-                    
-                    loadUserProgress();
-                    showMainSection();
-                } else {
-                    showLoginError('Login failed: ' + (result.error || 'Unknown error'));
-                }
             } catch (error) {
-                console.error('Login error details:', error);
-                if (error.name === 'TypeError' && error.message.includes('fetch')) {
-                    showLoginError('Connection failed: Cannot reach server. Please check your network connection.');
-                } else {
-                    showLoginError('Login failed: ' + error.message);
+                console.warn('Server login failed, using offline mode:', error.message);
+                
+                // Offline mode fallback
+                currentUser = { 
+                    id: Date.now(), // Use timestamp as temporary ID
+                    username, 
+                    dailyNewWords: STUDENT_ACCOUNTS[username].dailyNewWords,
+                    serverConnected: false
+                };
+                
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                loadUserProgress();
+                showMainSection();
+                
+                // Update connection status
+                const statusEl = document.getElementById('connectionStatus');
+                if (statusEl) {
+                    statusEl.innerHTML = '⚠️ Offline mode - basic functions available';
+                    statusEl.style.color = '#ff9800';
                 }
             }
         }
