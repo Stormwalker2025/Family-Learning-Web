@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test User Permissions & Custom Questions</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { border: 1px solid #ccc; margin: 15px 0; padding: 15px; border-radius: 8px; }
+        .success { background-color: #d4edda; color: #155724; }
+        .error { background-color: #f8d7da; color: #721c24; }
+        .info { background-color: #d1ecf1; color: #0c5460; }
+        button { margin: 5px; padding: 10px 15px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>🧪 User Permissions & Custom Questions Test</h1>
+    
+    <div class="test-section">
+        <h3>📋 Test Results</h3>
+        <div id="results"></div>
+    </div>
+    
+    <div class="test-section">
+        <h3>🔧 Controls</h3>
+        <button onclick="testAllFeatures()">🚀 Run All Tests</button>
+        <button onclick="testUserPermissions()">👥 Test User Permissions</button>
+        <button onclick="testCustomQuestions()">📝 Test Custom Questions</button>
+        <button onclick="uploadSampleQuestions()">📤 Upload Sample Questions</button>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:3000/api';
+        
+        function addResult(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `test-section ${type}`;
+            div.innerHTML = `<pre>${new Date().toLocaleTimeString()}: ${message}</pre>`;
+            document.getElementById('results').appendChild(div);
+        }
+        
+        async function testAllFeatures() {
+            addResult('🚀 Starting comprehensive test suite...', 'info');
+            await testUserPermissions();
+            await testCustomQuestions();
+            await uploadSampleQuestions();
+            addResult('✅ All tests completed!', 'success');
+        }
+        
+        async function testUserPermissions() {
+            addResult('👥 Testing user permissions...', 'info');
+            
+            try {
+                // Test August (should have Year 3-5 access)
+                const augustResponse = await fetch(`${API_BASE_URL}/math/topics/user/1`);
+                const augustTopics = await augustResponse.json();
+                addResult(`August has access to ${augustTopics.length} math topics`, 'success');
+                
+                const augustGrades = [...new Set(augustTopics.map(t => t.grade_level))];
+                addResult(`August's accessible grades: ${augustGrades.join(', ')}`, 'info');
+                
+                // Test Michael (should have Year 5-9 access)  
+                const michaelResponse = await fetch(`${API_BASE_URL}/math/topics/user/2`);
+                const michaelTopics = await michaelResponse.json();
+                addResult(`Michael has access to ${michaelTopics.length} math topics`, 'success');
+                
+                const michaelGrades = [...new Set(michaelTopics.map(t => t.grade_level))];
+                addResult(`Michael's accessible grades: ${michaelGrades.join(', ')}`, 'info');
+                
+            } catch (error) {
+                addResult(`❌ Error testing permissions: ${error.message}`, 'error');
+            }
+        }
+        
+        async function testCustomQuestions() {
+            addResult('📝 Testing custom questions...', 'info');
+            
+            try {
+                // Test August's questions
+                const augustResponse = await fetch(`${API_BASE_URL}/custom-questions/1`);
+                const augustQuestions = await augustResponse.json();
+                addResult(`August has ${augustQuestions.length} custom questions`, 'success');
+                
+                if (augustQuestions.length > 0) {
+                    const categories = [...new Set(augustQuestions.map(q => q.category))];
+                    addResult(`August's question categories: ${categories.join(', ')}`, 'info');
+                }
+                
+                // Test Michael's questions
+                const michaelResponse = await fetch(`${API_BASE_URL}/custom-questions/2`);
+                const michaelQuestions = await michaelResponse.json();
+                addResult(`Michael has ${michaelQuestions.length} custom questions`, 'success');
+                
+                if (michaelQuestions.length > 0) {
+                    const categories = [...new Set(michaelQuestions.map(q => q.category))];
+                    addResult(`Michael's question categories: ${categories.join(', ')}`, 'info');
+                }
+                
+            } catch (error) {
+                addResult(`❌ Error testing custom questions: ${error.message}`, 'error');
+            }
+        }
+        
+        async function uploadSampleQuestions() {
+            addResult('📤 Testing question upload...', 'info');
+            
+            const sampleContent = \`For August (Mixed Operations + Simple Equations)
+
+**Arithmetic (5 questions):**
+
+1. 24 + 18 =
+2. 56 − 29 =
+3. 7 × 6 =
+4. 42 ÷ 7 =
+5. 33 + 27 =
+
+**Simple Equations (2 questions):**
+
+6. x + 7 = 15
+7. 3 × y = 21
+
+---
+
+For Michael (Complex Operations + Fractions)
+
+**Arithmetic (3 questions):**
+
+1. 345 + 278 =
+2. 672 − 439 =
+3. 56 × 9 =
+
+**Fraction practice:**
+
+1. \\\\frac{3}{4} + \\\\frac{1}{8} =
+2. \\\\frac{5}{6} - \\\\frac{1}{3} =\`;
+            
+            try {
+                const response = await fetch(\`\${API_BASE_URL}/upload-questions\`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ content: sampleContent })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    addResult(\`✅ Successfully uploaded: \${result.message}\`, 'success');
+                    addResult(\`📊 Parsed \${result.totalParsed} questions, inserted \${result.inserted}\`, 'info');
+                } else {
+                    addResult(\`❌ Upload failed: \${result.error}\`, 'error');
+                }
+                
+            } catch (error) {
+                addResult(\`❌ Error uploading questions: \${error.message}\`, 'error');
+            }
+        }
+        
+        // Auto-run tests on page load
+        window.onload = () => {
+            setTimeout(testAllFeatures, 1000); // Give server time to fully start
+        };
+    </script>
+</body>
+</html>

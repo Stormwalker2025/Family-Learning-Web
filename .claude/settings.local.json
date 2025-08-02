@@ -42,7 +42,11 @@
       "Bash(cp:*)",
       "Bash(ls:*)",
       "Bash(timeout 5 npm start)",
-      "Bash(timeout 3 npm start)"
+      "Bash(timeout 3 npm start)",
+      "Bash(npm install:*)",
+      "Bash(cmd /c:*)",
+      "Bash(copy vocab.db vocab_backup.db)",
+      "Bash(del vocab.db)"
     ],
     "deny": []
   }

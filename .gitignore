@@ -1,26 +1,33 @@
 # Dependencies
 node_modules/
 npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
 
 # Environment variables
 .env
 .env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env.production
 
-# Database (SQLite will be recreated automatically)
-vocabulary.db
-vocabulary.db-journal
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
 
-# Uploads directory (temporary files)
-uploads/
-temp/
+# OS files
+.DS_Store
+Thumbs.db
+
+# Uploads
+uploads/*
+!uploads/.gitkeep
 
 # Logs
-logs
+logs/
 *.log
 
 # Runtime data
@@ -29,31 +36,17 @@ pids
 *.seed
 *.pid.lock
 
-# Coverage directory used by tools like istanbul
-coverage/
+# Claude settings
+.claude/
 
-# nyc test coverage
-.nyc_output
+# Temporary files
+temp/
+tmp/
 
-# Operating System Files
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
+# PDF and text files
+*.pdf
+*.txt
 
-# IDE/Editor files
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-
-# Custom files
-333.txt
-test*.csv
-test*.html
-test*.js
-nul
+# Backup files
+*_backup.*
+*.bak

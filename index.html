@@ -2514,6 +2514,7 @@
                 });
 
                 const result = await response.json();
+                console.log('Login response:', result); // Debug log
                 
                 if (result.success) {
                     currentUser = result.user;
@@ -2525,8 +2526,10 @@
                     loginBtn.textContent = '✅ Success!';
                     
                     setTimeout(() => {
+                        console.log('About to show main screen'); // Debug log
                         showMainScreen();
-                        loadStats();
+                        console.log('Main screen shown, loading stats'); // Debug log
+                        loadStats().catch(err => console.error('Stats load error:', err));
                     }, 1000);
                 } else {
                     // Enhanced error messages
@@ -2558,12 +2561,19 @@
 
         // Show Main Screen
         function showMainScreen() {
+            console.log('showMainScreen called'); // Debug log
+            console.log('currentUser:', currentUser); // Debug log
+            
             document.getElementById('loginScreen').classList.add('hidden');
             document.getElementById('mainScreen').classList.remove('hidden');
             document.getElementById('userName').textContent = currentUser.name;
             
+            console.log('Screen visibility updated'); // Debug log
+            
             // Update UI based on user role
             updateRoleBasedUI();
+            
+            console.log('showMainScreen completed'); // Debug log
         }
 
         function updateRoleBasedUI() {
@@ -3337,6 +3347,12 @@
         }
 
         // Handle Enter Key in Login
+        document.getElementById('nameSelect').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                login();
+            }
+        });
+        
         document.getElementById('passwordInput').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 login();
@@ -4315,7 +4331,7 @@
                 
                 let html = '<div class="achievement-grid">';
                 
-                achievements.forEach(achievement => {
+                for (const achievement of achievements) {
                     const isEarned = achievement.is_earned;
                     const progress = await getAchievementProgress(achievement);
                     const progressPercentage = Math.min(100, (progress / achievement.requirement_value) * 100);
@@ -4350,7 +4366,7 @@
                             ` : ''}
                         </div>
                     `;
-                });
+                }
                 
                 html += '</div>';
                 document.getElementById('achievementsList').innerHTML = html;

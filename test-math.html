@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Topics Test</title>
+</head>
+<body>
+    <h1>数学话题测试</h1>
+    <button onclick="loadMathTopics()">加载数学话题</button>
+    <div id="results" style="white-space: pre-wrap; font-family: monospace; margin-top: 20px;"></div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:3002/api';
+        
+        async function loadMathTopics() {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.textContent = '正在加载...';
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/math/topics`);
+                const topics = await response.json();
+                
+                let output = `总共找到 ${topics.length} 个数学话题:\n\n`;
+                
+                topics.forEach((topic, index) => {
+                    output += `${index + 1}. ${topic.grade_level} - ${topic.topic_name}\n`;
+                    output += `   描述: ${topic.description}\n`;
+                    if (topic.knowledge_points) {
+                        output += `   知识点: ✅ 有内容\n`;
+                        output += `   ${topic.knowledge_points.substring(0, 100)}...\n`;
+                    } else {
+                        output += `   知识点: ❌ 无内容\n`;
+                    }
+                    output += `\n`;
+                });
+                
+                resultsDiv.textContent = output;
+            } catch (error) {
+                resultsDiv.textContent = `错误: ${error.message}`;
+            }
+        }
+    </script>
+</body>
+</html>
