@@ -1215,6 +1215,97 @@
             transform: translateY(-2px);
         }
 
+        /* Queensland Import Styles */
+        .vocab-preview {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+
+        .vocab-preview h4 {
+            color: var(--klein-blue);
+            margin-bottom: 15px;
+        }
+
+        .vocab-preview ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .vocab-preview li {
+            padding: 8px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .vocab-preview li:last-child {
+            border-bottom: none;
+        }
+
+        .queensland-actions {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin: 25px 0;
+        }
+
+        .import-qld-btn, .enhance-btn {
+            flex: 1;
+            min-width: 200px;
+            padding: 15px 25px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .import-qld-btn {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+        }
+
+        .import-qld-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.3);
+        }
+
+        .enhance-btn {
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+            color: white;
+        }
+
+        .enhance-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(116, 185, 255, 0.3);
+        }
+
+        .import-progress {
+            margin: 20px 0;
+        }
+
+        .progress-bar {
+            background: #e9ecef;
+            border-radius: 10px;
+            height: 20px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #00b894, #00a085);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            text-align: center;
+            color: #6c757d;
+            font-weight: 500;
+        }
+
         /* Rewards Center Styles */
         .rewards-container {
             max-width: 1000px;
@@ -2130,8 +2221,9 @@
                 <div class="mode-title">📁 CSV Bulk Import</div>
                 <div class="csv-import-container">
                     <div class="import-tabs">
-                        <button class="import-tab active" onclick="switchImportTab('vocabulary')">Vocabulary</button>
+                        <button class="import-tab active" onclick="switchImportTab('vocabulary')">CSV Upload</button>
                         <button class="import-tab" onclick="switchImportTab('questions')">Questions</button>
+                        <button class="import-tab" onclick="switchImportTab('queensland')">Queensland Vocab</button>
                     </div>
                     
                     <!-- Vocabulary Import -->
@@ -2192,6 +2284,41 @@
                             <button onclick="uploadQuestions()" class="upload-btn">🚀 Import Questions</button>
                             <button onclick="cancelUpload('questions')" class="cancel-btn">Cancel</button>
                         </div>
+                    </div>
+                    
+                    <!-- Queensland Vocabulary Import -->
+                    <div id="queenslandImport" class="import-section hidden">
+                        <div class="import-instructions">
+                            <h3>🇦🇺 Import Queensland Primary School Vocabulary</h3>
+                            <p>Import curated vocabulary words for Queensland primary school students (Grades 1-6)</p>
+                            <p>This will add <strong>600+</strong> words with pronunciations from trusted dictionary sources</p>
+                            <div class="vocab-preview">
+                                <h4>Word Lists Include:</h4>
+                                <ul>
+                                    <li><strong>Grade 1-2:</strong> High-frequency sight words and basic vocabulary</li>
+                                    <li><strong>Grade 3-4:</strong> Common academic and everyday words</li>
+                                    <li><strong>Grade 5-6:</strong> Advanced vocabulary and subject-specific terms</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="queensland-actions">
+                            <button onclick="importQueenslandVocab()" class="import-qld-btn" id="qldImportBtn">
+                                🚀 Import Queensland Vocabulary
+                            </button>
+                            <button onclick="enhanceExistingWords()" class="enhance-btn" id="enhanceBtn">
+                                🔊 Add Pronunciations to Existing Words
+                            </button>
+                        </div>
+                        
+                        <div class="import-progress hidden" id="qldProgress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="qldProgressFill"></div>
+                            </div>
+                            <div class="progress-text" id="qldProgressText">Preparing import...</div>
+                        </div>
+                        
+                        <div id="queenslandResult"></div>
                     </div>
                     
                     <div id="importResults" class="import-results hidden"></div>
@@ -3193,12 +3320,67 @@
         }
 
         // Speak Word
-        function speakWord(wordText = null) {
+        async function speakWord(wordText = null) {
             const word = wordText || (currentWords[currentWordIndex] ? currentWords[currentWordIndex].word : '');
-            if (word && 'speechSynthesis' in window) {
+            const currentWordObj = currentWords[currentWordIndex];
+            
+            if (!word) return;
+            
+            // Try to use audio URL first (from dictionary API)
+            if (currentWordObj && currentWordObj.audio_url) {
+                try {
+                    const audio = new Audio(currentWordObj.audio_url);
+                    audio.volume = 0.8;
+                    await audio.play();
+                    return;
+                } catch (error) {
+                    console.log('Audio URL failed, falling back to dictionary API:', error);
+                }
+            }
+            
+            // Try to fetch pronunciation from dictionary API
+            try {
+                const response = await fetch(`${API}/api/dictionary/${encodeURIComponent(word)}`);
+                if (response.ok) {
+                    const definition = await response.json();
+                    if (definition.audioUrl) {
+                        const audio = new Audio(definition.audioUrl);
+                        audio.volume = 0.8;
+                        await audio.play();
+                        
+                        // Update word phonetic display if available
+                        const phoneticElement = document.getElementById('wordPhonetic');
+                        if (phoneticElement && definition.pronunciation) {
+                            phoneticElement.textContent = definition.pronunciation;
+                        }
+                        
+                        return;
+                    }
+                }
+            } catch (error) {
+                console.log('Dictionary API failed, falling back to text-to-speech:', error);
+            }
+            
+            // Fallback to browser text-to-speech
+            if ('speechSynthesis' in window) {
+                // Cancel any ongoing speech
+                speechSynthesis.cancel();
+                
                 const utterance = new SpeechSynthesisUtterance(word);
                 utterance.lang = 'en-US';
                 utterance.rate = 0.8;
+                utterance.pitch = 1.0;
+                utterance.volume = 0.8;
+                
+                // Try to use US English voice if available
+                const voices = speechSynthesis.getVoices();
+                const usVoice = voices.find(voice => 
+                    voice.lang === 'en-US' || voice.lang.startsWith('en-US')
+                );
+                if (usVoice) {
+                    utterance.voice = usVoice;
+                }
+                
                 speechSynthesis.speak(utterance);
             }
         }
@@ -4010,13 +4192,18 @@
             document.querySelectorAll('.import-tab').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
             
-            // Show/hide sections
+            // Hide all sections first
+            document.getElementById('vocabularyImport').classList.add('hidden');
+            document.getElementById('questionsImport').classList.add('hidden');
+            document.getElementById('queenslandImport').classList.add('hidden');
+            
+            // Show selected section
             if (tab === 'vocabulary') {
                 document.getElementById('vocabularyImport').classList.remove('hidden');
-                document.getElementById('questionsImport').classList.add('hidden');
-            } else {
-                document.getElementById('vocabularyImport').classList.add('hidden');
+            } else if (tab === 'questions') {
                 document.getElementById('questionsImport').classList.remove('hidden');
+            } else if (tab === 'queensland') {
+                document.getElementById('queenslandImport').classList.remove('hidden');
             }
             
             // Hide results
@@ -4229,6 +4416,164 @@
                     <p>${message}</p>
                 </div>
             `;
+        }
+
+        // Queensland Vocabulary Import Functions
+        async function importQueenslandVocab() {
+            const btn = document.getElementById('qldImportBtn');
+            const progress = document.getElementById('qldProgress');
+            const progressFill = document.getElementById('qldProgressFill');
+            const progressText = document.getElementById('qldProgressText');
+            const resultDiv = document.getElementById('queenslandResult');
+            
+            // Disable button and show progress
+            btn.disabled = true;
+            btn.textContent = '⏳ Importing...';
+            progress.classList.remove('hidden');
+            resultDiv.innerHTML = '';
+            
+            try {
+                progressText.textContent = 'Starting import of Queensland vocabulary...';
+                progressFill.style.width = '10%';
+                
+                const response = await fetch(`${API}/api/import-queensland-vocab`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                
+                progressFill.style.width = '50%';
+                progressText.textContent = 'Processing words with dictionary API...';
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const result = await response.json();
+                
+                progressFill.style.width = '100%';
+                progressText.textContent = 'Import completed!';
+                
+                // Show results
+                setTimeout(() => {
+                    progress.classList.add('hidden');
+                    
+                    if (result.success) {
+                        resultDiv.innerHTML = `
+                            <div class="status success">
+                                <h4>✅ Queensland Vocabulary Import Successful!</h4>
+                                <p>${result.message}</p>
+                                <div style="margin-top: 15px; padding: 15px; background: rgba(0, 184, 148, 0.1); border-radius: 8px;">
+                                    <strong>What was imported:</strong><br>
+                                    • Primary school vocabulary (Grades 1-6)<br>
+                                    • US pronunciations from dictionary API<br>
+                                    • Proper definitions and examples<br>
+                                    • Grade-level difficulty settings
+                                </div>
+                                <button onclick="loadStats(); hideCSVImport();" style="margin-top: 15px; padding: 10px 20px; background: var(--klein-blue); color: white; border: none; border-radius: 8px; cursor: pointer;">
+                                    🔄 Refresh and Go Back
+                                </button>
+                            </div>
+                        `;
+                    } else {
+                        resultDiv.innerHTML = `
+                            <div class="status error">
+                                <h4>❌ Import Failed</h4>
+                                <p>${result.message || 'Unknown error occurred'}</p>
+                            </div>
+                        `;
+                    }
+                }, 1000);
+                
+            } catch (error) {
+                console.error('Import error:', error);
+                progress.classList.add('hidden');
+                resultDiv.innerHTML = `
+                    <div class="status error">
+                        <h4>❌ Import Error</h4>
+                        <p>Failed to import Queensland vocabulary: ${error.message}</p>
+                    </div>
+                `;
+            } finally {
+                // Re-enable button
+                btn.disabled = false;
+                btn.textContent = '🚀 Import Queensland Vocabulary';
+            }
+        }
+
+        async function enhanceExistingWords() {
+            const btn = document.getElementById('enhanceBtn');
+            const resultDiv = document.getElementById('queenslandResult');
+            
+            // Disable button
+            btn.disabled = true;
+            btn.textContent = '⏳ Enhancing...';
+            resultDiv.innerHTML = '';
+            
+            try {
+                resultDiv.innerHTML = `
+                    <div class="status info">
+                        <h4>🔊 Adding Pronunciations...</h4>
+                        <p>Fetching pronunciations for existing words from dictionary API...</p>
+                        <div style="width: 100%; height: 4px; background: #e9ecef; border-radius: 2px; margin: 10px 0;">
+                            <div style="width: 0%; height: 100%; background: var(--klein-blue); border-radius: 2px; transition: width 0.3s ease;" id="enhanceProgress"></div>
+                        </div>
+                    </div>
+                `;
+                
+                const response = await fetch(`${API}/api/enhance-words`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const result = await response.json();
+                
+                // Animate progress to completion
+                const progressBar = document.getElementById('enhanceProgress');
+                if (progressBar) {
+                    progressBar.style.width = '100%';
+                }
+                
+                setTimeout(() => {
+                    if (result.success) {
+                        resultDiv.innerHTML = `
+                            <div class="status success">
+                                <h4>✅ Enhancement Completed!</h4>
+                                <p>${result.message}</p>
+                                <div style="margin-top: 15px; padding: 15px; background: rgba(116, 185, 255, 0.1); border-radius: 8px;">
+                                    <strong>What was enhanced:</strong><br>
+                                    • Added US pronunciation audio URLs<br>
+                                    • Updated phonetic transcriptions<br>
+                                    • Improved word definitions where available
+                                </div>
+                            </div>
+                        `;
+                    } else {
+                        resultDiv.innerHTML = `
+                            <div class="status error">
+                                <h4>❌ Enhancement Failed</h4>
+                                <p>${result.message || 'Unknown error occurred'}</p>
+                            </div>
+                        `;
+                    }
+                }, 1000);
+                
+            } catch (error) {
+                console.error('Enhancement error:', error);
+                resultDiv.innerHTML = `
+                    <div class="status error">
+                        <h4>❌ Enhancement Error</h4>
+                        <p>Failed to enhance words: ${error.message}</p>
+                    </div>
+                `;
+            } finally {
+                // Re-enable button
+                btn.disabled = false;
+                btn.textContent = '🔊 Add Pronunciations to Existing Words';
+            }
         }
 
         // Rewards System Functions

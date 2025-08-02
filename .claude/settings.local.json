@@ -46,7 +46,8 @@
       "Bash(npm install:*)",
       "Bash(cmd /c:*)",
       "Bash(copy vocab.db vocab_backup.db)",
-      "Bash(del vocab.db)"
+      "Bash(del vocab.db)",
+      "WebFetch(domain:www.flocabulary.com)"
     ],
     "deny": []
   }

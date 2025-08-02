@@ -4,6 +4,7 @@ const cors = require('cors');
 const path = require('path');
 const multer = require('multer');
 const fs = require('fs');
+const https = require('https');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -1658,6 +1659,225 @@ function checkAchievementRequirement(userId, achievement, callback) {
     }
 }
 
+
+// Dictionary API Integration
+async function fetchWordDefinition(word) {
+    try {
+        // Using Free Dictionary API
+        const response = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en_US/${word.toLowerCase()}`);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        if (data && data.length > 0) {
+            const entry = data[0];
+            
+            // Extract pronunciation (US pronunciation preferred)
+            let pronunciation = null;
+            let audioUrl = null;
+            
+            if (entry.phonetics && entry.phonetics.length > 0) {
+                // Look for US pronunciation first
+                const usPhonetic = entry.phonetics.find(p => 
+                    p.audio && (p.audio.includes('us') || p.audio.includes('US'))
+                );
+                
+                if (usPhonetic) {
+                    pronunciation = usPhonetic.text;
+                    audioUrl = usPhonetic.audio;
+                } else {
+                    // Fallback to any available pronunciation
+                    const anyPhonetic = entry.phonetics.find(p => p.audio);
+                    if (anyPhonetic) {
+                        pronunciation = anyPhonetic.text;
+                        audioUrl = anyPhonetic.audio;
+                    }
+                }
+            }
+            
+            // Extract definition
+            let definition = '';
+            let example = '';
+            
+            if (entry.meanings && entry.meanings.length > 0) {
+                const meaning = entry.meanings[0];
+                if (meaning.definitions && meaning.definitions.length > 0) {
+                    definition = meaning.definitions[0].definition;
+                    example = meaning.definitions[0].example || '';
+                }
+            }
+            
+            return {
+                word: entry.word,
+                pronunciation: pronunciation,
+                audioUrl: audioUrl,
+                definition: definition,
+                example: example,
+                partOfSpeech: entry.meanings[0]?.partOfSpeech || ''
+            };
+        }
+        
+        return null;
+    } catch (error) {
+        console.error(`Error fetching definition for "${word}":`, error.message);
+        return null;
+    }
+}
+
+// API endpoint to get word definition and pronunciation
+app.get('/api/dictionary/:word', async (req, res) => {
+    const { word } = req.params;
+    
+    try {
+        const definition = await fetchWordDefinition(word);
+        
+        if (definition) {
+            res.json(definition);
+        } else {
+            res.status(404).json({ error: 'Word not found in dictionary' });
+        }
+    } catch (error) {
+        console.error('Dictionary API error:', error);
+        res.status(500).json({ error: 'Failed to fetch word definition' });
+    }
+});
+
+// API endpoint to enhance existing words with dictionary data
+app.post('/api/enhance-words', async (req, res) => {
+    try {
+        // Get all words without audio URLs
+        db.all(`SELECT * FROM words WHERE audio_url IS NULL OR audio_url = ''`, async (err, words) => {
+            if (err) {
+                return res.status(500).json({ error: 'Database error' });
+            }
+            
+            let enhanced = 0;
+            let processed = 0;
+            
+            for (const word of words) {
+                try {
+                    const definition = await fetchWordDefinition(word.word);
+                    
+                    if (definition && definition.audioUrl) {
+                        db.run(`UPDATE words SET audio_url = ?, image_url = ? WHERE id = ?`, 
+                            [definition.audioUrl, definition.pronunciation, word.id], 
+                            (updateErr) => {
+                                if (!updateErr) {
+                                    enhanced++;
+                                }
+                            }
+                        );
+                    }
+                    
+                    processed++;
+                    
+                    // Add delay to avoid rate limiting
+                    await new Promise(resolve => setTimeout(resolve, 100));
+                    
+                } catch (error) {
+                    console.error(`Error enhancing word "${word.word}":`, error);
+                    processed++;
+                }
+            }
+            
+            // Wait a bit for all database operations to complete
+            setTimeout(() => {
+                res.json({ 
+                    success: true, 
+                    message: `Enhanced ${enhanced} out of ${processed} words with pronunciation data` 
+                });
+            }, 1000);
+        });
+        
+    } catch (error) {
+        console.error('Enhance words error:', error);
+        res.status(500).json({ error: 'Failed to enhance words' });
+    }
+});
+
+// Import Queensland vocabulary
+app.post('/api/import-queensland-vocab', async (req, res) => {
+    try {
+        const vocabData = JSON.parse(fs.readFileSync(path.join(__dirname, 'queensland-vocabulary.json'), 'utf8'));
+        
+        let imported = 0;
+        let processed = 0;
+        const totalWords = Object.values(vocabData).flat().length;
+        
+        for (const [grade, words] of Object.entries(vocabData)) {
+            const gradeNumber = parseInt(grade.replace('grade', ''));
+            
+            for (const word of words) {
+                try {
+                    // Check if word already exists
+                    const existing = await new Promise((resolve, reject) => {
+                        db.get("SELECT id FROM words WHERE LOWER(word) = LOWER(?)", [word], (err, row) => {
+                            if (err) reject(err);
+                            else resolve(row);
+                        });
+                    });
+                    
+                    if (!existing) {
+                        // Fetch definition from dictionary API
+                        const definition = await fetchWordDefinition(word);
+                        
+                        let meaning = `A ${gradeNumber > 3 ? 'advanced' : 'basic'} vocabulary word`;
+                        let example = `This is an example with the word "${word}".`;
+                        let audioUrl = '';
+                        let pronunciation = '';
+                        
+                        if (definition) {
+                            meaning = definition.definition || meaning;
+                            example = definition.example || example;
+                            audioUrl = definition.audioUrl || '';
+                            pronunciation = definition.pronunciation || '';
+                        }
+                        
+                        await new Promise((resolve, reject) => {
+                            db.run(`INSERT INTO words (word, meaning, example, difficulty_level, grade_level, subject, audio_url, image_url) 
+                                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+                                [word, meaning, example, Math.min(gradeNumber, 5), gradeNumber, 'english', audioUrl, pronunciation],
+                                function(err) {
+                                    if (err) reject(err);
+                                    else {
+                                        imported++;
+                                        resolve(this.lastID);
+                                    }
+                                }
+                            );
+                        });
+                        
+                        // Add delay to avoid rate limiting
+                        await new Promise(resolve => setTimeout(resolve, 200));
+                    }
+                    
+                    processed++;
+                    
+                    // Send progress update every 50 words
+                    if (processed % 50 === 0) {
+                        console.log(`Processed ${processed}/${totalWords} words, imported ${imported} new words`);
+                    }
+                    
+                } catch (error) {
+                    console.error(`Error importing word "${word}":`, error);
+                    processed++;
+                }
+            }
+        }
+        
+        res.json({ 
+            success: true, 
+            message: `Import completed: ${imported} new words added out of ${processed} processed` 
+        });
+        
+    } catch (error) {
+        console.error('Import vocabulary error:', error);
+        res.status(500).json({ error: 'Failed to import vocabulary: ' + error.message });
+    }
+});
 
 // Start server
 app.listen(PORT, '0.0.0.0', () => {
