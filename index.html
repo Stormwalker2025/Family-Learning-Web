@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>📚 VocabMaster - English Learning</title>
+    <title>📚 VocabMaster - Visual Memory Learning</title>
     <style>
         * { 
             margin: 0; 
@@ -13,10 +13,22 @@
         
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #4169E1 0%, #0047AB 50%, #002FA7 100%);
             min-height: 100vh;
             color: #333;
             overflow-x: hidden;
+        }
+        
+        /* Klein Blue Theme */
+        :root {
+            --klein-blue: #002FA7;
+            --light-blue: #4169E1;
+            --accent-color: #FFD700;
+            --success-color: #00FF7F;
+            --danger-color: #FF6B6B;
+            --white: #FFFFFF;
+            --light-gray: #F8F9FA;
+            --dark-gray: #666666;
         }
         
         .container {
@@ -34,46 +46,62 @@
             min-height: 100vh;
             padding: 20px;
             text-align: center;
+            background: linear-gradient(135deg, var(--klein-blue) 0%, var(--light-blue) 100%);
         }
         
         .login-card {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            max-width: 400px;
+            border-radius: 25px;
+            padding: 50px;
+            box-shadow: 0 25px 50px rgba(0, 47, 167, 0.3);
+            max-width: 450px;
             width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
         
         .app-logo {
-            font-size: 48px;
-            margin-bottom: 10px;
+            font-size: 64px;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
         }
         
         .app-title {
-            font-size: 32px;
+            font-size: 36px;
             font-weight: bold;
-            color: #667eea;
-            margin-bottom: 10px;
+            color: var(--klein-blue);
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 47, 167, 0.1);
         }
         
         .app-subtitle {
-            color: #666;
-            margin-bottom: 30px;
-            font-size: 16px;
+            color: var(--dark-gray);
+            margin-bottom: 40px;
+            font-size: 18px;
+            line-height: 1.4;
         }
         
         .input-group {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             position: relative;
         }
         
         .form-input {
             width: 100%;
-            padding: 15px 20px;
+            padding: 18px 25px;
             border: 2px solid #e1e5e9;
-            border-radius: 12px;
+            border-radius: 15px;
             font-size: 16px;
             transition: all 0.3s ease;
             background: rgba(255, 255, 255, 0.9);
@@ -81,33 +109,52 @@
         
         .form-input:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: var(--klein-blue);
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.2);
+            box-shadow: 0 15px 30px rgba(0, 47, 167, 0.2);
         }
         
-        .start-btn {
+        .form-select {
             width: 100%;
-            padding: 15px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 18px;
-            font-weight: 600;
+            padding: 18px 25px;
+            border: 2px solid #e1e5e9;
+            border-radius: 15px;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.9);
             cursor: pointer;
             transition: all 0.3s ease;
         }
         
+        .form-select:focus {
+            outline: none;
+            border-color: var(--klein-blue);
+            box-shadow: 0 15px 30px rgba(0, 47, 167, 0.2);
+        }
+        
+        .start-btn {
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(135deg, var(--klein-blue), var(--light-blue));
+            color: white;
+            border: none;
+            border-radius: 15px;
+            font-size: 20px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
         .start-btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 15px 30px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 20px 40px rgba(0, 47, 167, 0.4);
         }
         
         /* Main App Screen */
         .main-screen {
             padding: 20px;
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
         }
         
@@ -115,140 +162,331 @@
         .app-header {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
-            border-radius: 20px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border-radius: 25px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 15px 35px rgba(0, 47, 167, 0.1);
             display: flex;
             justify-content: space-between;
             align-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
         
         .header-left {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 20px;
         }
         
         .header-title {
-            font-size: 24px;
+            font-size: 28px;
             font-weight: bold;
-            color: #667eea;
+            color: var(--klein-blue);
         }
         
         .user-greeting {
-            color: #666;
+            color: var(--dark-gray);
             font-size: 16px;
         }
         
         .logout-btn {
-            background: #ff6b6b;
+            background: var(--danger-color);
             color: white;
             border: none;
-            padding: 8px 16px;
-            border-radius: 8px;
+            padding: 10px 20px;
+            border-radius: 10px;
             cursor: pointer;
             font-size: 14px;
+            font-weight: 600;
             transition: all 0.3s ease;
         }
         
         .logout-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+            box-shadow: 0 8px 20px rgba(255, 107, 107, 0.4);
         }
         
         /* Stats Dashboard */
         .stats-dashboard {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            margin-bottom: 25px;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
         }
         
         .stat-card {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
-            border-radius: 15px;
-            padding: 20px;
+            border-radius: 20px;
+            padding: 25px;
             text-align: center;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 12px 30px rgba(0, 47, 167, 0.1);
             transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
         
         .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 47, 167, 0.2);
         }
         
         .stat-number {
-            font-size: 28px;
+            font-size: 32px;
             font-weight: bold;
-            color: #667eea;
-            margin-bottom: 5px;
+            color: var(--klein-blue);
+            margin-bottom: 8px;
         }
         
         .stat-label {
-            color: #666;
+            color: var(--dark-gray);
             font-size: 14px;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+        
+        /* Daily Progress Section */
+        .daily-progress-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 15px 35px rgba(0, 47, 167, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .progress-header h3 {
+            color: var(--klein-blue);
+            font-size: 24px;
+            font-weight: 700;
+            margin: 0;
+        }
+        
+        .progress-header span {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--accent-color);
+        }
+        
+        .daily-progress-bar {
+            height: 12px;
+            background: rgba(65, 105, 225, 0.2);
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+        
+        .daily-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--klein-blue), var(--accent-color));
+            border-radius: 6px;
+            transition: width 0.8s ease;
+            position: relative;
+        }
+        
+        .daily-progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shine 2s infinite;
+        }
+        
+        @keyframes shine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .progress-details {
+            text-align: center;
+            color: var(--dark-gray);
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        /* Role-based UI elements */
+        .user-role-badge {
+            font-size: 12px;
+            background: var(--accent-color);
+            color: var(--klein-blue);
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin-left: 10px;
+            font-weight: 600;
+        }
+
+        .child-selector {
+            margin-right: 15px;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .parent-only {
+            border: 2px solid var(--accent-color);
+        }
+
+        /* Assignment forms */
+        .assignment-form {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: var(--klein-blue);
+        }
+
+        .form-group textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .save-btn, .cancel-btn, .add-question-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .save-btn {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .cancel-btn {
+            background: var(--danger-color);
+            color: white;
+        }
+
+        .add-question-btn {
+            background: var(--klein-blue);
+            color: white;
+            width: 100%;
+            margin-top: 15px;
+        }
+
+        .question-item {
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid #e1e5e9;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+
+        .assignment-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 5px 15px rgba(0, 47, 167, 0.1);
+            border-left: 4px solid var(--klein-blue);
+        }
+
+        .assignment-card.completed {
+            border-left-color: var(--success-color);
+        }
+
+        .assignment-card.overdue {
+            border-left-color: var(--danger-color);
+        }
+
+        .error-item {
+            background: rgba(255, 107, 107, 0.1);
+            border-left: 4px solid var(--danger-color);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 10px;
         }
         
         /* Mode Selection */
         .mode-selection {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
-            border-radius: 20px;
-            padding: 30px;
-            margin-bottom: 25px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border-radius: 25px;
+            padding: 35px;
+            margin-bottom: 30px;
+            box-shadow: 0 15px 35px rgba(0, 47, 167, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
         
         .mode-title {
             text-align: center;
-            font-size: 24px;
+            font-size: 28px;
             font-weight: bold;
-            color: #333;
-            margin-bottom: 25px;
+            color: var(--klein-blue);
+            margin-bottom: 30px;
         }
         
         .mode-buttons {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
         }
         
         .mode-btn {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            background: linear-gradient(135deg, var(--light-blue), var(--klein-blue));
             color: white;
             border: none;
-            border-radius: 15px;
-            padding: 20px;
-            font-size: 16px;
+            border-radius: 20px;
+            padding: 25px;
+            font-size: 18px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
             text-align: center;
-            min-height: 80px;
+            min-height: 120px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            gap: 5px;
+            gap: 8px;
+            box-shadow: 0 10px 25px rgba(0, 47, 167, 0.2);
         }
         
         .mode-btn.review {
-            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            background: linear-gradient(135deg, var(--accent-color), #FFA500);
+            color: var(--klein-blue);
         }
         
         .mode-btn.practice {
-            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
-            color: #333;
+            background: linear-gradient(135deg, var(--success-color), #00CED1);
+            color: white;
         }
         
         .mode-btn:hover {
-            transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 47, 167, 0.3);
         }
         
         .mode-btn:disabled {
@@ -258,7 +496,7 @@
         }
         
         .mode-btn-icon {
-            font-size: 24px;
+            font-size: 32px;
         }
         
         .mode-btn-text {
@@ -266,14 +504,14 @@
             opacity: 0.9;
         }
         
-        /* Study Screen */
+        /* Study Screen - Three Phase Learning */
         .study-screen {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--klein-blue) 0%, var(--light-blue) 100%);
             z-index: 1000;
             display: flex;
             flex-direction: column;
@@ -282,7 +520,7 @@
         .study-header {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(20px);
-            padding: 15px 20px;
+            padding: 20px 25px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -290,7 +528,15 @@
         }
         
         .progress-info {
-            font-size: 16px;
+            font-size: 18px;
+            font-weight: 700;
+        }
+        
+        .phase-indicator {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
             font-weight: 600;
         }
         
@@ -298,21 +544,26 @@
             background: rgba(255, 255, 255, 0.2);
             color: white;
             border: none;
-            border-radius: 8px;
-            padding: 8px 12px;
+            border-radius: 10px;
+            padding: 10px 15px;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .close-study:hover {
+            background: rgba(255, 255, 255, 0.3);
         }
         
         .progress-bar {
-            height: 4px;
+            height: 6px;
             background: rgba(255, 255, 255, 0.2);
-            position: relative;
         }
         
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, #4facfe, #00f2fe);
+            background: linear-gradient(90deg, var(--accent-color), var(--success-color));
             transition: width 0.5s ease;
         }
         
@@ -321,38 +572,219 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px;
+            padding: 30px;
         }
         
         .word-card {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
-            border-radius: 25px;
-            padding: 40px;
-            max-width: 600px;
+            border-radius: 30px;
+            padding: 50px;
+            max-width: 700px;
             width: 100%;
             text-align: center;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
-            animation: slideIn 0.5s ease;
+            box-shadow: 0 25px 60px rgba(0, 47, 167, 0.2);
+            animation: slideIn 0.6s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
         
         @keyframes slideIn {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
+            from { opacity: 0; transform: translateY(50px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
         
-        .word-display {
-            font-size: 48px;
+        /* Phase 1: Sentence + Image */
+        .phase-sentence {
+            font-size: 24px;
+            color: var(--dark-gray);
+            margin-bottom: 30px;
+            line-height: 1.6;
+            font-style: italic;
+        }
+        
+        .word-image {
+            width: 250px;
+            height: 250px;
+            background: linear-gradient(135deg, #E3F2FD, #BBDEFB);
+            border-radius: 25px;
+            margin: 30px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 64px;
+            box-shadow: 0 15px 35px rgba(0, 47, 167, 0.15);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .word-image:hover {
+            transform: scale(1.05);
+            box-shadow: 0 20px 40px rgba(0, 47, 167, 0.2);
+        }
+        
+        .word-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(255,255,255,0.1), rgba(255,255,255,0.3));
+            pointer-events: none;
+        }
+        
+        .image-placeholder {
+            background: linear-gradient(135deg, var(--accent-color), #FFA500);
+            color: var(--klein-blue);
             font-weight: bold;
-            color: #667eea;
-            margin-bottom: 20px;
-            letter-spacing: 2px;
+            text-shadow: 2px 2px 4px rgba(255,255,255,0.3);
+        }
+        
+        .actual-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 25px;
+        }
+        
+        /* Phase 2: Word + Image */
+        .word-display {
+            font-size: 56px;
+            font-weight: bold;
+            color: var(--klein-blue);
+            margin-bottom: 25px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
         }
         
         .word-phonetic {
+            font-size: 20px;
+            color: var(--dark-gray);
+            margin-bottom: 20px;
+        }
+        
+        /* Phase 3: Word + Definition */
+        .definition-section {
+            margin: 40px 0;
+            padding: 30px;
+            background: rgba(65, 105, 225, 0.1);
+            border-radius: 20px;
+            text-align: left;
+        }
+        
+        .definition-text {
+            font-size: 20px;
+            color: var(--klein-blue);
+            margin-bottom: 20px;
+            line-height: 1.7;
+            font-weight: 600;
+        }
+        
+        .example-text {
+            font-style: italic;
+            color: var(--dark-gray);
             font-size: 18px;
-            color: #666;
-            margin-bottom: 15px;
+            border-left: 4px solid var(--accent-color);
+            padding-left: 20px;
+        }
+        
+        /* Multiple Choice Questions */
+        .choices {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .choice-btn {
+            background: rgba(255, 255, 255, 0.9);
+            border: 3px solid #e1e5e9;
+            border-radius: 15px;
+            padding: 20px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+        
+        .choice-btn:hover {
+            border-color: var(--klein-blue);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 47, 167, 0.2);
+        }
+        
+        .choice-btn.correct {
+            background: linear-gradient(135deg, var(--success-color), #00FA9A);
+            color: white;
+            border-color: var(--success-color);
+            animation: correctAnswer 0.6s ease;
+        }
+        
+        .choice-btn.incorrect {
+            background: linear-gradient(135deg, var(--danger-color), #FF8A80);
+            color: white;
+            border-color: var(--danger-color);
+            animation: incorrectAnswer 0.6s ease;
+        }
+        
+        @keyframes correctAnswer {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes incorrectAnswer {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+            100% { transform: translateX(0); }
+        }
+        
+        /* Action Buttons */
+        .action-buttons {
+            margin-top: 40px;
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .action-btn {
+            padding: 18px 35px;
+            border: none;
+            border-radius: 15px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 150px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .next-phase-btn {
+            background: linear-gradient(135deg, var(--klein-blue), var(--light-blue));
+            color: white;
+        }
+        
+        .know-btn {
+            background: linear-gradient(135deg, var(--success-color), #00FA9A);
+            color: white;
+        }
+        
+        .dont-know-btn {
+            background: linear-gradient(135deg, var(--danger-color), #FF8A80);
+            color: white;
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
         }
         
         .speak-btn {
@@ -360,198 +792,1079 @@
             color: white;
             border: none;
             border-radius: 50px;
-            padding: 12px 24px;
-            font-size: 16px;
+            padding: 15px 30px;
+            font-size: 18px;
             cursor: pointer;
-            margin: 15px 0 30px 0;
+            margin: 20px 0;
             transition: all 0.3s ease;
+            font-weight: 600;
         }
         
         .speak-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 10px 25px rgba(23, 162, 184, 0.3);
+            transform: scale(1.1);
+            box-shadow: 0 15px 30px rgba(23, 162, 184, 0.3);
         }
         
-        .definition-section {
-            margin: 30px 0;
-            padding: 20px;
-            background: rgba(102, 126, 234, 0.1);
-            border-radius: 15px;
-            text-align: left;
-        }
-        
-        .definition-text {
-            font-size: 18px;
-            color: #333;
-            margin-bottom: 15px;
-            line-height: 1.6;
-        }
-        
-        .example-text {
-            font-style: italic;
-            color: #666;
-            font-size: 16px;
-            border-left: 3px solid #667eea;
-            padding-left: 15px;
-        }
-        
-        .choice-section {
-            margin-top: 30px;
-        }
-        
-        .choices {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-top: 20px;
-        }
-        
-        .choice-btn {
-            background: rgba(255, 255, 255, 0.9);
-            border: 2px solid #e1e5e9;
-            border-radius: 12px;
-            padding: 15px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            min-height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .choice-btn:hover {
-            border-color: #667eea;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.2);
-        }
-        
-        .choice-btn.correct {
-            background: linear-gradient(135deg, #4facfe, #00f2fe);
-            color: white;
-            border-color: #4facfe;
-        }
-        
-        .choice-btn.incorrect {
-            background: linear-gradient(135deg, #ff6b6b, #ffa8a8);
-            color: white;
-            border-color: #ff6b6b;
-        }
-        
-        .action-buttons {
-            margin-top: 30px;
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-        }
-        
-        .action-btn {
-            padding: 15px 30px;
-            border: none;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            min-width: 120px;
-        }
-        
-        .show-answer-btn {
-            background: linear-gradient(135deg, #4facfe, #00f2fe);
-            color: white;
-        }
-        
-        .know-btn {
-            background: linear-gradient(135deg, #4facfe, #00f2fe);
-            color: white;
-        }
-        
-        .dont-know-btn {
-            background: linear-gradient(135deg, #ff6b6b, #ffa8a8);
-            color: white;
-        }
-        
-        .next-btn {
-            background: linear-gradient(135deg, #28a745, #20c997);
-            color: white;
-        }
-        
-        .action-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-        }
-        
+        /* Completion Screen */
         .completion-card {
             text-align: center;
-            padding: 40px;
+            padding: 50px;
         }
         
         .completion-icon {
-            font-size: 64px;
-            margin-bottom: 20px;
+            font-size: 80px;
+            margin-bottom: 30px;
+            animation: bounce 1s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
         }
         
         .completion-title {
-            font-size: 28px;
+            font-size: 32px;
             font-weight: bold;
-            color: #667eea;
-            margin-bottom: 15px;
+            color: var(--klein-blue);
+            margin-bottom: 20px;
         }
         
         .completion-text {
-            font-size: 18px;
-            color: #666;
-            margin-bottom: 30px;
+            font-size: 20px;
+            color: var(--dark-gray);
+            margin-bottom: 40px;
+            line-height: 1.5;
         }
         
         .back-btn {
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: linear-gradient(135deg, var(--klein-blue), var(--light-blue));
             color: white;
             border: none;
-            border-radius: 12px;
-            padding: 15px 30px;
-            font-size: 16px;
-            font-weight: 600;
+            border-radius: 15px;
+            padding: 20px 40px;
+            font-size: 18px;
+            font-weight: 700;
             cursor: pointer;
             transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
         
         .back-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(0, 47, 167, 0.3);
         }
         
         .hidden { display: none; }
         
         .status {
-            padding: 15px;
-            border-radius: 12px;
-            margin: 15px 0;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
             text-align: center;
-            font-weight: 500;
+            font-weight: 600;
+            font-size: 16px;
         }
         
-        .status.success { background: rgba(40, 167, 69, 0.1); color: #155724; }
-        .status.error { background: rgba(220, 53, 69, 0.1); color: #721c24; }
-        .status.info { background: rgba(23, 162, 184, 0.1); color: #0c5460; }
-        .status.warning { background: rgba(255, 193, 7, 0.1); color: #856404; }
+        .status.success { background: rgba(0, 255, 127, 0.1); color: #008F47; }
+        .status.error { background: rgba(255, 107, 107, 0.1); color: #D63384; }
+        .status.info { background: rgba(65, 105, 225, 0.1); color: var(--klein-blue); }
+        .status.warning { background: rgba(255, 215, 0, 0.1); color: #B8860B; }
         
+        /* Assignment and Error Notebook Styles */
+        .assignment-form {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark-gray);
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 16px;
+            background: white;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-select:focus {
+            outline: none;
+            border-color: var(--klein-blue);
+        }
+
+        .form-select[multiple] {
+            height: 120px;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .save-btn, .cancel-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .save-btn {
+            background: linear-gradient(135deg, var(--klein-blue), var(--light-blue));
+            color: white;
+        }
+
+        .save-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 47, 167, 0.3);
+        }
+
+        .cancel-btn {
+            background: #6c757d;
+            color: white;
+        }
+
+        .cancel-btn:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        .add-question-btn {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 20px 0;
+        }
+
+        .add-question-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(40, 167, 69, 0.3);
+        }
+
+        .child-selector {
+            margin-right: 15px;
+        }
+
+        .child-selector select {
+            padding: 8px 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            background: white;
+            font-size: 14px;
+            min-width: 150px;
+        }
+
+        .child-selector select:focus {
+            outline: none;
+            border-color: var(--klein-blue);
+        }
+
+        .theme-selector {
+            margin-right: 15px;
+        }
+
+        .theme-selector select {
+            padding: 8px 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            background: white;
+            font-size: 14px;
+            min-width: 180px;
+            color: #6c757d;
+        }
+
+        .theme-selector select:focus {
+            outline: none;
+            border-color: var(--klein-blue);
+        }
+
+        /* CSV Import Styles */
+        .csv-import-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .import-tabs {
+            display: flex;
+            gap: 0;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .import-tab {
+            flex: 1;
+            padding: 15px 20px;
+            border: none;
+            background: #f8f9fa;
+            color: #6c757d;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .import-tab.active {
+            background: var(--klein-blue);
+            color: white;
+        }
+
+        .import-tab:hover:not(.active) {
+            background: #e9ecef;
+        }
+
+        .import-section {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .import-instructions {
+            margin-bottom: 25px;
+        }
+
+        .import-instructions h3 {
+            color: var(--klein-blue);
+            margin-bottom: 15px;
+        }
+
+        .import-instructions p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .template-download {
+            margin-top: 15px;
+        }
+
+        .template-btn {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 15px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .template-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(40, 167, 69, 0.3);
+        }
+
+        .assignment-selector {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .assignment-selector label {
+            font-weight: 600;
+            color: var(--dark-gray);
+            white-space: nowrap;
+        }
+
+        .assignment-selector select {
+            flex: 1;
+        }
+
+        .refresh-btn {
+            background: var(--klein-blue);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .refresh-btn:hover {
+            background: #0056b3;
+        }
+
+        .file-upload-area {
+            border: 2px dashed #ddd;
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        .file-upload-area:hover {
+            border-color: var(--klein-blue);
+            background: rgba(0, 47, 167, 0.05);
+        }
+
+        .file-upload-area.dragover {
+            border-color: var(--klein-blue);
+            background: rgba(0, 47, 167, 0.1);
+        }
+
+        .upload-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .upload-icon {
+            font-size: 48px;
+            color: #ccc;
+        }
+
+        .upload-text {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--dark-gray);
+        }
+
+        .upload-hint {
+            font-size: 14px;
+            color: #999;
+        }
+
+        .upload-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .upload-btn {
+            background: linear-gradient(135deg, var(--klein-blue), var(--light-blue));
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .upload-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 47, 167, 0.3);
+        }
+
+        .import-results {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .import-footer {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .back-btn {
+            background: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        /* Rewards Center Styles */
+        .rewards-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .rewards-tabs {
+            display: flex;
+            gap: 0;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .rewards-tab {
+            flex: 1;
+            padding: 15px 20px;
+            border: none;
+            background: #f8f9fa;
+            color: #6c757d;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .rewards-tab.active {
+            background: #ffc107;
+            color: #212529;
+        }
+
+        .rewards-tab:hover:not(.active) {
+            background: #e9ecef;
+        }
+
+        .rewards-section {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .rewards-instructions {
+            margin-bottom: 25px;
+        }
+
+        .rewards-instructions h3 {
+            color: var(--klein-blue);
+            margin-bottom: 15px;
+        }
+
+        .rewards-instructions p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .app-card {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .app-card.unlocked {
+            background: linear-gradient(135deg, #d4edda, #c3e6cb);
+            border: 2px solid #28a745;
+        }
+
+        .app-card.active {
+            background: linear-gradient(135deg, #d1ecf1, #b8daff);
+            border: 2px solid #17a2b8;
+            box-shadow: 0 8px 25px rgba(23, 162, 184, 0.3);
+        }
+
+        .app-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+
+        .app-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .app-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--dark-gray);
+            margin-bottom: 8px;
+        }
+
+        .app-description {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        .app-requirement {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 15px;
+            padding: 8px 12px;
+            background: rgba(0,0,0,0.05);
+            border-radius: 20px;
+            display: inline-block;
+        }
+
+        .app-status {
+            font-size: 14px;
+            font-weight: 600;
+            padding: 8px 16px;
+            border-radius: 20px;
+            display: inline-block;
+        }
+
+        .app-status.locked {
+            background: #ffc107;
+            color: #212529;
+        }
+
+        .app-status.unlocked {
+            background: #28a745;
+            color: white;
+        }
+
+        .app-status.active {
+            background: #17a2b8;
+            color: white;
+        }
+
+        .app-timer {
+            font-size: 12px;
+            color: #dc3545;
+            margin-top: 8px;
+            font-weight: 600;
+        }
+
+        .achievement-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+        }
+
+        .achievement-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            border-left: 5px solid #ddd;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .achievement-card.earned {
+            border-left-color: #ffc107;
+            background: linear-gradient(135deg, #fff8dc, #f0f8ff);
+            box-shadow: 0 5px 15px rgba(255, 193, 7, 0.2);
+        }
+
+        .achievement-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .achievement-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .achievement-icon {
+            font-size: 36px;
+        }
+
+        .achievement-info h4 {
+            margin: 0 0 5px 0;
+            color: var(--dark-gray);
+            font-size: 18px;
+        }
+
+        .achievement-info .achievement-description {
+            margin: 0;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .achievement-progress {
+            margin-top: 15px;
+        }
+
+        .progress-bar {
+            background: #e9ecef;
+            border-radius: 10px;
+            height: 8px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ffc107, #fd7e14);
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+        }
+
+        .achievement-reward {
+            background: rgba(255, 193, 7, 0.1);
+            border-radius: 8px;
+            padding: 10px;
+            margin-top: 15px;
+            text-align: center;
+            font-size: 12px;
+            color: #856404;
+        }
+
+        .rewards-footer {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        /* Student-only elements */
+        .student-only {
+            display: block;
+        }
+
+        /* Role-based visibility */
+        .parent-only .student-only,
+        .teacher-only .student-only,
+        .admin-only .student-only {
+            display: none !important;
+        }
+
+        /* Age-based UI Themes */
+        
+        /* Elementary (Grades 1-5) - Playful and colorful */
+        .theme-elementary {
+            --primary-gradient: linear-gradient(135deg, #ff6b6b, #feca57);
+            --secondary-gradient: linear-gradient(135deg, #48cae4, #00b4d8);
+            --accent-color: #ff6b6b;
+            --font-size-base: 18px;
+            --border-radius: 20px;
+            --button-padding: 16px 24px;
+            --card-padding: 30px;
+        }
+
+        .theme-elementary .mode-btn {
+            background: var(--primary-gradient);
+            border-radius: var(--border-radius);
+            padding: var(--button-padding);
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.3);
+            transform: scale(1.05);
+        }
+
+        .theme-elementary .mode-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 12px 35px rgba(255, 107, 107, 0.4);
+        }
+
+        .theme-elementary .word-display {
+            font-size: 56px;
+            color: #ff6b6b;
+            text-shadow: 2px 2px 8px rgba(255, 107, 107, 0.3);
+        }
+
+        .theme-elementary .word-card {
+            background: linear-gradient(135deg, #fff5f5, #ffe8e8);
+            border: 3px solid #ff6b6b;
+            border-radius: 25px;
+            padding: 40px;
+        }
+
+        .theme-elementary .app-header {
+            background: var(--primary-gradient);
+        }
+
+        /* Middle School (Grades 6-8) - Balanced and engaging */
+        .theme-middle {
+            --primary-gradient: linear-gradient(135deg, #667eea, #764ba2);
+            --secondary-gradient: linear-gradient(135deg, #29b6f6, #1e88e5);
+            --accent-color: #667eea;
+            --font-size-base: 16px;
+            --border-radius: 15px;
+            --button-padding: 14px 20px;
+            --card-padding: 25px;
+        }
+
+        .theme-middle .mode-btn {
+            background: var(--primary-gradient);
+            border-radius: var(--border-radius);
+            padding: var(--button-padding);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .theme-middle .word-display {
+            font-size: 48px;
+            color: #667eea;
+        }
+
+        .theme-middle .word-card {
+            background: linear-gradient(135deg, #f8f9ff, #f0f3ff);
+            border: 2px solid #667eea;
+            border-radius: 20px;
+            padding: 35px;
+        }
+
+        /* High School (Grades 9-12) - Professional and sophisticated */
+        .theme-high {
+            --primary-gradient: linear-gradient(135deg, #2c3e50, #34495e);
+            --secondary-gradient: linear-gradient(135deg, #3498db, #2980b9);
+            --accent-color: #3498db;
+            --font-size-base: 15px;
+            --border-radius: 12px;
+            --button-padding: 12px 18px;
+            --card-padding: 20px;
+        }
+
+        .theme-high .mode-btn {
+            background: var(--primary-gradient);
+            border-radius: var(--border-radius);
+            padding: var(--button-padding);
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.2);
+        }
+
+        .theme-high .word-display {
+            font-size: 42px;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+
+        .theme-high .word-card {
+            background: linear-gradient(135deg, #ffffff, #f8f9fa);
+            border: 1px solid #e9ecef;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+
+        /* Dynamic font sizes based on grade level */
+        .grade-1-3 {
+            font-size: 20px;
+            line-height: 1.8;
+        }
+
+        .grade-4-6 {
+            font-size: 18px;
+            line-height: 1.7;
+        }
+
+        .grade-7-9 {
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .grade-10-12 {
+            font-size: 15px;
+            line-height: 1.5;
+        }
+
+        /* Simplified UI for younger students */
+        .theme-elementary .stats-dashboard {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .theme-elementary .stat-card {
+            padding: 25px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, #ff9ff3, #f368e0);
+            color: white;
+            text-align: center;
+        }
+
+        .theme-elementary .stat-number {
+            font-size: 36px;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        /* Age-appropriate button sizes */
+        .theme-elementary .action-btn {
+            padding: 18px 28px;
+            font-size: 18px;
+            border-radius: 25px;
+        }
+
+        .theme-middle .action-btn {
+            padding: 14px 22px;
+            font-size: 16px;
+            border-radius: 15px;
+        }
+
+        .theme-high .action-btn {
+            padding: 12px 20px;
+            font-size: 14px;
+            border-radius: 10px;
+        }
+
+        /* Motivational elements for younger students */
+        .theme-elementary .completion-icon {
+            font-size: 120px;
+            animation: bounce 1s infinite, rainbow 3s infinite;
+        }
+
+        @keyframes rainbow {
+            0% { filter: hue-rotate(0deg); }
+            50% { filter: hue-rotate(180deg); }
+            100% { filter: hue-rotate(360deg); }
+        }
+
+        .theme-elementary .mode-btn-icon {
+            font-size: 32px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        /* Complexity adjustments */
+        .theme-elementary .advanced-features {
+            display: none;
+        }
+
+        .theme-high .basic-features {
+            display: none;
+        }
+
         /* Responsive Design */
         @media (max-width: 768px) {
-            .study-content { padding: 15px; }
-            .word-card { padding: 25px; margin: 0 10px; }
-            .word-display { font-size: 36px; }
+            .study-content { padding: 20px; }
+            .word-card { padding: 30px; margin: 0 15px; }
+            .word-display { font-size: 42px; }
             .choices { grid-template-columns: 1fr; }
             .action-buttons { flex-direction: column; }
             .mode-buttons { grid-template-columns: 1fr; }
             .stats-dashboard { grid-template-columns: repeat(2, 1fr); }
+            .word-image { width: 150px; height: 150px; }
+            .assignment-form { padding: 15px; }
+            .form-actions { flex-direction: column; }
+            .header-actions { flex-direction: column; gap: 10px; }
+            .child-selector { margin-right: 0; margin-bottom: 10px; }
         }
         
         @media (max-width: 480px) {
             .main-screen { padding: 15px; }
-            .app-header { padding: 15px; }
-            .mode-selection { padding: 20px; }
-            .word-display { font-size: 28px; }
+            .app-header { padding: 20px; }
+            .mode-selection { padding: 25px; }
+            .word-display { font-size: 32px; }
+            .login-card { padding: 30px; }
+        }
+
+        /* Analytics Dashboard Styles */
+        .analytics-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .analytics-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .analytics-header h2 {
+            color: var(--klein-blue);
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .analytics-header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .analytics-nav {
+            display: flex;
+            justify-content: center;
+            gap: 0;
+            margin-bottom: 30px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .analytics-tab {
+            flex: 1;
+            max-width: 200px;
+            padding: 15px 20px;
+            border: none;
+            background: #f8f9fa;
+            color: #6c757d;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .analytics-tab.active {
+            background: var(--klein-blue);
+            color: white;
+            box-shadow: 0 4px 15px rgba(68, 138, 255, 0.3);
+        }
+
+        .analytics-tab:hover:not(.active) {
+            background: #e9ecef;
+            transform: translateY(-2px);
+        }
+
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .analytics-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            border: 1px solid #f0f0f0;
+        }
+
+        .analytics-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.12);
+        }
+
+        .analytics-card h3 {
+            color: var(--klein-blue);
+            margin-bottom: 20px;
+            font-size: 1.3em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .analytics-stat {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .analytics-stat:last-child {
+            border-bottom: none;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.95em;
+        }
+
+        .stat-value {
+            font-weight: 700;
+            font-size: 1.1em;
+            color: var(--dark-gray);
+        }
+
+        .stat-value.positive {
+            color: #28a745;
+        }
+
+        .stat-value.negative {
+            color: #dc3545;
+        }
+
+        .chart-placeholder {
+            height: 200px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6c757d;
+            font-style: italic;
+            margin-top: 15px;
+        }
+
+        .user-selector {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .user-selector label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--dark-gray);
+        }
+
+        .user-selector select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .export-section {
+            text-align: center;
+            margin-top: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, #f8f9fa, #ffffff);
+            border-radius: 15px;
+            border: 2px dashed #ddd;
+        }
+
+        .export-btn {
+            background: linear-gradient(135deg, var(--klein-blue), #20c997);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 15px 30px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 0 10px;
+        }
+
+        .export-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(68, 138, 255, 0.3);
         }
     </style>
 </head>
@@ -562,10 +1875,20 @@
             <div class="login-card">
                 <div class="app-logo">📚</div>
                 <div class="app-title">VocabMaster</div>
-                <div class="app-subtitle">Master English Vocabulary with Visual Learning</div>
+                <div class="app-subtitle">Visual Memory Learning System<br>Inspired by Baicizhan Method</div>
                 
                 <div class="input-group">
-                    <input type="text" id="nameInput" class="form-input" placeholder="Enter your name" maxlength="20" autocomplete="name">
+                    <select id="nameSelect" class="form-select" required>
+                        <option value="">Select Your Account</option>
+                        <option value="Michael">Michael</option>
+                        <option value="August">August</option>
+                        <option value="Dan">Dan</option>
+                        <option value="Grace">Grace</option>
+                    </select>
+                </div>
+                
+                <div class="input-group">
+                    <input type="password" id="passwordInput" class="form-input" placeholder="Enter password" required>
                 </div>
                 
                 <button onclick="login()" class="start-btn">🚀 Start Learning</button>
@@ -582,10 +1905,28 @@
                     <div class="app-logo">📚</div>
                     <div>
                         <div class="header-title">VocabMaster</div>
-                        <div class="user-greeting">Hello, <span id="userName"></span>!</div>
+                        <div class="user-greeting">
+                            Welcome back, <span id="userName"></span>!
+                            <span id="userRole" class="user-role-badge"></span>
+                        </div>
                     </div>
                 </div>
-                <button class="logout-btn" onclick="logout()">Logout</button>
+                <div class="header-actions">
+                    <div id="childSelector" class="child-selector hidden">
+                        <select id="childSelect" onchange="switchChild()">
+                            <option value="">Select Child</option>
+                        </select>
+                    </div>
+                    <div id="themeSelector" class="theme-selector hidden">
+                        <select id="themeSelect" onchange="switchTheme()">
+                            <option value="">Theme Preview</option>
+                            <option value="1">Elementary (Grades 1-5)</option>
+                            <option value="6">Middle School (Grades 6-8)</option>
+                            <option value="9">High School (Grades 9-12)</option>
+                        </select>
+                    </div>
+                    <button class="logout-btn" onclick="logout()">Logout</button>
+                </div>
             </div>
             
             <!-- Stats Dashboard -->
@@ -606,6 +1947,28 @@
                     <div class="stat-number" id="dueToday">0</div>
                     <div class="stat-label">Due Today</div>
                 </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="dailyTarget">0</div>
+                    <div class="stat-label">Daily Target</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="todayProgress">0</div>
+                    <div class="stat-label">Today's Progress</div>
+                </div>
+            </div>
+            
+            <!-- Daily Progress Section -->
+            <div class="daily-progress-section">
+                <div class="progress-header">
+                    <h3>📈 Today's Learning Progress</h3>
+                    <span id="progressPercentage">0%</span>
+                </div>
+                <div class="daily-progress-bar">
+                    <div class="daily-progress-fill" id="dailyProgressFill" style="width: 0%;"></div>
+                </div>
+                <div class="progress-details">
+                    <span id="progressText">0 / 0 words completed today</span>
+                </div>
             </div>
             
             <div id="mainStatus"></div>
@@ -613,11 +1976,12 @@
             <!-- Mode Selection -->
             <div class="mode-selection">
                 <div class="mode-title">Choose Your Learning Mode</div>
-                <div class="mode-buttons">
+                <div class="mode-buttons" id="modeButtons">
+                    <!-- Student modes -->
                     <button class="mode-btn" onclick="startLearning()" id="learnBtn">
                         <div class="mode-btn-icon">📖</div>
                         <div>Learn New Words</div>
-                        <div class="mode-btn-text">Discover new vocabulary</div>
+                        <div class="mode-btn-text">Three-phase visual learning</div>
                     </button>
                     <button class="mode-btn review" onclick="startReview()" id="reviewBtn">
                         <div class="mode-btn-icon">🔄</div>
@@ -626,8 +1990,46 @@
                     </button>
                     <button class="mode-btn practice" onclick="showAllWords()">
                         <div class="mode-btn-icon">📝</div>
-                        <div>Browse All Words</div>
-                        <div class="mode-btn-text">View your vocabulary</div>
+                        <div>Browse Collection</div>
+                        <div class="mode-btn-text">View all vocabulary</div>
+                    </button>
+                    <button class="mode-btn" onclick="showAssignments()" id="assignmentsBtn">
+                        <div class="mode-btn-icon">📝</div>
+                        <div>Assignments</div>
+                        <div class="mode-btn-text">Homework & Practice</div>
+                    </button>
+                    <button class="mode-btn" onclick="showErrorNotebook()" id="errorsBtn">
+                        <div class="mode-btn-icon">❌</div>
+                        <div>Error Notebook</div>
+                        <div class="mode-btn-text">Review wrong answers</div>
+                    </button>
+                    <button class="mode-btn student-only" onclick="showRewards()" id="rewardsBtn">
+                        <div class="mode-btn-icon">🏆</div>
+                        <div>Rewards Center</div>
+                        <div class="mode-btn-text">iPad apps & achievements</div>
+                    </button>
+                    
+                    <!-- Parent/Teacher modes -->
+                    <button class="mode-btn parent-only hidden" onclick="showCreateAssignment()" id="createAssignmentBtn">
+                        <div class="mode-btn-icon">➕</div>
+                        <div>Create Assignment</div>
+                        <div class="mode-btn-text">Set homework for students</div>
+                    </button>
+                    <button class="mode-btn parent-only hidden" onclick="showParentDashboard()" id="parentDashboardBtn">
+                        <div class="mode-btn-icon">👨‍👩‍👧‍👦</div>
+                        <div>Parent Dashboard</div>
+                        <div class="mode-btn-text">Monitor child's progress</div>
+                    </button>
+                    <button class="mode-btn parent-only hidden advanced-features" onclick="showCSVImport()" id="csvImportBtn">
+                        <div class="mode-btn-icon">📁</div>
+                        <div>CSV Import</div>
+                        <div class="mode-btn-text">Bulk import content</div>
+                    </button>
+
+                    <button class="mode-btn parent-only hidden advanced-features" onclick="showAnalyticsDashboard()" id="analyticsDashboardBtn">
+                        <div class="mode-btn-icon">📈</div>
+                        <div>数据分析</div>
+                        <div class="mode-btn-text">Learning analytics & reports</div>
                     </button>
                 </div>
             </div>
@@ -637,14 +2039,342 @@
                 <div class="mode-title">📚 Your Vocabulary Collection</div>
                 <div id="wordsList">Loading words...</div>
             </div>
+
+            <!-- Assignments Section -->
+            <div id="assignmentsSection" class="mode-selection hidden">
+                <div class="mode-title">📝 Assignments</div>
+                <div id="assignmentsList">Loading assignments...</div>
+            </div>
+
+            <!-- Error Notebook Section -->
+            <div id="errorNotebookSection" class="mode-selection hidden">
+                <div class="mode-title">❌ Error Notebook</div>
+                <div id="errorsList">Loading wrong answers...</div>
+            </div>
+
+            <!-- Create Assignment Section (Parents/Teachers) -->
+            <div id="createAssignmentSection" class="mode-selection hidden">
+                <div class="mode-title">➕ Create New Assignment</div>
+                <div class="assignment-form">
+                    <div class="form-group">
+                        <label>Assignment Title:</label>
+                        <input type="text" id="assignmentTitle" class="form-input" placeholder="Enter assignment title">
+                    </div>
+                    <div class="form-group">
+                        <label>Description:</label>
+                        <textarea id="assignmentDescription" class="form-input" placeholder="Assignment description (optional)"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Due Date:</label>
+                        <input type="datetime-local" id="assignmentDueDate" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label>Target Students:</label>
+                        <select id="targetStudents" class="form-select" multiple>
+                            <!-- Will be populated dynamically -->
+                        </select>
+                    </div>
+                    <div id="questionsContainer">
+                        <h3>Questions:</h3>
+                        <div id="questionsList"></div>
+                        <button type="button" onclick="addQuestion()" class="add-question-btn">+ Add Question</button>
+                    </div>
+                    <div class="form-actions">
+                        <button onclick="saveAssignment()" class="save-btn">Save Assignment</button>
+                        <button onclick="hideCreateAssignment()" class="cancel-btn">Cancel</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Parent Dashboard Section -->
+            <div id="parentDashboardSection" class="mode-selection hidden">
+                <div class="mode-title">👨‍👩‍👧‍👦 Parent Dashboard</div>
+                <div id="parentDashboardContent">Loading dashboard...</div>
+            </div>
+
+            <!-- Rewards Center Section -->
+            <div id="rewardsSection" class="mode-selection hidden">
+                <div class="mode-title">🏆 Rewards Center</div>
+                <div class="rewards-container">
+                    <div class="rewards-tabs">
+                        <button class="rewards-tab active" onclick="switchRewardsTab('apps')">iPad Apps</button>
+                        <button class="rewards-tab" onclick="switchRewardsTab('achievements')">Achievements</button>
+                    </div>
+                    
+                    <!-- iPad Apps -->
+                    <div id="appsRewards" class="rewards-section">
+                        <div class="rewards-instructions">
+                            <h3>🎮 Unlock iPad Apps</h3>
+                            <p>Complete learning goals to unlock exciting iPad apps for limited time access!</p>
+                        </div>
+                        <div id="appsList">Loading apps...</div>
+                    </div>
+                    
+                    <!-- Achievements -->
+                    <div id="achievementsRewards" class="rewards-section hidden">
+                        <div class="rewards-instructions">
+                            <h3>🌟 Your Achievements</h3>
+                            <p>Track your learning milestones and unlock rewards!</p>
+                        </div>
+                        <div id="achievementsList">Loading achievements...</div>
+                    </div>
+                    
+                    <div class="rewards-footer">
+                        <button onclick="hideRewards()" class="back-btn">🔙 Back to Main</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CSV Import Section -->
+            <div id="csvImportSection" class="mode-selection hidden">
+                <div class="mode-title">📁 CSV Bulk Import</div>
+                <div class="csv-import-container">
+                    <div class="import-tabs">
+                        <button class="import-tab active" onclick="switchImportTab('vocabulary')">Vocabulary</button>
+                        <button class="import-tab" onclick="switchImportTab('questions')">Questions</button>
+                    </div>
+                    
+                    <!-- Vocabulary Import -->
+                    <div id="vocabularyImport" class="import-section">
+                        <div class="import-instructions">
+                            <h3>Import Vocabulary Words</h3>
+                            <p>Upload a CSV file containing vocabulary words. Required columns: <strong>word, meaning</strong></p>
+                            <p>Optional columns: example, difficulty_level, grade_level, subject</p>
+                            <div class="template-download">
+                                <button onclick="downloadTemplate('vocabulary')" class="template-btn">📥 Download Template</button>
+                            </div>
+                        </div>
+                        
+                        <div class="file-upload-area" id="vocabularyUploadArea">
+                            <input type="file" id="vocabularyFile" accept=".csv" style="display: none;" onchange="handleFileSelect('vocabulary')">
+                            <div class="upload-placeholder" onclick="document.getElementById('vocabularyFile').click()">
+                                <div class="upload-icon">📁</div>
+                                <div class="upload-text">Click to select CSV file or drag and drop</div>
+                                <div class="upload-hint">Maximum file size: 5MB</div>
+                            </div>
+                        </div>
+                        
+                        <div class="upload-actions hidden" id="vocabularyActions">
+                            <button onclick="uploadVocabulary()" class="upload-btn">🚀 Import Vocabulary</button>
+                            <button onclick="cancelUpload('vocabulary')" class="cancel-btn">Cancel</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Questions Import -->
+                    <div id="questionsImport" class="import-section hidden">
+                        <div class="import-instructions">
+                            <h3>Import Questions</h3>
+                            <p>Upload a CSV file containing questions for assignments. Required columns: <strong>question_text, question_type, correct_answer</strong></p>
+                            <p>Optional columns: options, points, explanation, math_formula, tolerance</p>
+                            <div class="template-download">
+                                <button onclick="downloadTemplate('questions')" class="template-btn">📥 Download Template</button>
+                            </div>
+                        </div>
+                        
+                        <div class="assignment-selector">
+                            <label>Select Assignment:</label>
+                            <select id="assignmentSelect" class="form-select">
+                                <option value="">Choose an assignment...</option>
+                            </select>
+                            <button onclick="loadAssignments()" class="refresh-btn">🔄 Refresh</button>
+                        </div>
+                        
+                        <div class="file-upload-area" id="questionsUploadArea">
+                            <input type="file" id="questionsFile" accept=".csv" style="display: none;" onchange="handleFileSelect('questions')">
+                            <div class="upload-placeholder" onclick="document.getElementById('questionsFile').click()">
+                                <div class="upload-icon">📁</div>
+                                <div class="upload-text">Click to select CSV file or drag and drop</div>
+                                <div class="upload-hint">Maximum file size: 5MB</div>
+                            </div>
+                        </div>
+                        
+                        <div class="upload-actions hidden" id="questionsActions">
+                            <button onclick="uploadQuestions()" class="upload-btn">🚀 Import Questions</button>
+                            <button onclick="cancelUpload('questions')" class="cancel-btn">Cancel</button>
+                        </div>
+                    </div>
+                    
+                    <div id="importResults" class="import-results hidden"></div>
+                    
+                    <div class="import-footer">
+                        <button onclick="hideCSVImport()" class="back-btn">🔙 Back to Main</button>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <!-- Study Screen -->
+        <!-- Analytics Dashboard -->
+        <div id="analyticsScreen" class="main-screen hidden">
+            <div class="screen-header">
+                <h1>📈 数据分析报告</h1>
+                <button onclick="hideAnalyticsDashboard()" class="close-btn">✕ Close</button>
+            </div>
+            
+            <div class="analytics-container">
+                <div class="analytics-header">
+                    <h2>Learning Analytics Dashboard</h2>
+                    <p>Comprehensive insights into learning progress and performance</p>
+                </div>
+
+                <!-- User Selector for Parents/Teachers -->
+                <div class="user-selector" id="analyticsUserSelector" style="display: none;">
+                    <label for="analyticsUserSelect">Select Student:</label>
+                    <select id="analyticsUserSelect" onchange="loadAnalyticsData()">
+                        <option value="">Choose a student...</option>
+                    </select>
+                </div>
+
+                <!-- Analytics Navigation -->
+                <div class="analytics-nav">
+                    <button class="analytics-tab active" onclick="switchAnalyticsTab('overview')">总览</button>
+                    <button class="analytics-tab" onclick="switchAnalyticsTab('learning')">学习进度</button>
+                    <button class="analytics-tab" onclick="switchAnalyticsTab('performance')">表现分析</button>
+                    <button class="analytics-tab" onclick="switchAnalyticsTab('reports')">详细报告</button>
+                </div>
+
+                <!-- Overview Tab -->
+                <div id="overviewAnalytics" class="analytics-content">
+                    <div class="analytics-grid">
+                        <div class="analytics-card">
+                            <h3>📚 学习概况</h3>
+                            <div class="analytics-stat">
+                                <span class="stat-label">总学习天数</span>
+                                <span class="stat-value" id="totalDays">-</span>
+                            </div>
+                            <div class="analytics-stat">
+                                <span class="stat-label">连续学习天数</span>
+                                <span class="stat-value" id="streakDays">-</span>
+                            </div>
+                            <div class="analytics-stat">
+                                <span class="stat-label">总学习时间</span>
+                                <span class="stat-value" id="totalTime">-</span>
+                            </div>
+                            <div class="analytics-stat">
+                                <span class="stat-label">平均每日学习时间</span>
+                                <span class="stat-value" id="avgDailyTime">-</span>
+                            </div>
+                        </div>
+
+                        <div class="analytics-card">
+                            <h3>📖 词汇掌握</h3>
+                            <div class="analytics-stat">
+                                <span class="stat-label">已学习单词</span>
+                                <span class="stat-value" id="wordsLearned">-</span>
+                            </div>
+                            <div class="analytics-stat">
+                                <span class="stat-label">已掌握单词</span>
+                                <span class="stat-value positive" id="wordsMastered">-</span>
+                            </div>
+                            <div class="analytics-stat">
+                                <span class="stat-label">需要复习</span>
+                                <span class="stat-value negative" id="wordsReview">-</span>
+                            </div>
+                            <div class="analytics-stat">
+                                <span class="stat-label">掌握率</span>
+                                <span class="stat-value" id="masteryRate">-</span>
+                            </div>
+                        </div>
+
+                        <div class="analytics-card">
+                            <h3>✅ 作业表现</h3>
+                            <div class="analytics-stat">
+                                <span class="stat-label">完成作业数</span>
+                                <span class="stat-value" id="assignmentsCompleted">-</span>
+                            </div>
+                            <div class="analytics-stat">
+                                <span class="stat-label">平均得分</span>
+                                <span class="stat-value" id="avgScore">-</span>
+                            </div>
+                            <div class="analytics-stat">
+                                <span class="stat-label">最高得分</span>
+                                <span class="stat-value positive" id="highestScore">-</span>
+                            </div>
+                            <div class="analytics-stat">
+                                <span class="stat-label">提交及时率</span>
+                                <span class="stat-value" id="onTimeRate">-</span>
+                            </div>
+                        </div>
+
+                        <div class="analytics-card">
+                            <h3>📊 学习趋势</h3>
+                            <div class="chart-placeholder">
+                                Learning Progress Chart
+                                <br>
+                                <small>(Chart visualization would go here)</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Learning Tab -->
+                <div id="learningAnalytics" class="analytics-content hidden">
+                    <div class="analytics-grid">
+                        <div class="analytics-card">
+                            <h3>📈 学习进度分析</h3>
+                            <div class="analytics-stat">
+                                <span class="stat-label">本周新学单词</span>
+                                <span class="stat-value" id="weeklyNewWords">-</span>
+                            </div>
+                            <div class="analytics-stat">
+                                <span class="stat-label">本月新学单词</span>
+                                <span class="stat-value" id="monthlyNewWords">-</span>
+                            </div>
+                            <div class="analytics-stat">
+                                <span class="stat-label">最活跃时间段</span>
+                                <span class="stat-value" id="peakTime">-</span>
+                            </div>
+                        </div>
+
+                        <div class="analytics-card">
+                            <h3>🎯 难点词汇</h3>
+                            <div id="difficultWords">Loading...</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Performance Tab -->
+                <div id="performanceAnalytics" class="analytics-content hidden">
+                    <div class="analytics-grid">
+                        <div class="analytics-card">
+                            <h3>🎭 学科表现</h3>
+                            <div id="subjectPerformance">Loading...</div>
+                        </div>
+
+                        <div class="analytics-card">
+                            <h3>🔄 错题分析</h3>
+                            <div id="errorAnalysis">Loading...</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reports Tab -->
+                <div id="reportsAnalytics" class="analytics-content hidden">
+                    <div class="analytics-grid">
+                        <div class="analytics-card">
+                            <h3>📋 详细报告</h3>
+                            <div id="detailedReports">Loading...</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Export Section -->
+                <div class="export-section">
+                    <h3>📤 导出报告</h3>
+                    <p>生成并导出学习报告用于存档或分享</p>
+                    <button class="export-btn" onclick="exportReport('pdf')">📄 导出PDF报告</button>
+                    <button class="export-btn" onclick="exportReport('excel')">📊 导出Excel数据</button>
+                    <button class="export-btn" onclick="exportReport('csv')">📋 导出CSV数据</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Study Screen with Three Phases -->
         <div id="studyScreen" class="study-screen hidden">
             <div class="study-header">
                 <div class="progress-info">
                     <span id="currentIndex">1</span> / <span id="totalCount">10</span>
                 </div>
+                <div class="phase-indicator" id="phaseIndicator">Phase 1: Context</div>
                 <button class="close-study" onclick="closeStudy()">✕ Close</button>
             </div>
             <div class="progress-bar">
@@ -653,33 +2383,43 @@
             
             <div class="study-content">
                 <div class="word-card" id="wordCard">
-                    <!-- Learning Phase -->
-                    <div id="learningPhase">
+                    <!-- Phase 1: Sentence + Image -->
+                    <div id="phase1" class="phase-content">
+                        <div class="phase-sentence" id="phaseSentence">Loading sentence...</div>
+                        <div class="word-image" id="wordImage">🎯</div>
+                        <div class="action-buttons">
+                            <button class="action-btn next-phase-btn" onclick="nextPhase()">Next Phase</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Phase 2: Word + Image -->
+                    <div id="phase2" class="phase-content hidden">
                         <div class="word-display" id="currentWord">Loading...</div>
                         <div class="word-phonetic" id="wordPhonetic"></div>
                         <button class="speak-btn" onclick="speakWord()">🔊 Listen</button>
-                        
-                        <div class="definition-section hidden" id="definitionSection">
-                            <div class="definition-text" id="wordDefinition"></div>
-                            <div class="example-text" id="wordExample"></div>
-                        </div>
-                        
+                        <div class="word-image" id="wordImage2">🎯</div>
                         <div class="action-buttons">
-                            <button class="action-btn show-answer-btn" onclick="showDefinition()" id="showAnswerBtn">
-                                💡 Show Meaning
-                            </button>
-                            <div class="hidden" id="knowledgeButtons">
-                                <button class="action-btn know-btn" onclick="markAsKnown()">✅ I Know It</button>
-                                <button class="action-btn dont-know-btn" onclick="markAsUnknown()">❌ I Don't Know</button>
-                            </div>
+                            <button class="action-btn next-phase-btn" onclick="nextPhase()">Next Phase</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Phase 3: Word + Definition (Multiple Choice) -->
+                    <div id="phase3" class="phase-content hidden">
+                        <div class="word-display" id="currentWord3">Loading...</div>
+                        <div class="choices" id="choices">
+                            <!-- Multiple choice options will be inserted here -->
+                        </div>
+                        <div class="action-buttons hidden" id="phase3Actions">
+                            <button class="action-btn know-btn" onclick="markAsKnown()">✅ I Mastered It</button>
+                            <button class="action-btn dont-know-btn" onclick="markAsUnknown()">❌ Need More Practice</button>
                         </div>
                     </div>
                     
                     <!-- Completion Phase -->
                     <div id="completionPhase" class="completion-card hidden">
                         <div class="completion-icon">🎉</div>
-                        <div class="completion-title">Great Job!</div>
-                        <div class="completion-text">You've completed this learning session.</div>
+                        <div class="completion-title">Excellent Work!</div>
+                        <div class="completion-text">You've completed this three-phase learning session.<br>Your brain has formed stronger memory connections!</div>
                         <button class="back-btn" onclick="closeStudy()">📚 Back to Dashboard</button>
                     </div>
                 </div>
@@ -692,6 +2432,7 @@
         let currentUser = null;
         let currentWords = [];
         let currentWordIndex = 0;
+        let currentPhase = 1;
         let currentMode = 'learn';
         let stats = {};
         
@@ -726,24 +2467,50 @@
                 } catch (error) {
                     localStorage.removeItem('currentUser');
                 }
+            } else {
+                // Remember last selected user
+                const lastUser = localStorage.getItem('lastSelectedUser');
+                if (lastUser) {
+                    document.getElementById('nameSelect').value = lastUser;
+                }
             }
         }
 
-        // Login Function
+        // Login Function with Enhanced Validation
         async function login() {
-            const name = document.getElementById('nameInput').value.trim();
+            const name = document.getElementById('nameSelect').value;
+            const password = document.getElementById('passwordInput').value;
+            
+            // Input validation
             if (!name) {
-                showStatus('loginStatus', 'Please enter your name', 'error');
+                showStatus('loginStatus', 'Please select your account first', 'warning');
+                document.getElementById('nameSelect').focus();
+                return;
+            }
+            
+            if (!password) {
+                showStatus('loginStatus', 'Please enter your password', 'warning');
+                document.getElementById('passwordInput').focus();
+                return;
+            }
+            
+            if (password.length < 3) {
+                showStatus('loginStatus', 'Password must be at least 3 characters', 'warning');
                 return;
             }
 
-            showStatus('loginStatus', 'Connecting...', 'info');
+            // Show loading state
+            showStatus('loginStatus', '🔐 Authenticating...', 'info');
+            const loginBtn = document.querySelector('.start-btn');
+            const originalText = loginBtn.textContent;
+            loginBtn.textContent = '🔄 Logging in...';
+            loginBtn.disabled = true;
 
             try {
                 const response = await fetch(`${API}/api/login`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name })
+                    body: JSON.stringify({ name, password })
                 });
 
                 const result = await response.json();
@@ -751,14 +2518,41 @@
                 if (result.success) {
                     currentUser = result.user;
                     localStorage.setItem('currentUser', JSON.stringify(currentUser));
-                    showMainScreen();
-                    loadStats();
+                    localStorage.setItem('lastSelectedUser', name);
+                    
+                    // Success animation
+                    showStatus('loginStatus', '✅ Login successful! Welcome back!', 'success');
+                    loginBtn.textContent = '✅ Success!';
+                    
+                    setTimeout(() => {
+                        showMainScreen();
+                        loadStats();
+                    }, 1000);
                 } else {
-                    showStatus('loginStatus', 'Login failed', 'error');
+                    // Enhanced error messages
+                    let errorMessage = 'Login failed';
+                    if (result.error.includes('Invalid')) {
+                        errorMessage = '❌ Invalid username or password. Please check and try again.';
+                    } else if (result.error.includes('required')) {
+                        errorMessage = '⚠️ Please fill in all required fields.';
+                    }
+                    
+                    showStatus('loginStatus', errorMessage, 'error');
+                    
+                    // Shake animation for wrong password
+                    const loginCard = document.querySelector('.login-card');
+                    loginCard.style.animation = 'shake 0.5s ease-in-out';
+                    setTimeout(() => {
+                        loginCard.style.animation = '';
+                    }, 500);
                 }
             } catch (error) {
                 console.error('Login error:', error);
-                showStatus('loginStatus', 'Login failed. Please try again.', 'error');
+                showStatus('loginStatus', '🌐 Connection error. Please check your internet and try again.', 'error');
+            } finally {
+                // Reset button state
+                loginBtn.textContent = originalText;
+                loginBtn.disabled = false;
             }
         }
 
@@ -767,6 +2561,258 @@
             document.getElementById('loginScreen').classList.add('hidden');
             document.getElementById('mainScreen').classList.remove('hidden');
             document.getElementById('userName').textContent = currentUser.name;
+            
+            // Update UI based on user role
+            updateRoleBasedUI();
+        }
+
+        function updateRoleBasedUI() {
+            const userRoleBadge = document.getElementById('userRole');
+            const childSelector = document.getElementById('childSelector');
+            const childSelect = document.getElementById('childSelect');
+            
+            // Update role badge
+            const roleLabels = {
+                'student': 'Student',
+                'parent': 'Parent',
+                'parent_admin': 'Parent & Admin',
+                'teacher': 'Teacher',
+                'admin': 'Administrator'
+            };
+            
+            const roleColors = {
+                'student': '#007bff',
+                'parent': '#28a745',
+                'parent_admin': '#fd7e14',
+                'teacher': '#6f42c1',
+                'admin': '#dc3545'
+            };
+            
+            userRoleBadge.textContent = roleLabels[currentUser.role] || currentUser.role;
+            userRoleBadge.style.backgroundColor = roleColors[currentUser.role] || '#6c757d';
+            
+            // Apply age-appropriate theme for students
+            if (currentUser.role === 'student' && currentUser.gradeLevel) {
+                applyAgeTheme(currentUser.gradeLevel);
+            }
+            
+            // Show/hide role-specific buttons
+            const parentOnlyBtns = document.querySelectorAll('.parent-only');
+            const studentOnlyBtns = document.querySelectorAll('.student-only');
+            
+            if (currentUser.role === 'parent' || currentUser.role === 'parent_admin' || currentUser.role === 'teacher') {
+                parentOnlyBtns.forEach(btn => btn.classList.remove('hidden'));
+                studentOnlyBtns.forEach(btn => btn.classList.add('hidden'));
+                
+                // Setup child selector for parents
+                if ((currentUser.role === 'parent' || currentUser.role === 'parent_admin') && currentUser.children && currentUser.children.length > 0) {
+                    childSelector.classList.remove('hidden');
+                    childSelect.innerHTML = '<option value="">Select Child</option>';
+                    currentUser.children.forEach(child => {
+                        const option = document.createElement('option');
+                        option.value = child.id;
+                        option.textContent = child.name;
+                        childSelect.appendChild(option);
+                    });
+                }
+            } else {
+                parentOnlyBtns.forEach(btn => btn.classList.add('hidden'));
+                studentOnlyBtns.forEach(btn => btn.classList.remove('hidden'));
+                childSelector.classList.add('hidden');
+            }
+
+            // Show theme selector for admin users (for testing)
+            const themeSelector = document.getElementById('themeSelector');
+            if (currentUser.role === 'parent_admin' || currentUser.role === 'admin') {
+                themeSelector.classList.remove('hidden');
+            } else {
+                themeSelector.classList.add('hidden');
+            }
+        }
+
+        function applyAgeTheme(gradeLevel) {
+            const body = document.body;
+            
+            // Remove existing theme classes
+            body.classList.remove('theme-elementary', 'theme-middle', 'theme-high');
+            body.classList.remove('grade-1-3', 'grade-4-6', 'grade-7-9', 'grade-10-12');
+            
+            // Apply theme based on grade level
+            if (gradeLevel <= 5) {
+                body.classList.add('theme-elementary');
+                if (gradeLevel <= 3) {
+                    body.classList.add('grade-1-3');
+                } else {
+                    body.classList.add('grade-4-6');
+                }
+                setupElementaryFeatures();
+            } else if (gradeLevel <= 8) {
+                body.classList.add('theme-middle');
+                body.classList.add('grade-7-9');
+                setupMiddleSchoolFeatures();
+            } else {
+                body.classList.add('theme-high');
+                body.classList.add('grade-10-12');
+                setupHighSchoolFeatures();
+            }
+            
+            console.log(`🎨 Applied ${getThemeName(gradeLevel)} theme for grade ${gradeLevel}`);
+        }
+
+        function getThemeName(gradeLevel) {
+            if (gradeLevel <= 5) return 'Elementary';
+            if (gradeLevel <= 8) return 'Middle School';
+            return 'High School';
+        }
+
+        function setupElementaryFeatures() {
+            // Hide advanced features for younger students
+            hideAdvancedFeatures();
+            
+            // Add encouraging messages
+            addEncouragingMessages();
+            
+            // Simplify navigation
+            simplifyNavigation();
+            
+            // Add fun sound effects (conceptual - would need audio files)
+            enableSoundEffects();
+        }
+
+        function setupMiddleSchoolFeatures() {
+            // Show moderate complexity features
+            showModerateFeatures();
+            
+            // Enable peer comparison features
+            enablePeerFeatures();
+        }
+
+        function setupHighSchoolFeatures() {
+            // Show all advanced features
+            showAdvancedFeatures();
+            
+            // Enable detailed analytics
+            enableAnalytics();
+            
+            // Add academic progress tracking
+            enableAcademicTracking();
+        }
+
+        function hideAdvancedFeatures() {
+            // Hide complex assignment types for elementary students
+            const advancedElements = document.querySelectorAll('.advanced-features');
+            advancedElements.forEach(element => {
+                element.style.display = 'none';
+            });
+            
+            // Simplify stats dashboard
+            const statsCards = document.querySelectorAll('.stat-card');
+            statsCards.forEach((card, index) => {
+                if (index > 3) { // Show only first 4 stats for elementary
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        function showAdvancedFeatures() {
+            const advancedElements = document.querySelectorAll('.advanced-features');
+            advancedElements.forEach(element => {
+                element.style.display = 'block';
+            });
+        }
+
+        function showModerateFeatures() {
+            // Show most features but keep some complexity hidden
+            const advancedElements = document.querySelectorAll('.advanced-features');
+            advancedElements.forEach(element => {
+                if (!element.classList.contains('high-school-only')) {
+                    element.style.display = 'block';
+                }
+            });
+        }
+
+        function addEncouragingMessages() {
+            // Add motivational messages for elementary students
+            const encouragingPhrases = [
+                "Great job! 🌟",
+                "You're doing amazing! 🎉",
+                "Keep it up, superstar! ⭐",
+                "Fantastic work! 🚀",
+                "You're a learning champion! 🏆"
+            ];
+            
+            // Add these to completion screens and progress updates
+            const completionCards = document.querySelectorAll('.completion-card');
+            completionCards.forEach(card => {
+                const randomPhrase = encouragingPhrases[Math.floor(Math.random() * encouragingPhrases.length)];
+                const encouragement = document.createElement('div');
+                encouragement.className = 'elementary-encouragement';
+                encouragement.style.cssText = `
+                    font-size: 24px;
+                    color: #ff6b6b;
+                    margin: 15px 0;
+                    font-weight: bold;
+                    text-align: center;
+                `;
+                encouragement.textContent = randomPhrase;
+                card.appendChild(encouragement);
+            });
+        }
+
+        function simplifyNavigation() {
+            // Reduce number of visible options for elementary students
+            const modeButtons = document.querySelectorAll('.mode-btn');
+            modeButtons.forEach((button, index) => {
+                if (index > 3) { // Show only first 4 main functions
+                    button.style.display = 'none';
+                }
+            });
+        }
+
+        function enableSoundEffects() {
+            // Placeholder for sound effects
+            console.log('🔊 Sound effects enabled for elementary theme');
+        }
+
+        function enablePeerFeatures() {
+            // Placeholder for peer comparison features
+            console.log('👥 Peer features enabled for middle school theme');
+        }
+
+        function enableAnalytics() {
+            // Show detailed analytics for high school students
+            console.log('📊 Advanced analytics enabled for high school theme');
+        }
+
+        function enableAcademicTracking() {
+            // Enable GPA tracking, college prep features, etc.
+            console.log('🎓 Academic tracking enabled for high school theme');
+        }
+
+        function switchChild() {
+            const childSelect = document.getElementById('childSelect');
+            const selectedChildId = childSelect.value;
+            
+            if (selectedChildId) {
+                const selectedChild = currentUser.children.find(child => child.id == selectedChildId);
+                if (selectedChild) {
+                    // Temporarily switch the current user context to view child's data
+                    // This is for monitoring purposes only
+                    alert(`Now viewing data for: ${selectedChild.name}`);
+                    // We could implement full child view switching here
+                }
+            }
+        }
+
+        function switchTheme() {
+            const themeSelect = document.getElementById('themeSelect');
+            const selectedGrade = parseInt(themeSelect.value);
+            
+            if (selectedGrade) {
+                // Apply the selected theme for preview
+                applyAgeTheme(selectedGrade);
+                console.log(`🎨 Theme preview: ${getThemeName(selectedGrade)} (Grade ${selectedGrade})`);
+            }
         }
 
         // Load Statistics
@@ -779,6 +2825,16 @@
                 document.getElementById('learnedWords').textContent = stats.learned;
                 document.getElementById('studyingWords').textContent = stats.studying;
                 document.getElementById('dueToday').textContent = stats.dueToday;
+                document.getElementById('dailyTarget').textContent = currentUser.dailyTarget || 20;
+                
+                // Calculate and display daily progress
+                const dailyTarget = currentUser.dailyTarget || 20;
+                const todayProgress = stats.todayStudied || 0;
+                
+                document.getElementById('todayProgress').textContent = todayProgress;
+                
+                // Update daily progress bar
+                updateDailyProgress(todayProgress, dailyTarget);
                 
                 // Update Review Button
                 const reviewBtn = document.getElementById('reviewBtn');
@@ -790,10 +2846,31 @@
                     reviewBtn.style.cursor = 'pointer';
                 }
                 
-                showStatus('mainStatus', 'Ready to learn! Choose your learning mode.', 'success');
+                showStatus('mainStatus', 'Ready for three-phase visual learning! Choose your mode.', 'success');
             } catch (error) {
                 console.error('Error loading stats:', error);
                 showStatus('mainStatus', 'Failed to load statistics', 'error');
+            }
+        }
+        
+        // Update Daily Progress
+        function updateDailyProgress(current, target) {
+            const percentage = Math.min((current / target) * 100, 100);
+            
+            document.getElementById('dailyProgressFill').style.width = percentage + '%';
+            document.getElementById('progressPercentage').textContent = Math.round(percentage) + '%';
+            document.getElementById('progressText').textContent = `${current} / ${target} words completed today`;
+            
+            // Add celebration effect when target is reached
+            if (current >= target) {
+                const progressSection = document.querySelector('.daily-progress-section');
+                progressSection.style.background = 'linear-gradient(135deg, rgba(0, 255, 127, 0.1), rgba(255, 215, 0, 0.1))';
+                progressSection.style.borderColor = 'var(--success-color)';
+                
+                // Show celebration message
+                if (current === target) {
+                    showStatus('mainStatus', '🎉 Congratulations! You\'ve reached your daily target!', 'success');
+                }
             }
         }
 
@@ -810,6 +2887,7 @@
                 }
                 
                 currentWordIndex = 0;
+                currentPhase = 1;
                 showStudyScreen();
                 displayCurrentWord();
             } catch (error) {
@@ -836,6 +2914,7 @@
                 }
                 
                 currentWordIndex = 0;
+                currentPhase = 1;
                 showStudyScreen();
                 displayCurrentWord();
             } catch (error) {
@@ -857,7 +2936,7 @@
             loadStats(); // Refresh stats
         }
 
-        // Display Current Word
+        // Display Current Word with Three Phases
         function displayCurrentWord() {
             if (currentWordIndex >= currentWords.length) {
                 showCompletion();
@@ -866,17 +2945,10 @@
             
             const word = currentWords[currentWordIndex];
             
-            // Update word display
-            document.getElementById('currentWord').textContent = word.word;
-            document.getElementById('wordPhonetic').textContent = `/${word.word}/`; // Simple phonetic
-            document.getElementById('wordDefinition').textContent = word.meaning;
-            document.getElementById('wordExample').textContent = `"${word.example}"`;
-            
-            // Reset UI state
-            document.getElementById('definitionSection').classList.add('hidden');
-            document.getElementById('showAnswerBtn').classList.remove('hidden');
-            document.getElementById('knowledgeButtons').classList.add('hidden');
-            document.getElementById('learningPhase').classList.remove('hidden');
+            // Reset all phases
+            document.getElementById('phase1').classList.add('hidden');
+            document.getElementById('phase2').classList.add('hidden');
+            document.getElementById('phase3').classList.add('hidden');
             document.getElementById('completionPhase').classList.add('hidden');
             
             // Update progress
@@ -885,25 +2957,235 @@
             const progress = (currentWordIndex / currentWords.length) * 100;
             document.getElementById('progressFill').style.width = progress + '%';
             
+            // Start with Phase 1
+            currentPhase = 1;
+            showPhase(word);
+        }
+
+        // Show Current Phase
+        function showPhase(word) {
+            // Update phase indicator
+            const phaseNames = ['Context', 'Recognition', 'Definition'];
+            document.getElementById('phaseIndicator').textContent = `Phase ${currentPhase}: ${phaseNames[currentPhase - 1]}`;
+            
+            if (currentPhase === 1) {
+                // Phase 1: Sentence + Image
+                document.getElementById('phase1').classList.remove('hidden');
+                document.getElementById('phaseSentence').textContent = word.example || `This word is "${word.word}".`;
+                
+                // Use enhanced visual system
+                const imageContainer = document.getElementById('wordImage');
+                createWordVisual(word.word, imageContainer);
+                
+            } else if (currentPhase === 2) {
+                // Phase 2: Word + Image
+                document.getElementById('phase2').classList.remove('hidden');
+                document.getElementById('currentWord').textContent = word.word;
+                document.getElementById('wordPhonetic').textContent = `/${word.word}/`;
+                
+                // Use enhanced visual system
+                const imageContainer2 = document.getElementById('wordImage2');
+                createWordVisual(word.word, imageContainer2);
+                
+            } else if (currentPhase === 3) {
+                // Phase 3: Word + Multiple Choice Definition
+                document.getElementById('phase3').classList.remove('hidden');
+                document.getElementById('currentWord3').textContent = word.word;
+                generateMultipleChoice(word);
+            }
+            
             // Add animation
             const wordCard = document.getElementById('wordCard');
             wordCard.style.animation = 'none';
             setTimeout(() => {
-                wordCard.style.animation = 'slideIn 0.5s ease';
+                wordCard.style.animation = 'slideIn 0.6s ease';
             }, 10);
         }
 
-        // Show Definition
-        function showDefinition() {
-            document.getElementById('definitionSection').classList.remove('hidden');
-            document.getElementById('showAnswerBtn').classList.add('hidden');
-            document.getElementById('knowledgeButtons').classList.remove('hidden');
+        // Enhanced visual memory system
+        function createWordVisual(word, container) {
+            const wordLower = word.toLowerCase();
+            
+            // Try to get emoji first
+            const emoji = getWordEmoji(wordLower);
+            
+            // Create visual element
+            const visual = document.createElement('div');
+            visual.className = 'word-visual';
+            visual.style.cssText = `
+                width: 100%;
+                height: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 64px;
+                position: relative;
+                z-index: 1;
+            `;
+            
+            // For certain words, create enhanced visuals
+            if (getWordCategory(wordLower) === 'concrete') {
+                visual.style.background = 'linear-gradient(135deg, var(--accent-color), #FFA500)';
+                visual.style.borderRadius = '25px';
+                visual.style.color = 'var(--klein-blue)';
+                visual.style.fontWeight = 'bold';
+                visual.style.textShadow = '2px 2px 4px rgba(255,255,255,0.3)';
+            }
+            
+            visual.textContent = emoji;
+            
+            // Add word hint overlay for better memory association
+            const hint = document.createElement('div');
+            hint.style.cssText = `
+                position: absolute;
+                bottom: 10px;
+                right: 10px;
+                background: rgba(0, 47, 167, 0.8);
+                color: white;
+                padding: 4px 8px;
+                border-radius: 8px;
+                font-size: 12px;
+                font-weight: 600;
+                z-index: 2;
+            `;
+            hint.textContent = word.substring(0, 3).toUpperCase();
+            
+            container.innerHTML = '';
+            container.appendChild(visual);
+            container.appendChild(hint);
+        }
+        
+        // Determine word category for visual enhancement
+        function getWordCategory(word) {
+            const concreteWords = [
+                'apple', 'book', 'cat', 'dog', 'house', 'car', 'tree', 'computer', 
+                'phone', 'coffee', 'sun', 'moon', 'star', 'flower', 'bird'
+            ];
+            
+            return concreteWords.includes(word) ? 'concrete' : 'abstract';
+        }
+        
+        // Get Word Emoji (Enhanced mapping)
+        function getWordEmoji(word) {
+            const emojiMap = {
+                // Basic nouns
+                'apple': '🍎', 'book': '📚', 'cat': '🐱', 'dog': '🐶', 'house': '🏠',
+                'water': '💧', 'friend': '👫', 'school': '🏫', 'car': '🚗', 'tree': '🌳',
+                'computer': '💻', 'phone': '📱', 'music': '🎵', 'food': '🍽️', 'coffee': '☕',
+                'sun': '☀️', 'moon': '🌙', 'star': '⭐', 'flower': '🌸', 'bird': '🐦',
+                'table': '🪑', 'chair': '🪑', 'window': '🪟', 'door': '🚪', 'money': '💰',
+                
+                // Adjectives
+                'happy': '😊', 'beautiful': '🌺', 'sad': '😢', 'angry': '😠', 'excited': '🎉',
+                'important': '⭐', 'different': '🔄', 'wonderful': '✨', 'delicious': '😋', 
+                'interesting': '🤔', 'amazing': '🤩', 'terrible': '😱', 'good': '👍', 'bad': '👎',
+                'big': '🔍', 'small': '🔎', 'fast': '💨', 'slow': '🐌', 'hot': '🔥', 'cold': '❄️',
+                
+                // Verbs
+                'run': '🏃', 'walk': '🚶', 'eat': '🍽️', 'drink': '🥤', 'sleep': '😴',
+                'study': '📖', 'work': '💼', 'play': '🎮', 'read': '📚', 'write': '✍️',
+                'swim': '🏊', 'jump': '🦘', 'fly': '✈️', 'drive': '🚗', 'cook': '👨‍🍳',
+                
+                // Others
+                'love': '❤️', 'time': '⏰', 'money': '💰', 'family': '👨‍👩‍👧‍👦', 'life': '🌱',
+                'world': '🌍', 'country': '🗺️', 'city': '🏙️', 'language': '🗣️', 'culture': '🎭'
+            };
+            return emojiMap[word.toLowerCase()] || '🎯';
+        }
+
+        // Next Phase
+        function nextPhase() {
+            if (currentPhase < 3) {
+                currentPhase++;
+                const word = currentWords[currentWordIndex];
+                
+                // Hide current phase
+                document.getElementById(`phase${currentPhase - 1}`).classList.add('hidden');
+                
+                // Show next phase
+                showPhase(word);
+            }
+        }
+
+        // Generate Multiple Choice for Phase 3
+        function generateMultipleChoice(word) {
+            const choices = document.getElementById('choices');
+            choices.innerHTML = '';
+            
+            // Create fallback wrong answers if not enough words
+            const fallbackAnswers = [
+                'beautiful', 'important', 'different', 'wonderful', 
+                'delicious', 'amazing', 'terrible', 'exciting'
+            ];
+            
+            // Get 3 wrong answers
+            let wrongAnswers = [];
+            if (currentWords.length >= 4) {
+                wrongAnswers = currentWords
+                    .filter(w => w.id !== word.id)
+                    .slice(0, 3)
+                    .map(w => w.meaning);
+            } else {
+                // Use fallback answers if not enough words
+                wrongAnswers = fallbackAnswers
+                    .filter(ans => ans !== word.meaning)
+                    .slice(0, 3);
+            }
+            
+            // Add correct answer
+            const allChoices = [word.meaning, ...wrongAnswers].slice(0, 4);
+            
+            // Shuffle choices
+            for (let i = allChoices.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [allChoices[i], allChoices[j]] = [allChoices[j], allChoices[i]];
+            }
+            
+            // Create choice buttons
+            allChoices.forEach((choice, index) => {
+                const button = document.createElement('button');
+                button.className = 'choice-btn';
+                button.textContent = choice;
+                button.onclick = () => selectChoice(button, choice === word.meaning);
+                choices.appendChild(button);
+            });
+            
+            // Hide phase 3 actions initially
+            document.getElementById('phase3Actions').classList.add('hidden');
+        }
+
+        // Select Choice in Phase 3
+        function selectChoice(button, isCorrect) {
+            // Disable all buttons
+            const allButtons = document.querySelectorAll('.choice-btn');
+            allButtons.forEach(btn => btn.style.pointerEvents = 'none');
+            
+            // Mark correct/incorrect
+            if (isCorrect) {
+                button.classList.add('correct');
+                setTimeout(() => {
+                    document.getElementById('phase3Actions').classList.remove('hidden');
+                }, 800);
+            } else {
+                button.classList.add('incorrect');
+                // Show correct answer
+                setTimeout(() => {
+                    const correctBtn = Array.from(allButtons).find(btn => 
+                        btn.textContent === currentWords[currentWordIndex].meaning
+                    );
+                    if (correctBtn) correctBtn.classList.add('correct');
+                    
+                    setTimeout(() => {
+                        document.getElementById('phase3Actions').classList.remove('hidden');
+                    }, 500);
+                }, 800);
+            }
         }
 
         // Speak Word
-        function speakWord() {
-            const word = document.getElementById('currentWord').textContent;
-            if ('speechSynthesis' in window) {
+        function speakWord(wordText = null) {
+            const word = wordText || (currentWords[currentWordIndex] ? currentWords[currentWordIndex].word : '');
+            if (word && 'speechSynthesis' in window) {
                 const utterance = new SpeechSynthesisUtterance(word);
                 utterance.lang = 'en-US';
                 utterance.rate = 0.8;
@@ -940,7 +3222,24 @@
                 
                 if (result.success) {
                     currentWordIndex++;
-                    setTimeout(() => displayCurrentWord(), 800);
+                    currentPhase = 1;
+                    
+                    // Show brief success feedback
+                    const wordCard = document.querySelector('.word-card');
+                    const originalContent = wordCard.innerHTML;
+                    wordCard.innerHTML = `
+                        <div style="text-align: center; padding: 40px;">
+                            <div style="font-size: 48px; margin-bottom: 15px;">${correct ? '✅' : '📝'}</div>
+                            <div style="font-size: 24px; color: var(--klein-blue); font-weight: 700;">
+                                ${correct ? 'Perfect! Moving to next word...' : 'Keep practicing! Moving to next word...'}
+                            </div>
+                        </div>
+                    `;
+                    
+                    setTimeout(() => {
+                        wordCard.innerHTML = originalContent;
+                        displayCurrentWord();
+                    }, 1500);
                 }
             } catch (error) {
                 console.error('Error studying word:', error);
@@ -949,7 +3248,9 @@
 
         // Show Completion
         function showCompletion() {
-            document.getElementById('learningPhase').classList.add('hidden');
+            document.getElementById('phase1').classList.add('hidden');
+            document.getElementById('phase2').classList.add('hidden');
+            document.getElementById('phase3').classList.add('hidden');
             document.getElementById('completionPhase').classList.remove('hidden');
             
             // Update progress to 100%
@@ -988,22 +3289,22 @@
                 const wordCard = document.createElement('div');
                 wordCard.className = 'stat-card';
                 wordCard.style.textAlign = 'left';
-                wordCard.style.marginBottom = '15px';
+                wordCard.style.marginBottom = '20px';
                 
                 wordCard.innerHTML = `
                     <div style="display: flex; justify-content: space-between; align-items: flex-start;">
                         <div style="flex: 1;">
-                            <div style="font-size: 24px; font-weight: bold; color: #667eea; margin-bottom: 8px;">
-                                ${word.word}
+                            <div style="font-size: 28px; font-weight: bold; color: var(--klein-blue); margin-bottom: 10px;">
+                                ${getWordEmoji(word.word)} ${word.word}
                                 <button onclick="speakWord('${word.word}')" 
                                         style="background: #17a2b8; color: white; border: none; 
-                                               padding: 4px 8px; border-radius: 4px; margin-left: 10px; 
-                                               cursor: pointer; font-size: 12px;">🔊</button>
+                                               padding: 6px 12px; border-radius: 6px; margin-left: 15px; 
+                                               cursor: pointer; font-size: 14px;">🔊</button>
                             </div>
-                            <div style="color: #666; margin-bottom: 5px; font-size: 16px;">${word.meaning}</div>
-                            <div style="font-style: italic; color: #888; font-size: 14px;">"${word.example || 'No example'}"</div>
+                            <div style="color: var(--dark-gray); margin-bottom: 8px; font-size: 18px;">${word.meaning}</div>
+                            <div style="font-style: italic; color: var(--dark-gray); font-size: 16px;">"${word.example || 'No example'}"</div>
                         </div>
-                        <div style="text-align: right; color: #667eea; font-weight: 600; font-size: 14px;">
+                        <div style="text-align: right; color: var(--klein-blue); font-weight: 700; font-size: 16px;">
                             ${status}
                         </div>
                     </div>
@@ -1019,7 +3320,8 @@
             localStorage.removeItem('currentUser');
             document.getElementById('mainScreen').classList.add('hidden');
             document.getElementById('loginScreen').classList.remove('hidden');
-            document.getElementById('nameInput').value = '';
+            document.getElementById('nameSelect').value = '';
+            document.getElementById('passwordInput').value = '';
             document.getElementById('loginStatus').innerHTML = '';
             document.getElementById('wordListSection').classList.add('hidden');
         }
@@ -1030,16 +3332,1340 @@
             element.innerHTML = `<div class="status ${type}">${message}</div>`;
             
             if (type === 'success') {
-                setTimeout(() => element.innerHTML = '', 4000);
+                setTimeout(() => element.innerHTML = '', 5000);
             }
         }
 
         // Handle Enter Key in Login
-        document.getElementById('nameInput').addEventListener('keypress', function(e) {
+        document.getElementById('passwordInput').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 login();
             }
         });
+
+        // Assignment Management Functions
+        async function showAssignments() {
+            hideAllSections();
+            document.getElementById('assignmentsSection').classList.remove('hidden');
+            
+            try {
+                const response = await fetch(`${API}/api/assignments/student/${currentUser.id}`);
+                const assignments = await response.json();
+                
+                let html = '';
+                if (assignments.length === 0) {
+                    html = '<div class="status info">No assignments found.</div>';
+                } else {
+                    assignments.forEach(assignment => {
+                        const dueDate = new Date(assignment.due_date).toLocaleDateString();
+                        const status = assignment.isCompleted ? '✅ Completed' : '⏰ Pending';
+                        const scoreText = assignment.score !== null ? `Score: ${assignment.score}/${assignment.max_score}` : '';
+                        
+                        html += `
+                            <div class="assignment-card" style="border: 1px solid #ddd; border-radius: 10px; padding: 20px; margin: 10px 0; background: white;">
+                                <h3 style="color: var(--klein-blue); margin: 0 0 10px 0;">${assignment.title}</h3>
+                                <p style="color: #666; margin: 5px 0;">${assignment.description || 'No description'}</p>
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
+                                    <span style="font-size: 14px; color: #888;">Due: ${dueDate}</span>
+                                    <span style="font-weight: bold; color: ${assignment.isCompleted ? '#28a745' : '#ffc107'};">${status}</span>
+                                </div>
+                                ${scoreText ? `<div style="margin-top: 10px; font-weight: bold; color: #007bff;">${scoreText}</div>` : ''}
+                                ${!assignment.isCompleted ? `<button onclick="startAssignment(${assignment.id})" class="mode-btn" style="margin-top: 10px; padding: 10px 20px;">Start Assignment</button>` : ''}
+                            </div>
+                        `;
+                    });
+                }
+                
+                document.getElementById('assignmentsList').innerHTML = html;
+            } catch (error) {
+                console.error('Error loading assignments:', error);
+                document.getElementById('assignmentsList').innerHTML = '<div class="status error">Failed to load assignments.</div>';
+            }
+        }
+
+        async function startAssignment(assignmentId) {
+            try {
+                const response = await fetch(`${API}/api/assignments/${assignmentId}`);
+                const assignment = await response.json();
+                
+                if (!assignment.questions || assignment.questions.length === 0) {
+                    alert('This assignment has no questions.');
+                    return;
+                }
+                
+                // Create assignment interface
+                let html = `
+                    <div class="assignment-interface" style="max-width: 800px; margin: 0 auto; padding: 20px;">
+                        <h2 style="color: var(--klein-blue); text-align: center;">${assignment.title}</h2>
+                        <p style="text-align: center; margin-bottom: 30px;">${assignment.description || ''}</p>
+                        <div id="assignmentQuestions">
+                `;
+                
+                assignment.questions.forEach((question, index) => {
+                    html += `
+                        <div class="question-block" style="background: white; border: 1px solid #ddd; border-radius: 10px; padding: 20px; margin: 20px 0;">
+                            <h4>Question ${index + 1}:</h4>
+                            <p style="font-size: 16px; margin: 15px 0;">${question.question_text}</p>
+                    `;
+                    
+                    if (question.question_type === 'multiple_choice' || question.question_type === 'true_false') {
+                        const options = question.options || [];
+                        options.forEach((option, optIndex) => {
+                            html += `
+                                <label style="display: block; margin: 10px 0; cursor: pointer;">
+                                    <input type="radio" name="question_${question.id}" value="${option}" style="margin-right: 10px;">
+                                    ${option}
+                                </label>
+                            `;
+                        });
+                    } else if (question.question_type === 'fill_blank' || question.question_type === 'short_answer') {
+                        html += `<input type="text" id="answer_${question.id}" class="form-input" placeholder="Enter your answer" style="width: 100%; margin: 10px 0;">`;
+                    } else if (question.question_type === 'numeric') {
+                        html += `<input type="number" id="answer_${question.id}" class="form-input" placeholder="Enter a number" step="any" style="width: 100%; margin: 10px 0;">`;
+                    } else if (question.question_type === 'math_expression') {
+                        html += `
+                            <div style="margin: 15px 0;">
+                                ${question.math_formula ? `<div style="background: #f8f9fa; padding: 10px; border-radius: 5px; margin-bottom: 10px; font-family: monospace;">${question.math_formula}</div>` : ''}
+                                <input type="text" id="answer_${question.id}" class="form-input" placeholder="Enter your mathematical expression or result" style="width: 100%;">
+                                <small style="color: #666; font-size: 12px;">You can enter mathematical expressions (e.g., 2*3+1) or numeric results</small>
+                            </div>
+                        `;
+                    }
+                    
+                    html += '</div>';
+                });
+                
+                html += `
+                        </div>
+                        <div style="text-align: center; margin-top: 30px;">
+                            <button onclick="submitAssignment(${assignmentId})" class="start-btn">Submit Assignment</button>
+                            <button onclick="showAssignments()" class="cancel-btn" style="margin-left: 15px;">Cancel</button>
+                        </div>
+                    </div>
+                `;
+                
+                document.getElementById('assignmentsSection').innerHTML = `
+                    <div class="mode-title">📝 ${assignment.title}</div>
+                    ${html}
+                `;
+                
+            } catch (error) {
+                console.error('Error loading assignment:', error);
+                alert('Failed to load assignment.');
+            }
+        }
+
+        async function submitAssignment(assignmentId) {
+            try {
+                const response = await fetch(`${API}/api/assignments/${assignmentId}`);
+                const assignment = await response.json();
+                
+                const answers = [];
+                assignment.questions.forEach((question, index) => {
+                    let answer = '';
+                    if (question.question_type === 'multiple_choice' || question.question_type === 'true_false') {
+                        const selected = document.querySelector(`input[name="question_${question.id}"]:checked`);
+                        answer = selected ? selected.value : '';
+                    } else if (question.question_type === 'fill_blank' || question.question_type === 'short_answer' || question.question_type === 'numeric' || question.question_type === 'math_expression') {
+                        answer = document.getElementById(`answer_${question.id}`).value.trim();
+                    }
+                    answers.push(answer);
+                });
+                
+                const submitResponse = await fetch(`${API}/api/assignments/${assignmentId}/submit`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        studentId: currentUser.id,
+                        answers: answers
+                    })
+                });
+                
+                const result = await submitResponse.json();
+                
+                if (result.success) {
+                    alert(`Assignment submitted! Score: ${result.score}/${result.maxScore} (${result.percentage}%)`);
+                    showAssignments(); // Refresh assignments list
+                } else {
+                    alert('Failed to submit assignment.');
+                }
+                
+            } catch (error) {
+                console.error('Error submitting assignment:', error);
+                alert('Failed to submit assignment.');
+            }
+        }
+
+        // Error Notebook Functions
+        async function showErrorNotebook() {
+            hideAllSections();
+            document.getElementById('errorNotebookSection').classList.remove('hidden');
+            
+            try {
+                const response = await fetch(`${API}/api/errors/${currentUser.id}`);
+                const errors = await response.json();
+                
+                let html = '';
+                if (errors.length === 0) {
+                    html = '<div class="status success">🎉 Great! No wrong answers to review.</div>';
+                } else {
+                    html = `
+                        <div style="margin-bottom: 20px;">
+                            <p style="color: #666;">Review your wrong answers and practice them again to master them!</p>
+                        </div>
+                        <div id="errorsList">
+                    `;
+                    
+                    errors.forEach((error, index) => {
+                        html += `
+                            <div class="error-card" style="background: white; border-left: 4px solid #dc3545; border-radius: 10px; padding: 20px; margin: 15px 0; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                                <h4 style="color: #dc3545; margin: 0 0 10px 0;">Question ${index + 1}</h4>
+                                <p style="font-size: 16px; margin: 10px 0;"><strong>Question:</strong> ${error.question_text || 'Word practice'}</p>
+                                <p style="margin: 5px 0;"><strong>Your answer:</strong> <span style="color: #dc3545;">${error.incorrect_answer}</span></p>
+                                <p style="margin: 5px 0;"><strong>Correct answer:</strong> <span style="color: #28a745;">${error.correct_answer}</span></p>
+                                <p style="font-size: 14px; color: #666; margin: 10px 0;">Attempts: ${error.attempts}</p>
+                                <div style="margin-top: 15px;">
+                                    <input type="text" id="practice_${error.id}" class="form-input" placeholder="Practice the correct answer..." style="width: 70%; display: inline-block;">
+                                    <button onclick="practiceError(${error.id})" class="mode-btn" style="width: 25%; margin-left: 5%; padding: 8px;">Practice</button>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    
+                    html += '</div>';
+                }
+                
+                document.getElementById('errorsList').innerHTML = html;
+            } catch (error) {
+                console.error('Error loading error notebook:', error);
+                document.getElementById('errorsList').innerHTML = '<div class="status error">Failed to load error notebook.</div>';
+            }
+        }
+
+        async function practiceError(errorId) {
+            const input = document.getElementById(`practice_${errorId}`);
+            const answer = input.value.trim();
+            
+            if (!answer) {
+                alert('Please enter an answer first.');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API}/api/errors/practice`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        studentId: currentUser.id,
+                        answers: { [errorId]: answer }
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success && result.results.length > 0) {
+                    const practiceResult = result.results[0];
+                    if (practiceResult.correct) {
+                        alert('✅ Correct! This error has been marked as mastered.');
+                        showErrorNotebook(); // Refresh the list
+                    } else {
+                        alert(`❌ Incorrect. The correct answer is: ${practiceResult.correctAnswer}`);
+                        input.value = '';
+                    }
+                }
+            } catch (error) {
+                console.error('Error practicing:', error);
+                alert('Failed to submit practice answer.');
+            }
+        }
+
+        // Parent/Teacher Functions
+        async function showCreateAssignment() {
+            if (currentUser.role !== 'parent' && currentUser.role !== 'parent_admin' && currentUser.role !== 'teacher') {
+                alert('You do not have permission to create assignments.');
+                return;
+            }
+            
+            hideAllSections();
+            document.getElementById('createAssignmentSection').classList.remove('hidden');
+            
+            // Load available students for targeting
+            try {
+                const response = await fetch(`${API}/api/users`); // We'll need to add this endpoint
+                // For now, use family relationships
+                if (currentUser.children && currentUser.children.length > 0) {
+                    const select = document.getElementById('targetStudents');
+                    select.innerHTML = '';
+                    currentUser.children.forEach(child => {
+                        const option = document.createElement('option');
+                        option.value = child.id;
+                        option.textContent = child.name;
+                        select.appendChild(option);
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading students:', error);
+            }
+            
+            // Reset form
+            document.getElementById('assignmentTitle').value = '';
+            document.getElementById('assignmentDescription').value = '';
+            document.getElementById('assignmentDueDate').value = '';
+            document.getElementById('questionsList').innerHTML = '';
+        }
+
+        function hideCreateAssignment() {
+            document.getElementById('createAssignmentSection').classList.add('hidden');
+            showMainContent();
+        }
+
+        let questionCount = 0;
+        function addQuestion() {
+            questionCount++;
+            const questionHtml = `
+                <div class="question-item" id="question_${questionCount}" style="border: 1px solid #ddd; border-radius: 8px; padding: 15px; margin: 10px 0; background: #f9f9f9;">
+                    <div class="question-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        <h4>Question ${questionCount}</h4>
+                        <button onclick="removeQuestion(${questionCount})" style="background: #dc3545; color: white; border: none; border-radius: 4px; padding: 5px 10px; cursor: pointer;">Remove</button>
+                    </div>
+                    <div class="form-group">
+                        <label>Question Text:</label>
+                        <textarea id="questionText_${questionCount}" class="form-input" placeholder="Enter the question" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Question Type:</label>
+                        <select id="questionType_${questionCount}" class="form-select" onchange="updateQuestionOptions(${questionCount})">
+                            <option value="multiple_choice">Multiple Choice</option>
+                            <option value="fill_blank">Fill in the Blank</option>
+                            <option value="short_answer">Short Answer</option>
+                            <option value="math_expression">Math Expression</option>
+                            <option value="numeric">Numeric Answer</option>
+                            <option value="true_false">True/False</option>
+                        </select>
+                    </div>
+                    <div id="optionsContainer_${questionCount}">
+                        <div class="form-group">
+                            <label>Options (one per line):</label>
+                            <textarea id="questionOptions_${questionCount}" class="form-input" placeholder="Option 1\nOption 2\nOption 3\nOption 4"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Correct Answer:</label>
+                        <input type="text" id="correctAnswer_${questionCount}" class="form-input" placeholder="Enter the correct answer" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Points:</label>
+                        <input type="number" id="questionPoints_${questionCount}" class="form-input" value="1" min="1">
+                    </div>
+                    <div class="form-group">
+                        <label>Explanation (optional):</label>
+                        <textarea id="questionExplanation_${questionCount}" class="form-input" placeholder="Explain why this is the correct answer"></textarea>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('questionsList').insertAdjacentHTML('beforeend', questionHtml);
+        }
+
+        function removeQuestion(questionId) {
+            document.getElementById(`question_${questionId}`).remove();
+        }
+
+        function updateQuestionOptions(questionId) {
+            const type = document.getElementById(`questionType_${questionId}`).value;
+            const container = document.getElementById(`optionsContainer_${questionId}`);
+            
+            switch (type) {
+                case 'multiple_choice':
+                    container.innerHTML = `
+                        <div class="form-group">
+                            <label>Options (one per line):</label>
+                            <textarea id="questionOptions_${questionId}" class="form-input" placeholder="Option 1\nOption 2\nOption 3\nOption 4"></textarea>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'true_false':
+                    container.innerHTML = `
+                        <div class="form-group">
+                            <label>Options:</label>
+                            <textarea id="questionOptions_${questionId}" class="form-input" readonly>True\nFalse</textarea>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'math_expression':
+                    container.innerHTML = `
+                        <div class="form-group">
+                            <label>Math Formula (LaTeX format, optional):</label>
+                            <input type="text" id="mathFormula_${questionId}" class="form-input" placeholder="E.g., x^2 + 2x + 1 = 0">
+                        </div>
+                        <div class="form-group">
+                            <label>Tolerance (for numeric results):</label>
+                            <input type="number" id="tolerance_${questionId}" class="form-input" value="0.01" step="0.01" min="0">
+                        </div>
+                    `;
+                    break;
+                    
+                case 'numeric':
+                    container.innerHTML = `
+                        <div class="form-group">
+                            <label>Tolerance (acceptable difference):</label>
+                            <input type="number" id="tolerance_${questionId}" class="form-input" value="0.01" step="0.01" min="0">
+                        </div>
+                    `;
+                    break;
+                    
+                case 'short_answer':
+                    container.innerHTML = `
+                        <div class="form-group">
+                            <label>Answer Matching:</label>
+                            <div style="display: flex; gap: 15px; margin-top: 8px;">
+                                <label style="display: flex; align-items: center; gap: 5px;">
+                                    <input type="checkbox" id="caseSensitive_${questionId}">
+                                    Case Sensitive
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 5px;">
+                                    <input type="checkbox" id="exactMatch_${questionId}">
+                                    Exact Match
+                                </label>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'fill_blank':
+                    container.innerHTML = `
+                        <div class="form-group">
+                            <label>Answer Matching:</label>
+                            <div style="display: flex; gap: 15px; margin-top: 8px;">
+                                <label style="display: flex; align-items: center; gap: 5px;">
+                                    <input type="checkbox" id="caseSensitive_${questionId}">
+                                    Case Sensitive
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 5px;">
+                                    <input type="checkbox" id="exactMatch_${questionId}">
+                                    Exact Match
+                                </label>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                    
+                default:
+                    container.innerHTML = '';
+                    break;
+            }
+        }
+
+        async function saveAssignment() {
+            const title = document.getElementById('assignmentTitle').value.trim();
+            const description = document.getElementById('assignmentDescription').value.trim();
+            const dueDate = document.getElementById('assignmentDueDate').value;
+            const targetStudentsSelect = document.getElementById('targetStudents');
+            const targetStudents = Array.from(targetStudentsSelect.selectedOptions).map(option => parseInt(option.value));
+            
+            if (!title) {
+                alert('Please enter an assignment title.');
+                return;
+            }
+            
+            if (targetStudents.length === 0) {
+                alert('Please select at least one student.');
+                return;
+            }
+            
+            // Collect questions
+            const questions = [];
+            const questionItems = document.querySelectorAll('.question-item');
+            
+            for (let item of questionItems) {
+                const questionId = item.id.split('_')[1];
+                const questionText = document.getElementById(`questionText_${questionId}`).value.trim();
+                const questionType = document.getElementById(`questionType_${questionId}`).value;
+                const correctAnswer = document.getElementById(`correctAnswer_${questionId}`).value.trim();
+                const points = parseInt(document.getElementById(`questionPoints_${questionId}`).value) || 1;
+                const explanation = document.getElementById(`questionExplanation_${questionId}`).value.trim();
+                
+                if (!questionText || !correctAnswer) {
+                    alert(`Please fill in all required fields for Question ${questionId}.`);
+                    return;
+                }
+                
+                let options = [];
+                let mathFormula = '';
+                let tolerance = 0.01;
+                let caseSensitive = false;
+                let exactMatch = false;
+                
+                if (questionType === 'multiple_choice') {
+                    const optionsText = document.getElementById(`questionOptions_${questionId}`).value.trim();
+                    options = optionsText.split('\n').filter(opt => opt.trim()).map(opt => opt.trim());
+                    
+                    if (options.length < 2) {
+                        alert(`Please provide at least 2 options for Question ${questionId}.`);
+                        return;
+                    }
+                    
+                    if (!options.includes(correctAnswer)) {
+                        alert(`The correct answer for Question ${questionId} must be one of the provided options.`);
+                        return;
+                    }
+                } else if (questionType === 'true_false') {
+                    options = ['True', 'False'];
+                    if (!['True', 'False', 'true', 'false'].includes(correctAnswer)) {
+                        alert(`For True/False questions, the correct answer must be 'True' or 'False'.`);
+                        return;
+                    }
+                } else if (questionType === 'math_expression') {
+                    const mathFormulaElement = document.getElementById(`mathFormula_${questionId}`);
+                    const toleranceElement = document.getElementById(`tolerance_${questionId}`);
+                    if (mathFormulaElement) mathFormula = mathFormulaElement.value.trim();
+                    if (toleranceElement) tolerance = parseFloat(toleranceElement.value) || 0.01;
+                } else if (questionType === 'numeric') {
+                    const toleranceElement = document.getElementById(`tolerance_${questionId}`);
+                    if (toleranceElement) tolerance = parseFloat(toleranceElement.value) || 0.01;
+                } else if (questionType === 'short_answer' || questionType === 'fill_blank') {
+                    const caseSensitiveElement = document.getElementById(`caseSensitive_${questionId}`);
+                    const exactMatchElement = document.getElementById(`exactMatch_${questionId}`);
+                    if (caseSensitiveElement) caseSensitive = caseSensitiveElement.checked;
+                    if (exactMatchElement) exactMatch = exactMatchElement.checked;
+                }
+                
+                questions.push({
+                    text: questionText,
+                    type: questionType,
+                    correctAnswer: correctAnswer,
+                    options: options,
+                    points: points,
+                    explanation: explanation,
+                    mathFormula: mathFormula,
+                    tolerance: tolerance,
+                    caseSensitive: caseSensitive,
+                    exactMatch: exactMatch
+                });
+            }
+            
+            if (questions.length === 0) {
+                alert('Please add at least one question.');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API}/api/assignments`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        title: title,
+                        description: description,
+                        questions: questions,
+                        targetStudents: targetStudents,
+                        dueDate: dueDate,
+                        creatorId: currentUser.id
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    alert('Assignment created successfully!');
+                    hideCreateAssignment();
+                } else {
+                    alert('Failed to create assignment.');
+                }
+                
+            } catch (error) {
+                console.error('Error creating assignment:', error);
+                alert('Failed to create assignment.');
+            }
+        }
+
+        async function showParentDashboard() {
+            if (currentUser.role !== 'parent' && currentUser.role !== 'parent_admin') {
+                alert('You do not have permission to access the parent dashboard.');
+                return;
+            }
+            
+            hideAllSections();
+            document.getElementById('parentDashboardSection').classList.remove('hidden');
+            
+            let html = '<div class="dashboard-content">';
+            
+            if (currentUser.children && currentUser.children.length > 0) {
+                html += '<h3>Children Progress Overview</h3>';
+                
+                for (let child of currentUser.children) {
+                    try {
+                        const statsResponse = await fetch(`${API}/api/stats/${child.id}`);
+                        const childStats = await statsResponse.json();
+                        
+                        const assignmentsResponse = await fetch(`${API}/api/assignments/student/${child.id}`);
+                        const assignments = await assignmentsResponse.json();
+                        
+                        const completedAssignments = assignments.filter(a => a.isCompleted).length;
+                        const totalAssignments = assignments.length;
+                        
+                        html += `
+                            <div class="child-dashboard" style="border: 1px solid #ddd; border-radius: 15px; padding: 20px; margin: 20px 0; background: linear-gradient(135deg, #f8f9fa, #e9ecef);">
+                                <h4 style="color: var(--klein-blue); margin: 0 0 15px 0;">👨‍🎓 ${child.name}</h4>
+                                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 15px;">
+                                    <div class="mini-stat" style="text-align: center; background: white; padding: 15px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                                        <div style="font-size: 24px; font-weight: bold; color: var(--klein-blue);">${childStats.learned || 0}</div>
+                                        <div style="font-size: 12px; color: #666;">Words Mastered</div>
+                                    </div>
+                                    <div class="mini-stat" style="text-align: center; background: white; padding: 15px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                                        <div style="font-size: 24px; font-weight: bold; color: #28a745;">${childStats.todayStudied || 0}</div>
+                                        <div style="font-size: 12px; color: #666;">Studied Today</div>
+                                    </div>
+                                    <div class="mini-stat" style="text-align: center; background: white; padding: 15px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                                        <div style="font-size: 24px; font-weight: bold; color: #ffc107;">${completedAssignments}/${totalAssignments}</div>
+                                        <div style="font-size: 12px; color: #666;">Assignments</div>
+                                    </div>
+                                    <div class="mini-stat" style="text-align: center; background: white; padding: 15px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                                        <div style="font-size: 24px; font-weight: bold; color: #dc3545;">${childStats.dueToday || 0}</div>
+                                        <div style="font-size: 12px; color: #666;">Due Today</div>
+                                    </div>
+                                </div>
+                                <div style="margin-top: 15px;">
+                                    <button onclick="switchToChild(${child.id}, '${child.name}')" class="mode-btn" style="padding: 8px 16px; font-size: 14px;">View Detailed Progress</button>
+                                </div>
+                            </div>
+                        `;
+                    } catch (error) {
+                        console.error(`Error loading stats for ${child.name}:`, error);
+                        html += `
+                            <div class="child-dashboard" style="border: 1px solid #ddd; border-radius: 15px; padding: 20px; margin: 20px 0;">
+                                <h4>${child.name}</h4>
+                                <p style="color: #dc3545;">Failed to load progress data.</p>
+                            </div>
+                        `;
+                    }
+                }
+            } else {
+                html += '<div class="status info">No children registered under your account.</div>';
+            }
+            
+            html += '</div>';
+            document.getElementById('parentDashboardContent').innerHTML = html;
+        }
+
+        function switchToChild(childId, childName) {
+            // This would temporarily switch the view to show the child's progress
+            // For now, just show an alert
+            alert(`Switching to detailed view for ${childName}. This feature will be implemented in the next update.`);
+        }
+
+        // Helper function to hide all sections
+        function hideAllSections() {
+            document.getElementById('wordListSection').classList.add('hidden');
+            document.getElementById('assignmentsSection').classList.add('hidden');
+            document.getElementById('errorNotebookSection').classList.add('hidden');
+            document.getElementById('createAssignmentSection').classList.add('hidden');
+            document.getElementById('parentDashboardSection').classList.add('hidden');
+            document.getElementById('csvImportSection').classList.add('hidden');
+            document.getElementById('rewardsSection').classList.add('hidden');
+        }
+
+        function showMainContent() {
+            hideAllSections();
+        }
+
+        // CSV Import Functions
+        async function showCSVImport() {
+            if (currentUser.role !== 'parent' && currentUser.role !== 'parent_admin' && currentUser.role !== 'teacher') {
+                alert('You do not have permission to access CSV import.');
+                return;
+            }
+            
+            hideAllSections();
+            document.getElementById('csvImportSection').classList.remove('hidden');
+            
+            // Load assignments for questions import
+            await loadAssignments();
+        }
+
+        function hideCSVImport() {
+            document.getElementById('csvImportSection').classList.add('hidden');
+            showMainContent();
+        }
+
+        function switchImportTab(tab) {
+            // Update tab buttons
+            document.querySelectorAll('.import-tab').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Show/hide sections
+            if (tab === 'vocabulary') {
+                document.getElementById('vocabularyImport').classList.remove('hidden');
+                document.getElementById('questionsImport').classList.add('hidden');
+            } else {
+                document.getElementById('vocabularyImport').classList.add('hidden');
+                document.getElementById('questionsImport').classList.remove('hidden');
+            }
+            
+            // Hide results
+            document.getElementById('importResults').classList.add('hidden');
+        }
+
+        async function loadAssignments() {
+            try {
+                const response = await fetch(`${API}/api/assignments/creator/${currentUser.id}`);
+                const assignments = await response.json();
+                
+                const select = document.getElementById('assignmentSelect');
+                select.innerHTML = '<option value="">Choose an assignment...</option>';
+                
+                assignments.forEach(assignment => {
+                    const option = document.createElement('option');
+                    option.value = assignment.id;
+                    option.textContent = `${assignment.title} (${assignment.question_count || 0} questions)`;
+                    select.appendChild(option);
+                });
+                
+            } catch (error) {
+                console.error('Error loading assignments:', error);
+            }
+        }
+
+        function downloadTemplate(type) {
+            const url = `${API}/api/csv-templates/${type}`;
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `${type}_template.csv`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function handleFileSelect(type) {
+            const fileInput = document.getElementById(`${type}File`);
+            const file = fileInput.files[0];
+            
+            if (file) {
+                // Update UI to show selected file
+                const uploadArea = document.getElementById(`${type}UploadArea`);
+                uploadArea.innerHTML = `
+                    <div class="upload-placeholder">
+                        <div class="upload-icon">📄</div>
+                        <div class="upload-text">Selected: ${file.name}</div>
+                        <div class="upload-hint">Size: ${(file.size / 1024).toFixed(1)} KB</div>
+                    </div>
+                `;
+                
+                // Show action buttons
+                document.getElementById(`${type}Actions`).classList.remove('hidden');
+            }
+        }
+
+        function cancelUpload(type) {
+            // Reset file input
+            document.getElementById(`${type}File`).value = '';
+            
+            // Reset UI
+            const uploadArea = document.getElementById(`${type}UploadArea`);
+            uploadArea.innerHTML = `
+                <div class="upload-placeholder" onclick="document.getElementById('${type}File').click()">
+                    <div class="upload-icon">📁</div>
+                    <div class="upload-text">Click to select CSV file or drag and drop</div>
+                    <div class="upload-hint">Maximum file size: 5MB</div>
+                </div>
+            `;
+            
+            // Hide action buttons
+            document.getElementById(`${type}Actions`).classList.add('hidden');
+            
+            // Hide results
+            document.getElementById('importResults').classList.add('hidden');
+        }
+
+        async function uploadVocabulary() {
+            const fileInput = document.getElementById('vocabularyFile');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                alert('Please select a CSV file first.');
+                return;
+            }
+            
+            const formData = new FormData();
+            formData.append('csvFile', file);
+            
+            try {
+                showImportProgress('Uploading and processing vocabulary...');
+                
+                const response = await fetch(`${API}/api/import/vocabulary`, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                showImportResults(result, 'vocabulary');
+                
+                if (result.success) {
+                    // Refresh word count in stats
+                    await loadStats();
+                }
+                
+            } catch (error) {
+                console.error('Error uploading vocabulary:', error);
+                showImportError('Failed to upload vocabulary file.');
+            }
+        }
+
+        async function uploadQuestions() {
+            const fileInput = document.getElementById('questionsFile');
+            const assignmentSelect = document.getElementById('assignmentSelect');
+            
+            const file = fileInput.files[0];
+            const assignmentId = assignmentSelect.value;
+            
+            if (!file) {
+                alert('Please select a CSV file first.');
+                return;
+            }
+            
+            if (!assignmentId) {
+                alert('Please select an assignment first.');
+                return;
+            }
+            
+            const formData = new FormData();
+            formData.append('csvFile', file);
+            formData.append('assignmentId', assignmentId);
+            
+            try {
+                showImportProgress('Uploading and processing questions...');
+                
+                const response = await fetch(`${API}/api/import/questions`, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                showImportResults(result, 'questions');
+                
+            } catch (error) {
+                console.error('Error uploading questions:', error);
+                showImportError('Failed to upload questions file.');
+            }
+        }
+
+        function showImportProgress(message) {
+            const resultsDiv = document.getElementById('importResults');
+            resultsDiv.classList.remove('hidden');
+            resultsDiv.innerHTML = `
+                <div class="status info">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <div style="width: 20px; height: 20px; border: 2px solid var(--klein-blue); border-top: 2px solid transparent; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+                        ${message}
+                    </div>
+                </div>
+                <style>
+                    @keyframes spin {
+                        0% { transform: rotate(0deg); }
+                        100% { transform: rotate(360deg); }
+                    }
+                </style>
+            `;
+        }
+
+        function showImportResults(result, type) {
+            const resultsDiv = document.getElementById('importResults');
+            resultsDiv.classList.remove('hidden');
+            
+            let html = '';
+            if (result.success) {
+                html += `
+                    <div class="status success">
+                        <h4>✅ Import Successful!</h4>
+                        <p>Successfully imported ${result.imported} of ${result.total} ${type}.</p>
+                    </div>
+                `;
+            } else {
+                html += `
+                    <div class="status error">
+                        <h4>❌ Import Failed</h4>
+                        <p>${result.error || 'Unknown error occurred.'}</p>
+                    </div>
+                `;
+            }
+            
+            if (result.errors && result.errors.length > 0) {
+                html += `
+                    <div class="status warning">
+                        <h4>⚠️ Import Warnings (${result.errors.length})</h4>
+                        <div style="max-height: 200px; overflow-y: auto; margin-top: 10px;">
+                            ${result.errors.map(error => `<div style="margin: 5px 0; padding: 5px; background: rgba(255,193,7,0.1); border-radius: 4px;">${error}</div>`).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+            
+            resultsDiv.innerHTML = html;
+        }
+
+        function showImportError(message) {
+            const resultsDiv = document.getElementById('importResults');
+            resultsDiv.classList.remove('hidden');
+            resultsDiv.innerHTML = `
+                <div class="status error">
+                    <h4>❌ Import Error</h4>
+                    <p>${message}</p>
+                </div>
+            `;
+        }
+
+        // Rewards System Functions
+        async function showRewards() {
+            if (currentUser.role !== 'student') {
+                alert('Rewards are only available for students.');
+                return;
+            }
+            
+            hideAllSections();
+            document.getElementById('rewardsSection').classList.remove('hidden');
+            
+            // Load apps and achievements
+            await loadApps();
+            await loadAchievements();
+        }
+
+        function hideRewards() {
+            document.getElementById('rewardsSection').classList.add('hidden');
+            showMainContent();
+        }
+
+        function switchRewardsTab(tab) {
+            // Update tab buttons
+            document.querySelectorAll('.rewards-tab').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Show/hide sections
+            if (tab === 'apps') {
+                document.getElementById('appsRewards').classList.remove('hidden');
+                document.getElementById('achievementsRewards').classList.add('hidden');
+            } else {
+                document.getElementById('appsRewards').classList.add('hidden');
+                document.getElementById('achievementsRewards').classList.remove('hidden');
+            }
+        }
+
+        async function loadApps() {
+            try {
+                const response = await fetch(`${API}/api/rewards/apps/${currentUser.id}`);
+                const apps = await response.json();
+                
+                let html = '<div class="app-grid">';
+                
+                apps.forEach(app => {
+                    const requirementText = getRequirementText(app.unlock_requirement, app.unlock_value);
+                    let statusClass = 'locked';
+                    let statusText = '🔒 Locked';
+                    let timerHtml = '';
+                    
+                    if (app.is_unlocked) {
+                        if (app.is_active) {
+                            statusClass = 'active';
+                            statusText = '✅ Available Now!';
+                            
+                            // Add countdown timer
+                            if (app.expires_at) {
+                                const expiresAt = new Date(app.expires_at);
+                                const minutesLeft = Math.max(0, Math.floor((expiresAt - new Date()) / 60000));
+                                timerHtml = `<div class="app-timer">⏰ ${minutesLeft} minutes remaining</div>`;
+                            }
+                        } else {
+                            statusClass = 'unlocked';
+                            statusText = '⏰ Expired';
+                        }
+                    }
+                    
+                    html += `
+                        <div class="app-card ${statusClass}">
+                            <div class="app-icon">${app.icon_url}</div>
+                            <div class="app-name">${app.name}</div>
+                            <div class="app-description">${app.description}</div>
+                            <div class="app-requirement">${requirementText}</div>
+                            <div class="app-status ${statusClass}">${statusText}</div>
+                            ${timerHtml}
+                        </div>
+                    `;
+                });
+                
+                html += '</div>';
+                document.getElementById('appsList').innerHTML = html;
+                
+            } catch (error) {
+                console.error('Error loading apps:', error);
+                document.getElementById('appsList').innerHTML = '<div class="status error">Failed to load apps.</div>';
+            }
+        }
+
+        async function loadAchievements() {
+            try {
+                // First check for new achievements
+                await fetch(`${API}/api/rewards/check-achievements`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userId: currentUser.id })
+                });
+                
+                const response = await fetch(`${API}/api/rewards/achievements/${currentUser.id}`);
+                const achievements = await response.json();
+                
+                let html = '<div class="achievement-grid">';
+                
+                achievements.forEach(achievement => {
+                    const isEarned = achievement.is_earned;
+                    const progress = await getAchievementProgress(achievement);
+                    const progressPercentage = Math.min(100, (progress / achievement.requirement_value) * 100);
+                    
+                    html += `
+                        <div class="achievement-card ${isEarned ? 'earned' : ''}">
+                            <div class="achievement-header">
+                                <div class="achievement-icon">${achievement.icon}</div>
+                                <div class="achievement-info">
+                                    <h4>${achievement.name}</h4>
+                                    <p class="achievement-description">${achievement.description}</p>
+                                </div>
+                            </div>
+                            
+                            ${!isEarned ? `
+                                <div class="achievement-progress">
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: ${progressPercentage}%"></div>
+                                    </div>
+                                    <div class="progress-text">${progress} / ${achievement.requirement_value}</div>
+                                </div>
+                            ` : `
+                                <div class="achievement-progress">
+                                    <div class="progress-text" style="color: #28a745; font-weight: bold;">🎉 Completed!</div>
+                                </div>
+                            `}
+                            
+                            ${achievement.reward_type === 'app_unlock' ? `
+                                <div class="achievement-reward">
+                                    🎮 Unlocks iPad App Access
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+                });
+                
+                html += '</div>';
+                document.getElementById('achievementsList').innerHTML = html;
+                
+            } catch (error) {
+                console.error('Error loading achievements:', error);
+                document.getElementById('achievementsList').innerHTML = '<div class="status error">Failed to load achievements.</div>';
+            }
+        }
+
+        function getRequirementText(type, value) {
+            const requirements = {
+                'words_learned': `Learn ${value} words`,
+                'daily_streak': `Study ${value} days in a row`,
+                'assignments_completed': `Complete ${value} assignments`,
+                'perfect_scores': `Get ${value} perfect scores`,
+                'words_per_day': `Learn ${value} words in one day`
+            };
+            
+            return requirements[type] || `Complete ${value} tasks`;
+        }
+
+        async function getAchievementProgress(achievement) {
+            try {
+                // This would ideally be returned from the achievements API
+                // For now, we'll calculate it based on current stats
+                switch (achievement.requirement_type) {
+                    case 'words_learned':
+                        return stats.learned || 0;
+                    case 'assignments_completed':
+                        // Would need to get assignment completion count
+                        return 0;
+                    case 'perfect_scores':
+                        // Would need to get perfect score count
+                        return 0;
+                    case 'words_per_day':
+                        return stats.todayStudied || 0;
+                    case 'daily_streak':
+                        // Would need to calculate streak
+                        return 0;
+                    default:
+                        return 0;
+                }
+            } catch (error) {
+                return 0;
+            }
+        }
+
+        // Analytics Dashboard Functions
+        async function showAnalyticsDashboard() {
+            if (currentUser.role !== 'parent' && currentUser.role !== 'parent_admin' && currentUser.role !== 'teacher') {
+                alert('You do not have permission to access analytics dashboard.');
+                return;
+            }
+            
+            hideAllSections();
+            document.getElementById('analyticsScreen').classList.remove('hidden');
+            
+            // Show user selector for parents/teachers
+            if (currentUser.role === 'parent' || currentUser.role === 'parent_admin' || currentUser.role === 'teacher') {
+                document.getElementById('analyticsUserSelector').style.display = 'block';
+                await loadStudentsForAnalytics();
+            }
+            
+            // Load initial analytics data
+            await loadAnalyticsData();
+        }
+
+        function hideAnalyticsDashboard() {
+            document.getElementById('analyticsScreen').classList.add('hidden');
+            showMainContent();
+        }
+
+        function switchAnalyticsTab(tab) {
+            // Update tab buttons
+            document.querySelectorAll('.analytics-tab').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Hide all content
+            document.querySelectorAll('.analytics-content').forEach(content => content.classList.add('hidden'));
+            
+            // Show selected content
+            switch(tab) {
+                case 'overview':
+                    document.getElementById('overviewAnalytics').classList.remove('hidden');
+                    break;
+                case 'learning':
+                    document.getElementById('learningAnalytics').classList.remove('hidden');
+                    loadLearningAnalytics();
+                    break;
+                case 'performance':
+                    document.getElementById('performanceAnalytics').classList.remove('hidden');
+                    loadPerformanceAnalytics();
+                    break;
+                case 'reports':
+                    document.getElementById('reportsAnalytics').classList.remove('hidden');
+                    loadDetailedReports();
+                    break;
+            }
+        }
+
+        async function loadStudentsForAnalytics() {
+            try {
+                const response = await fetch('/api/users/students');
+                const students = await response.json();
+                
+                const select = document.getElementById('analyticsUserSelect');
+                select.innerHTML = '<option value="">Choose a student...</option>';
+                
+                if (currentUser.role === 'parent' || currentUser.role === 'parent_admin') {
+                    // For parents, only show their children
+                    students.filter(student => student.parent_id === currentUser.id).forEach(student => {
+                        const option = document.createElement('option');
+                        option.value = student.id;
+                        option.textContent = student.name;
+                        select.appendChild(option);
+                    });
+                } else if (currentUser.role === 'teacher') {
+                    // For teachers, show all students
+                    students.forEach(student => {
+                        const option = document.createElement('option');
+                        option.value = student.id;
+                        option.textContent = student.name;
+                        select.appendChild(option);
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading students:', error);
+            }
+        }
+
+        async function loadAnalyticsData() {
+            const selectedUserId = document.getElementById('analyticsUserSelect').value;
+            const userId = selectedUserId || currentUser.id;
+            
+            try {
+                // Load overview analytics
+                const response = await fetch(`/api/analytics/overview/${userId}`);
+                const analytics = await response.json();
+                
+                // Update overview stats
+                document.getElementById('totalDays').textContent = analytics.totalLearningDays || 0;
+                document.getElementById('streakDays').textContent = analytics.currentStreak || 0;
+                document.getElementById('totalTime').textContent = formatTime(analytics.totalStudyTime || 0);
+                document.getElementById('avgDailyTime').textContent = formatTime(analytics.avgDailyTime || 0);
+                
+                document.getElementById('wordsLearned').textContent = analytics.wordsLearned || 0;
+                document.getElementById('wordsMastered').textContent = analytics.wordsMastered || 0;
+                document.getElementById('wordsReview').textContent = analytics.wordsNeedReview || 0;
+                document.getElementById('masteryRate').textContent = `${analytics.masteryRate || 0}%`;
+                
+                document.getElementById('assignmentsCompleted').textContent = analytics.assignmentsCompleted || 0;
+                document.getElementById('avgScore').textContent = `${analytics.avgScore || 0}%`;
+                document.getElementById('highestScore').textContent = `${analytics.highestScore || 0}%`;
+                document.getElementById('onTimeRate').textContent = `${analytics.onTimeSubmissionRate || 0}%`;
+                
+            } catch (error) {
+                console.error('Error loading analytics data:', error);
+            }
+        }
+
+        async function loadLearningAnalytics() {
+            const selectedUserId = document.getElementById('analyticsUserSelect').value;
+            const userId = selectedUserId || currentUser.id;
+            
+            try {
+                const response = await fetch(`/api/analytics/learning/${userId}`);
+                const data = await response.json();
+                
+                document.getElementById('weeklyNewWords').textContent = data.weeklyNewWords || 0;
+                document.getElementById('monthlyNewWords').textContent = data.monthlyNewWords || 0;
+                document.getElementById('peakTime').textContent = data.peakLearningTime || 'N/A';
+                
+                // Load difficult words
+                const difficultWordsResponse = await fetch(`/api/analytics/difficult-words/${userId}`);
+                const difficultWords = await difficultWordsResponse.json();
+                
+                const difficultWordsDiv = document.getElementById('difficultWords');
+                if (difficultWords.length > 0) {
+                    difficultWordsDiv.innerHTML = difficultWords.map(word => 
+                        `<div class="analytics-stat">
+                            <span class="stat-label">${word.word}</span>
+                            <span class="stat-value negative">${word.error_count} errors</span>
+                        </div>`
+                    ).join('');
+                } else {
+                    difficultWordsDiv.innerHTML = '<p>No difficult words identified yet.</p>';
+                }
+                
+            } catch (error) {
+                console.error('Error loading learning analytics:', error);
+                document.getElementById('difficultWords').innerHTML = '<p>Error loading data.</p>';
+            }
+        }
+
+        async function loadPerformanceAnalytics() {
+            const selectedUserId = document.getElementById('analyticsUserSelect').value;
+            const userId = selectedUserId || currentUser.id;
+            
+            try {
+                // Load subject performance
+                const subjectResponse = await fetch(`/api/analytics/subject-performance/${userId}`);
+                const subjectData = await subjectResponse.json();
+                
+                const subjectDiv = document.getElementById('subjectPerformance');
+                if (subjectData.length > 0) {
+                    subjectDiv.innerHTML = subjectData.map(subject => 
+                        `<div class="analytics-stat">
+                            <span class="stat-label">${subject.subject || 'General'}</span>
+                            <span class="stat-value">${subject.avg_score}%</span>
+                        </div>`
+                    ).join('');
+                } else {
+                    subjectDiv.innerHTML = '<p>No subject performance data available.</p>';
+                }
+                
+                // Load error analysis
+                const errorResponse = await fetch(`/api/analytics/error-analysis/${userId}`);
+                const errorData = await errorResponse.json();
+                
+                const errorDiv = document.getElementById('errorAnalysis');
+                if (errorData.length > 0) {
+                    errorDiv.innerHTML = errorData.map(error => 
+                        `<div class="analytics-stat">
+                            <span class="stat-label">${error.question_type}</span>
+                            <span class="stat-value negative">${error.error_count} errors</span>
+                        </div>`
+                    ).join('');
+                } else {
+                    errorDiv.innerHTML = '<p>No error patterns identified.</p>';
+                }
+                
+            } catch (error) {
+                console.error('Error loading performance analytics:', error);
+            }
+        }
+
+        async function loadDetailedReports() {
+            const selectedUserId = document.getElementById('analyticsUserSelect').value;
+            const userId = selectedUserId || currentUser.id;
+            
+            try {
+                const response = await fetch(`/api/analytics/detailed-report/${userId}`);
+                const report = await response.json();
+                
+                const reportsDiv = document.getElementById('detailedReports');
+                reportsDiv.innerHTML = `
+                    <div class="analytics-stat">
+                        <span class="stat-label">Report Period</span>
+                        <span class="stat-value">${new Date(report.startDate).toLocaleDateString()} - ${new Date(report.endDate).toLocaleDateString()}</span>
+                    </div>
+                    <div class="analytics-stat">
+                        <span class="stat-label">Total Learning Sessions</span>
+                        <span class="stat-value">${report.totalSessions}</span>
+                    </div>
+                    <div class="analytics-stat">
+                        <span class="stat-label">Average Session Length</span>
+                        <span class="stat-value">${formatTime(report.avgSessionLength)}</span>
+                    </div>
+                    <div class="analytics-stat">
+                        <span class="stat-label">Words Per Session</span>
+                        <span class="stat-value">${report.avgWordsPerSession}</span>
+                    </div>
+                `;
+                
+            } catch (error) {
+                console.error('Error loading detailed reports:', error);
+                document.getElementById('detailedReports').innerHTML = '<p>Error loading report data.</p>';
+            }
+        }
+
+        async function exportReport(format) {
+            const selectedUserId = document.getElementById('analyticsUserSelect').value;
+            const userId = selectedUserId || currentUser.id;
+            
+            try {
+                const response = await fetch(`/api/analytics/export/${format}/${userId}`);
+                
+                if (response.ok) {
+                    if (format === 'pdf') {
+                        const blob = await response.blob();
+                        const url = window.URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = `learning_report_${userId}_${new Date().toISOString().slice(0,10)}.pdf`;
+                        a.click();
+                        window.URL.revokeObjectURL(url);
+                    } else {
+                        const data = await response.json();
+                        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                        const url = window.URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = `learning_data_${userId}_${new Date().toISOString().slice(0,10)}.${format}`;
+                        a.click();
+                        window.URL.revokeObjectURL(url);
+                    }
+                    alert(`Report exported successfully as ${format.toUpperCase()}!`);
+                } else {
+                    throw new Error('Export failed');
+                }
+            } catch (error) {
+                console.error('Error exporting report:', error);
+                alert('Failed to export report. Please try again.');
+            }
+        }
+
+        function formatTime(minutes) {
+            if (!minutes) return '0m';
+            if (minutes < 60) return `${Math.round(minutes)}m`;
+            const hours = Math.floor(minutes / 60);
+            const mins = Math.round(minutes % 60);
+            return `${hours}h ${mins}m`;
+        }
+
     </script>
 </body>
 </html>
