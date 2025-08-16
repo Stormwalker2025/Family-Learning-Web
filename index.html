@@ -655,7 +655,7 @@
             color: var(--klein-blue);
             margin-bottom: 25px;
             letter-spacing: 3px;
-            text-transform: uppercase;
+            text-transform: lowercase;
         }
         
         .word-phonetic {
@@ -853,6 +853,286 @@
         .back-btn:hover {
             transform: translateY(-3px);
             box-shadow: 0 15px 30px rgba(0, 47, 167, 0.3);
+        }
+        
+        /* Enhanced Multi-sensory Learning Styles */
+        .pre-learning-content {
+            text-align: center;
+            padding: 40px;
+        }
+        
+        .instruction-text {
+            font-size: 20px;
+            color: var(--dark-gray);
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+        
+        .audio-focus-area {
+            margin: 40px 0;
+        }
+        
+        .large-audio-btn {
+            background: linear-gradient(135deg, #17a2b8, #138496);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            font-size: 36px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(23, 162, 184, 0.3);
+            margin-bottom: 15px;
+        }
+        
+        .large-audio-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 12px 35px rgba(23, 162, 184, 0.4);
+        }
+        
+        .large-audio-btn:active {
+            transform: scale(0.95);
+        }
+        
+        .audio-hint {
+            color: var(--dark-gray);
+            font-style: italic;
+        }
+        
+        /* Active Recall Phase Styles */
+        .recall-practice {
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .recall-instruction {
+            font-size: 18px;
+            color: var(--klein-blue);
+            margin-bottom: 25px;
+            padding: 15px;
+            background: rgba(65, 105, 225, 0.1);
+            border-radius: 10px;
+            border-left: 4px solid var(--klein-blue);
+        }
+        
+        .sentence-input {
+            width: 100%;
+            max-width: 500px;
+            padding: 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 16px;
+            font-family: inherit;
+            margin: 20px 0;
+            resize: vertical;
+            transition: border-color 0.3s ease;
+        }
+        
+        .sentence-input:focus {
+            outline: none;
+            border-color: var(--klein-blue);
+            box-shadow: 0 0 0 3px rgba(65, 105, 225, 0.1);
+        }
+        
+        .recall-actions {
+            margin: 25px 0;
+        }
+        
+        .show-meaning-btn {
+            background: linear-gradient(135deg, #ffc107, #ff8f00);
+            color: white;
+            margin-right: 15px;
+        }
+        
+        .check-sentence-btn {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+        }
+        
+        .meaning-reveal {
+            margin: 25px 0;
+            padding: 20px;
+            background: rgba(40, 167, 69, 0.1);
+            border-radius: 10px;
+            border-left: 4px solid #28a745;
+        }
+        
+        .word-meaning {
+            font-size: 18px;
+            font-weight: bold;
+            color: #28a745;
+            margin-bottom: 10px;
+        }
+        
+        .example-sentence {
+            font-style: italic;
+            color: var(--dark-gray);
+        }
+
+        /* New 4-Phase Learning Styles */
+        .audio-learning-content, .meaning-choice-content, .spelling-content, .sentence-creation-content {
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .replay-btn {
+            background: linear-gradient(135deg, #6c757d, #5a6268);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            padding: 10px 20px;
+            margin-left: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .replay-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(108, 117, 125, 0.3);
+        }
+        
+        /* Spelling Phase Styles */
+        .meaning-display {
+            font-size: 20px;
+            color: var(--klein-blue);
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(65, 105, 225, 0.1);
+            border-radius: 10px;
+            border-left: 4px solid var(--klein-blue);
+        }
+        
+        .spelling-area {
+            margin: 25px 0;
+        }
+        
+        .spelling-input {
+            width: 300px;
+            max-width: 80%;
+            padding: 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 18px;
+            text-align: center;
+            margin-right: 15px;
+            transition: border-color 0.3s ease;
+        }
+        
+        .spelling-input:focus {
+            outline: none;
+            border-color: var(--klein-blue);
+        }
+        
+        .spelling-input.correct {
+            border-color: #28a745;
+            background-color: rgba(40, 167, 69, 0.1);
+        }
+        
+        .spelling-input.incorrect {
+            border-color: #dc3545;
+            background-color: rgba(220, 53, 69, 0.1);
+            animation: shake 0.5s ease-in-out;
+        }
+        
+        .check-spelling-btn {
+            background: linear-gradient(135deg, #17a2b8, #138496);
+            color: white;
+            vertical-align: top;
+        }
+        
+        .spelling-feedback {
+            margin: 15px 0;
+            padding: 10px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+        
+        .spelling-feedback.correct {
+            background: rgba(40, 167, 69, 0.1);
+            color: #28a745;
+            border: 1px solid #28a745;
+        }
+        
+        .spelling-feedback.incorrect {
+            background: rgba(220, 53, 69, 0.1);
+            color: #dc3545;
+            border: 1px solid #dc3545;
+        }
+        
+        /* Sentence Creation Styles */
+        .sentence-guidelines {
+            background: rgba(255, 193, 7, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px 0;
+            border-left: 4px solid #ffc107;
+        }
+        
+        .guideline {
+            margin: 8px 0;
+            color: #856404;
+            font-weight: 500;
+        }
+        
+        .sentence-actions {
+            margin: 20px 0;
+        }
+        
+        .hint-btn {
+            background: linear-gradient(135deg, #ffc107, #ff8f00);
+            color: white;
+            margin-left: 15px;
+        }
+        
+        .sentence-feedback {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+        
+        .sentence-feedback.excellent {
+            background: rgba(40, 167, 69, 0.1);
+            color: #28a745;
+            border: 1px solid #28a745;
+        }
+        
+        .sentence-feedback.good {
+            background: rgba(23, 162, 184, 0.1);
+            color: #17a2b8;
+            border: 1px solid #17a2b8;
+        }
+        
+        .sentence-feedback.needs-improvement {
+            background: rgba(255, 193, 7, 0.1);
+            color: #856404;
+            border: 1px solid #ffc107;
+        }
+        
+        .sentence-feedback.poor {
+            background: rgba(220, 53, 69, 0.1);
+            color: #dc3545;
+            border: 1px solid #dc3545;
+        }
+        
+        .example-hint {
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(40, 167, 69, 0.1);
+            border-radius: 10px;
+            border-left: 4px solid #28a745;
+        }
+        
+        .hint-title {
+            font-weight: bold;
+            color: #28a745;
+            margin-bottom: 10px;
+        }
+        
+        .example-text {
+            font-style: italic;
+            color: var(--dark-gray);
         }
         
         .hidden { display: none; }
@@ -2510,35 +2790,86 @@
             
             <div class="study-content">
                 <div class="word-card" id="wordCard">
-                    <!-- Phase 1: Sentence + Image -->
+                    <!-- Phase 1: Listen to Pronunciation -->
                     <div id="phase1" class="phase-content">
-                        <div class="phase-sentence" id="phaseSentence">Loading sentence...</div>
-                        <div class="word-image" id="wordImage">🎯</div>
-                        <div class="action-buttons">
-                            <button class="action-btn next-phase-btn" onclick="nextPhase()">Next Phase</button>
+                        <div class="audio-learning-content">
+                            <div class="instruction-text">🎧 <strong>Step 1:</strong> Listen carefully to the pronunciation</div>
+                            <div class="audio-focus-area">
+                                <button class="large-audio-btn" onclick="speakWord()" id="audioBtn1">
+                                    🔊 Play Audio
+                                </button>
+                                <div class="audio-hint">Listen as many times as you need</div>
+                                <button class="replay-btn" onclick="speakWord()">🔄 Play Again</button>
+                            </div>
+                            <div class="action-buttons">
+                                <button class="action-btn next-phase-btn" onclick="nextPhase()">I've listened clearly →</button>
+                            </div>
                         </div>
                     </div>
                     
-                    <!-- Phase 2: Word + Image -->
+                    <!-- Phase 2: Choose Meaning -->
                     <div id="phase2" class="phase-content hidden">
-                        <div class="word-display" id="currentWord">Loading...</div>
-                        <div class="word-phonetic" id="wordPhonetic"></div>
-                        <button class="speak-btn" onclick="speakWord()">🔊 Listen</button>
-                        <div class="word-image" id="wordImage2">🎯</div>
-                        <div class="action-buttons">
-                            <button class="action-btn next-phase-btn" onclick="nextPhase()">Next Phase</button>
+                        <div class="meaning-choice-content">
+                            <div class="word-display" id="currentWord2">Loading...</div>
+                            <div class="instruction-text">🤔 <strong>Step 2:</strong> What does this word mean?</div>
+                            <div class="choices" id="meaningChoices">
+                                <!-- Multiple choice options will be inserted here -->
+                            </div>
+                            <div class="action-buttons hidden" id="phase2Actions">
+                                <button class="action-btn next-phase-btn" onclick="nextPhase()">Continue to Spelling →</button>
+                            </div>
                         </div>
                     </div>
                     
-                    <!-- Phase 3: Word + Definition (Multiple Choice) -->
+                    <!-- Phase 3: Spelling Check -->
                     <div id="phase3" class="phase-content hidden">
-                        <div class="word-display" id="currentWord3">Loading...</div>
-                        <div class="choices" id="choices">
-                            <!-- Multiple choice options will be inserted here -->
+                        <div class="spelling-content">
+                            <div class="instruction-text">✍️ <strong>Step 3:</strong> Now spell the word correctly</div>
+                            <div class="meaning-display" id="spellingMeaning">Loading meaning...</div>
+                            <div class="spelling-area">
+                                <input type="text" id="spellingInput" class="spelling-input" placeholder="Type the word here..." autocomplete="off">
+                                <button class="action-btn check-spelling-btn" onclick="checkSpelling()">✓ Check Spelling</button>
+                            </div>
+                            <div class="spelling-feedback hidden" id="spellingFeedback"></div>
+                            <div class="action-buttons hidden" id="phase3Actions">
+                                <button class="action-btn next-phase-btn" onclick="nextPhase()">Continue to Sentence →</button>
+                            </div>
                         </div>
-                        <div class="action-buttons hidden" id="phase3Actions">
-                            <button class="action-btn know-btn" onclick="markAsKnown()">✅ I Mastered It</button>
-                            <button class="action-btn dont-know-btn" onclick="markAsUnknown()">❌ Need More Practice</button>
+                    </div>
+                    
+                    <!-- Phase 4: Smart Sentence Creation -->
+                    <div id="phase4" class="phase-content hidden">
+                        <div class="sentence-creation-content">
+                            <div class="word-display" id="currentWord4">Loading...</div>
+                            <div class="instruction-text">📝 <strong>Step 4:</strong> Create a meaningful sentence using this word</div>
+                            <div class="sentence-guidelines">
+                                <div class="guideline">✓ Use the word in its correct meaning</div>
+                                <div class="guideline">✓ Write at least 6 words</div>
+                                <div class="guideline">✓ Make it a complete sentence</div>
+                            </div>
+                            <textarea 
+                                id="userSentence" 
+                                placeholder="Write your sentence here..."
+                                class="sentence-input"
+                                rows="3">
+                            </textarea>
+                            <div class="sentence-actions">
+                                <button class="action-btn check-sentence-btn" onclick="intelligentSentenceCheck()">
+                                    🧠 Check My Sentence
+                                </button>
+                                <button class="action-btn hint-btn" onclick="showSentenceHint()">
+                                    💡 Need Help?
+                                </button>
+                            </div>
+                            <div class="sentence-feedback hidden" id="sentenceFeedback"></div>
+                            <div class="example-hint hidden" id="exampleHint">
+                                <div class="hint-title">💡 Here's an example:</div>
+                                <div class="example-text" id="exampleSentenceText"></div>
+                            </div>
+                            <div class="action-buttons hidden" id="phase4Actions">
+                                <button class="action-btn know-btn" onclick="markAsKnown()">✅ I Mastered It</button>
+                                <button class="action-btn dont-know-btn" onclick="markAsUnknown()">❌ Need More Practice</button>
+                            </div>
                         </div>
                     </div>
                     
@@ -3015,11 +3346,31 @@
         async function startLearning() {
             currentMode = 'learn';
             try {
-                const response = await fetch(`${API}/api/learning/${currentUser.id}?limit=10`);
-                currentWords = await response.json();
+                const response = await fetch(`${API}/api/learning/${currentUser.id}`);
+                const data = await response.json();
+                
+                // Handle new API response format
+                if (data.words) {
+                    currentWords = data.words;
+                    
+                    // Show daily progress info
+                    if (data.todayLearned !== undefined) {
+                        const progressMsg = `Today's progress: ${data.todayLearned}/${data.dailyLimit} words learned`;
+                        showStatus('mainStatus', progressMsg, 'info');
+                        
+                        // Update daily progress display
+                        updateDailyProgress(data.todayLearned, data.dailyLimit);
+                    }
+                } else {
+                    currentWords = data; // Fallback for old format
+                }
                 
                 if (currentWords.length === 0) {
-                    showStatus('mainStatus', 'No new words available! Try reviewing your learned words.', 'warning');
+                    if (data.message) {
+                        showStatus('mainStatus', data.message, 'success');
+                    } else {
+                        showStatus('mainStatus', 'No new words available! Try reviewing your learned words.', 'warning');
+                    }
                     return;
                 }
                 
@@ -3086,6 +3437,7 @@
             document.getElementById('phase1').classList.add('hidden');
             document.getElementById('phase2').classList.add('hidden');
             document.getElementById('phase3').classList.add('hidden');
+            document.getElementById('phase4').classList.add('hidden');
             document.getElementById('completionPhase').classList.add('hidden');
             
             // Update progress
@@ -3094,7 +3446,7 @@
             const progress = (currentWordIndex / currentWords.length) * 100;
             document.getElementById('progressFill').style.width = progress + '%';
             
-            // Start with Phase 1
+            // Start with Phase 1 - Listen to Pronunciation
             currentPhase = 1;
             showPhase(word);
         }
@@ -3102,33 +3454,43 @@
         // Show Current Phase
         function showPhase(word) {
             // Update phase indicator
-            const phaseNames = ['Context', 'Recognition', 'Definition'];
-            document.getElementById('phaseIndicator').textContent = `Phase ${currentPhase}: ${phaseNames[currentPhase - 1]}`;
+            const phaseNames = ['Listen', 'Choose Meaning', 'Spell Word', 'Create Sentence'];
+            document.getElementById('phaseIndicator').textContent = `Step ${currentPhase}: ${phaseNames[currentPhase - 1]}`;
             
             if (currentPhase === 1) {
-                // Phase 1: Sentence + Image
+                // Phase 1: Listen to Pronunciation
                 document.getElementById('phase1').classList.remove('hidden');
-                document.getElementById('phaseSentence').textContent = word.example || `This word is "${word.word}".`;
-                
-                // Use enhanced visual system
-                const imageContainer = document.getElementById('wordImage');
-                createWordVisual(word.word, imageContainer);
+                // Store current word for audio playback
                 
             } else if (currentPhase === 2) {
-                // Phase 2: Word + Image
+                // Phase 2: Choose Meaning
                 document.getElementById('phase2').classList.remove('hidden');
-                document.getElementById('currentWord').textContent = word.word;
-                document.getElementById('wordPhonetic').textContent = `/${word.word}/`;
-                
-                // Use enhanced visual system
-                const imageContainer2 = document.getElementById('wordImage2');
-                createWordVisual(word.word, imageContainer2);
+                document.getElementById('currentWord2').textContent = word.word.toLowerCase();
+                generateMeaningChoices(word);
                 
             } else if (currentPhase === 3) {
-                // Phase 3: Word + Multiple Choice Definition
+                // Phase 3: Spelling Check
                 document.getElementById('phase3').classList.remove('hidden');
-                document.getElementById('currentWord3').textContent = word.word;
-                generateMultipleChoice(word);
+                document.getElementById('spellingMeaning').textContent = `Meaning: ${word.meaning}`;
+                
+                // Reset spelling UI
+                const input = document.getElementById('spellingInput');
+                input.value = '';
+                input.className = 'spelling-input';
+                document.getElementById('spellingFeedback').classList.add('hidden');
+                document.getElementById('phase3Actions').classList.add('hidden');
+                input.focus();
+                
+            } else if (currentPhase === 4) {
+                // Phase 4: Smart Sentence Creation
+                document.getElementById('phase4').classList.remove('hidden');
+                document.getElementById('currentWord4').textContent = word.word.toLowerCase();
+                
+                // Reset Phase 4 UI
+                document.getElementById('userSentence').value = '';
+                document.getElementById('sentenceFeedback').classList.add('hidden');
+                document.getElementById('exampleHint').classList.add('hidden');
+                document.getElementById('phase4Actions').classList.add('hidden');
             }
             
             // Add animation
@@ -3232,7 +3594,7 @@
 
         // Next Phase
         function nextPhase() {
-            if (currentPhase < 3) {
+            if (currentPhase < 4) {
                 currentPhase++;
                 const word = currentWords[currentWordIndex];
                 
@@ -3243,8 +3605,314 @@
                 showPhase(word);
             }
         }
+        
+        // Phase 4 Functions - Active Recall
+        function showMeaning() {
+            const word = currentWords[currentWordIndex];
+            
+            // Reveal meaning and example
+            document.getElementById('revealedMeaning').textContent = word.meaning;
+            document.getElementById('exampleSentence').textContent = `Example: "${word.example || 'No example available'}"`;
+            document.getElementById('meaningReveal').classList.remove('hidden');
+            
+            // Show sentence check button and hide meaning button
+            document.getElementById('showMeaningBtn').style.display = 'none';
+            document.getElementById('checkSentenceBtn').style.display = 'inline-block';
+        }
+        
+        function checkSentence() {
+            const userSentence = document.getElementById('userSentence').value.trim();
+            const word = currentWords[currentWordIndex];
+            
+            if (userSentence.length < 5) {
+                alert('Please write a sentence with at least 5 characters.');
+                return;
+            }
+            
+            // Basic check if the word is used in the sentence
+            const wordInSentence = userSentence.toLowerCase().includes(word.word.toLowerCase());
+            
+            if (wordInSentence) {
+                // Show success feedback
+                document.getElementById('userSentence').style.borderColor = '#28a745';
+                document.getElementById('userSentence').style.backgroundColor = 'rgba(40, 167, 69, 0.1)';
+                
+                // Show final action buttons
+                document.getElementById('phase4Actions').classList.remove('hidden');
+                document.getElementById('checkSentenceBtn').style.display = 'none';
+                
+                // Add a positive message
+                const existingHint = document.querySelector('.sentence-feedback');
+                if (!existingHint) {
+                    const feedback = document.createElement('div');
+                    feedback.className = 'sentence-feedback';
+                    feedback.innerHTML = '✅ Great! You used the word correctly in your sentence.';
+                    feedback.style.cssText = 'color: #28a745; margin: 10px 0; font-weight: bold;';
+                    document.getElementById('userSentence').parentNode.insertBefore(feedback, document.getElementById('userSentence').nextSibling);
+                }
+            } else {
+                // Show suggestion to include the word
+                alert(`Please include the word "${word.word}" in your sentence.`);
+                document.getElementById('userSentence').style.borderColor = '#dc3545';
+                document.getElementById('userSentence').focus();
+            }
+        }
 
-        // Generate Multiple Choice for Phase 3
+        // Generate Meaning Choices for Phase 2
+        function generateMeaningChoices(word) {
+            const choices = document.getElementById('meaningChoices');
+            choices.innerHTML = '';
+            
+            // Create fallback wrong answers if not enough words
+            const fallbackAnswers = [
+                'beautiful', 'important', 'different', 'wonderful', 
+                'delicious', 'amazing', 'terrible', 'exciting'
+            ];
+            
+            // Get 3 wrong answers
+            let wrongAnswers = [];
+            if (currentWords.length >= 4) {
+                wrongAnswers = currentWords
+                    .filter(w => w.id !== word.id)
+                    .slice(0, 3)
+                    .map(w => w.meaning);
+            } else {
+                // Use fallback answers if not enough words
+                wrongAnswers = fallbackAnswers
+                    .filter(ans => ans !== word.meaning)
+                    .slice(0, 3);
+            }
+            
+            // Combine correct and wrong answers
+            const allAnswers = [word.meaning, ...wrongAnswers];
+            
+            // Shuffle answers
+            for (let i = allAnswers.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [allAnswers[i], allAnswers[j]] = [allAnswers[j], allAnswers[i]];
+            }
+            
+            // Create choice buttons
+            allAnswers.forEach(answer => {
+                const button = document.createElement('button');
+                button.className = 'choice-btn';
+                button.textContent = answer;
+                button.onclick = () => selectMeaningChoice(button, word.meaning);
+                choices.appendChild(button);
+            });
+        }
+        
+        // Handle meaning choice selection
+        function selectMeaningChoice(button, correctAnswer) {
+            const allButtons = document.querySelectorAll('#meaningChoices .choice-btn');
+            allButtons.forEach(btn => btn.disabled = true);
+            
+            if (button.textContent === correctAnswer) {
+                button.classList.add('correct');
+                setTimeout(() => {
+                    document.getElementById('phase2Actions').classList.remove('hidden');
+                }, 1000);
+            } else {
+                button.classList.add('incorrect');
+                // Show correct answer
+                setTimeout(() => {
+                    const correctBtn = Array.from(allButtons).find(btn => 
+                        btn.textContent === correctAnswer
+                    );
+                    if (correctBtn) correctBtn.classList.add('correct');
+                    
+                    setTimeout(() => {
+                        document.getElementById('phase2Actions').classList.remove('hidden');
+                    }, 1500);
+                }, 500);
+            }
+        }
+
+        // Check spelling function
+        function checkSpelling() {
+            const input = document.getElementById('spellingInput');
+            const userSpelling = input.value.trim().toLowerCase();
+            const word = currentWords[currentWordIndex];
+            const correctSpelling = word.word.toLowerCase();
+            const feedback = document.getElementById('spellingFeedback');
+            
+            if (userSpelling === correctSpelling) {
+                input.classList.add('correct');
+                input.classList.remove('incorrect');
+                feedback.textContent = '✅ Perfect spelling!';
+                feedback.className = 'spelling-feedback correct';
+                feedback.classList.remove('hidden');
+                
+                setTimeout(() => {
+                    document.getElementById('phase3Actions').classList.remove('hidden');
+                }, 1000);
+            } else {
+                input.classList.add('incorrect');
+                input.classList.remove('correct');
+                feedback.textContent = `❌ Incorrect. The correct spelling is: ${word.word}`;
+                feedback.className = 'spelling-feedback incorrect';
+                feedback.classList.remove('hidden');
+                
+                // Allow user to try again
+                setTimeout(() => {
+                    input.value = '';
+                    input.className = 'spelling-input';
+                    input.focus();
+                }, 2000);
+            }
+        }
+
+        // Intelligent sentence checking system
+        function intelligentSentenceCheck() {
+            const userSentence = document.getElementById('userSentence').value.trim();
+            const word = currentWords[currentWordIndex];
+            const feedback = document.getElementById('sentenceFeedback');
+            
+            if (userSentence.length < 5) {
+                showSentenceFeedback('Please write a longer sentence (at least 5 words).', 'poor');
+                return;
+            }
+            
+            const analysis = analyzeSentence(userSentence, word);
+            showSentenceFeedback(analysis.message, analysis.level);
+            
+            if (analysis.level === 'excellent' || analysis.level === 'good') {
+                setTimeout(() => {
+                    document.getElementById('phase4Actions').classList.remove('hidden');
+                }, 1500);
+            }
+        }
+        
+        // Advanced sentence analysis
+        function analyzeSentence(sentence, word) {
+            const sentenceLower = sentence.toLowerCase();
+            const wordLower = word.word.toLowerCase();
+            const wordMeaning = word.meaning.toLowerCase();
+            
+            // Basic checks
+            const containsWord = sentenceLower.includes(wordLower);
+            const wordCount = sentence.split(/\s+/).length;
+            const hasCapitalization = sentence[0] === sentence[0].toUpperCase();
+            const hasPunctuation = /[.!?]$/.test(sentence);
+            const isComplete = hasCapitalization && hasPunctuation;
+            
+            if (!containsWord) {
+                return {
+                    level: 'poor',
+                    message: `❌ Please include the word "${word.word}" in your sentence.`
+                };
+            }
+            
+            if (wordCount < 6) {
+                return {
+                    level: 'needs-improvement',
+                    message: `⚠️ Your sentence is too short. Please write at least 6 words.`
+                };
+            }
+            
+            // Check if word is used meaningfully (not just randomly inserted)
+            const wordIndex = sentenceLower.indexOf(wordLower);
+            const isWordIsolated = isWordUsedProperly(sentence, wordLower, wordIndex);
+            
+            if (!isWordIsolated) {
+                return {
+                    level: 'needs-improvement',
+                    message: `⚠️ The word "${word.word}" should be used as a separate word, not part of another word.`
+                };
+            }
+            
+            // Check sentence structure and context
+            const contextScore = checkContextualUsage(sentence, word);
+            
+            if (!isComplete) {
+                return {
+                    level: 'good',
+                    message: `✅ Good use of "${word.word}"! Remember to start with a capital letter and end with punctuation.`
+                };
+            }
+            
+            if (contextScore >= 0.8) {
+                return {
+                    level: 'excellent',
+                    message: `🎉 Excellent sentence! You used "${word.word}" perfectly in context.`
+                };
+            } else if (contextScore >= 0.6) {
+                return {
+                    level: 'good',
+                    message: `✅ Good sentence! You used "${word.word}" correctly.`
+                };
+            } else {
+                return {
+                    level: 'needs-improvement',
+                    message: `⚠️ Your sentence uses "${word.word}" but the meaning might not be quite right. Try thinking about: ${word.meaning}`
+                };
+            }
+        }
+        
+        // Check if word is used as a proper word (not substring)
+        function isWordUsedProperly(sentence, word, wordIndex) {
+            if (wordIndex === -1) return false;
+            
+            const beforeChar = wordIndex > 0 ? sentence[wordIndex - 1] : ' ';
+            const afterChar = wordIndex + word.length < sentence.length ? sentence[wordIndex + word.length] : ' ';
+            
+            const isBeforeSpace = /\s|^/.test(beforeChar);
+            const isAfterSpace = /\s|[.!?]|$/.test(afterChar);
+            
+            return isBeforeSpace && isAfterSpace;
+        }
+        
+        // Advanced contextual usage analysis
+        function checkContextualUsage(sentence, word) {
+            const sentenceLower = sentence.toLowerCase();
+            const wordLower = word.word.toLowerCase();
+            const meaning = word.meaning.toLowerCase();
+            
+            // Simple keyword matching for context
+            const meaningKeywords = meaning.split(/\s+/).filter(w => w.length > 3);
+            const sentenceWords = sentenceLower.split(/\s+/);
+            
+            let contextMatches = 0;
+            meaningKeywords.forEach(keyword => {
+                if (sentenceWords.some(sw => sw.includes(keyword) || keyword.includes(sw))) {
+                    contextMatches++;
+                }
+            });
+            
+            // Basic grammar patterns
+            const hasArticles = /\b(a|an|the)\s+\w*${wordLower}/.test(sentenceLower);
+            const hasVerbs = /\b(is|are|was|were|have|has|will|can|could|would|should)\b/.test(sentenceLower);
+            const hasCoherentStructure = sentence.split(/\s+/).length >= 6 && hasVerbs;
+            
+            let score = 0.5; // Base score
+            
+            if (contextMatches > 0) score += 0.2;
+            if (hasArticles) score += 0.1;
+            if (hasCoherentStructure) score += 0.2;
+            if (sentence.includes(',') || sentence.includes(' and ') || sentence.includes(' but ')) score += 0.1;
+            
+            return Math.min(score, 1.0);
+        }
+        
+        // Show sentence feedback with appropriate styling
+        function showSentenceFeedback(message, level) {
+            const feedback = document.getElementById('sentenceFeedback');
+            feedback.textContent = message;
+            feedback.className = `sentence-feedback ${level}`;
+            feedback.classList.remove('hidden');
+        }
+        
+        // Show helpful sentence hint
+        function showSentenceHint() {
+            const word = currentWords[currentWordIndex];
+            const hint = document.getElementById('exampleHint');
+            const exampleText = document.getElementById('exampleSentenceText');
+            
+            exampleText.textContent = word.example || `"The ${word.word} is very ${word.meaning.split(' ')[0]}."`;
+            hint.classList.remove('hidden');
+        }
+
+        // Generate Multiple Choice for Phase 3  
         function generateMultipleChoice(word) {
             const choices = document.getElementById('choices');
             choices.innerHTML = '';
@@ -3487,7 +4155,7 @@
                     <div style="display: flex; justify-content: space-between; align-items: flex-start;">
                         <div style="flex: 1;">
                             <div style="font-size: 28px; font-weight: bold; color: var(--klein-blue); margin-bottom: 10px;">
-                                ${getWordEmoji(word.word)} ${word.word}
+                                ${getWordEmoji(word.word)} ${word.word.toLowerCase()}
                                 <button onclick="speakWord('${word.word}')" 
                                         style="background: #17a2b8; color: white; border: none; 
                                                padding: 6px 12px; border-radius: 6px; margin-left: 15px; 
@@ -4893,7 +5561,7 @@
                 if (difficultWords.length > 0) {
                     difficultWordsDiv.innerHTML = difficultWords.map(word => 
                         `<div class="analytics-stat">
-                            <span class="stat-label">${word.word}</span>
+                            <span class="stat-label">${word.word.toLowerCase()}</span>
                             <span class="stat-value negative">${word.error_count} errors</span>
                         </div>`
                     ).join('');
@@ -5026,6 +5694,30 @@
             const mins = Math.round(minutes % 60);
             return `${hours}h ${mins}m`;
         }
+
+        // Enhanced keyboard support
+        document.addEventListener('DOMContentLoaded', function() {
+            // Enter key for spelling input
+            const spellingInput = document.getElementById('spellingInput');
+            if (spellingInput) {
+                spellingInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        checkSpelling();
+                    }
+                });
+            }
+            
+            // Ctrl+Enter for sentence input (common shortcut)
+            const sentenceInput = document.getElementById('userSentence');
+            if (sentenceInput) {
+                sentenceInput.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+                        e.preventDefault();
+                        intelligentSentenceCheck();
+                    }
+                });
+            }
+        });
 
     </script>
 </body>

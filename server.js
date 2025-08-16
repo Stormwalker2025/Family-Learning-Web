@@ -147,6 +147,9 @@ db.serialize(() => {
         word_id INTEGER,
         learned BOOLEAN DEFAULT 0,
         learning_level INTEGER DEFAULT 0,
+        proficiency_score REAL DEFAULT 0.0,
+        correct_attempts INTEGER DEFAULT 0,
+        total_attempts INTEGER DEFAULT 0,
         last_studied DATE,
         next_review DATE,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -462,36 +465,62 @@ app.get('/api/progress/:userId', (req, res) => {
 // Get words for learning (new words)
 app.get('/api/learning/:userId', (req, res) => {
     const { userId } = req.params;
-    const limit = req.query.limit || 10;
+    const today = new Date().toISOString().split('T')[0];
     
-    const query = `
-        SELECT w.* FROM words w
-        LEFT JOIN progress p ON w.id = p.word_id AND p.user_id = ?
-        WHERE p.id IS NULL
-        ORDER BY w.id
-        LIMIT ?
-    `;
-    
-    db.all(query, [userId, limit], (err, words) => {
+    // First check how many new words learned today
+    db.get(`
+        SELECT COUNT(*) as todayLearned FROM progress 
+        WHERE user_id = ? AND DATE(created_at) = ?
+    `, [userId, today], (err, result) => {
         if (err) return res.status(500).json({ error: 'Database error' });
-        res.json(words);
+        
+        const todayLearned = result.todayLearned || 0;
+        const dailyLimit = 10; // Scientific daily limit
+        const remainingWords = Math.max(0, dailyLimit - todayLearned);
+        
+        if (remainingWords === 0) {
+            return res.json({ 
+                words: [], 
+                message: `Daily limit reached! You've learned ${todayLearned} words today. Come back tomorrow for more!`,
+                todayLearned,
+                dailyLimit
+            });
+        }
+        
+        const query = `
+            SELECT w.* FROM words w
+            LEFT JOIN progress p ON w.id = p.word_id AND p.user_id = ?
+            WHERE p.id IS NULL
+            ORDER BY w.id
+            LIMIT ?
+        `;
+        
+        db.all(query, [userId, remainingWords], (err, words) => {
+            if (err) return res.status(500).json({ error: 'Database error' });
+            res.json({ 
+                words: words,
+                todayLearned,
+                dailyLimit,
+                remainingWords
+            });
+        });
     });
 });
 
 // Get words for review (due for review)
 app.get('/api/review/:userId', (req, res) => {
     const { userId } = req.params;
-    const today = new Date().toISOString().split('T')[0];
+    const now = new Date().toISOString();
     
     const query = `
-        SELECT w.*, p.learning_level, p.last_studied
+        SELECT w.*, p.learning_level, p.last_studied, p.next_review
         FROM words w
         JOIN progress p ON w.id = p.word_id
         WHERE p.user_id = ? AND p.next_review <= ? AND p.learned = 0
         ORDER BY p.next_review
     `;
     
-    db.all(query, [userId, today], (err, words) => {
+    db.all(query, [userId, now], (err, words) => {
         if (err) return res.status(500).json({ error: 'Database error' });
         res.json(words);
     });
@@ -500,10 +529,17 @@ app.get('/api/review/:userId', (req, res) => {
 // Study a word (spaced repetition)
 app.post('/api/study', (req, res) => {
     const { userId, wordId, correct } = req.body;
-    const today = new Date().toISOString().split('T')[0];
+    const now = new Date();
+    const today = now.toISOString().split('T')[0];
     
-    // Spaced repetition intervals (days)
-    const intervals = [1, 3, 7, 14, 30, 90, 180];
+    // Scientific spaced repetition intervals based on research
+    // Level 0: Immediate review (5-10 minutes) - for errors
+    // Level 1: 24 hours (1 day)
+    // Level 2: 1 week (7 days) 
+    // Level 3: 1 month (30 days)
+    // Level 4: 6 months (180 days)
+    // Level 5: Long-term mastery (365 days)
+    const intervals = [0.007, 1, 7, 30, 180, 365]; // 0.007 ≈ 10 minutes
     
     // Get current progress
     db.get(
@@ -516,27 +552,50 @@ app.post('/api/study', (req, res) => {
             
             if (!progress) {
                 // First time studying this word
-                newLevel = correct ? 1 : 0;
+                if (correct) {
+                    newLevel = 1; // Start at level 1 (24 hours)
+                } else {
+                    newLevel = 0; // Immediate review (10 minutes)
+                }
             } else {
-                // Update existing progress
+                // Update existing progress based on performance
                 if (correct) {
                     newLevel = Math.min(progress.learning_level + 1, intervals.length - 1);
-                    if (newLevel >= 3) learned = 1; // Mark as learned after level 3
+                    // Mark as learned after reaching level 4 (6 months interval)
+                    if (newLevel >= 4) learned = 1;
                 } else {
-                    newLevel = Math.max(0, progress.learning_level - 1);
+                    // Reset to immediate review for incorrect answers
+                    newLevel = 0;
+                    learned = 0; // Unlearn if was previously learned
                 }
             }
             
-            // Calculate next review date
-            const reviewDate = new Date();
-            reviewDate.setDate(reviewDate.getDate() + intervals[newLevel]);
-            nextReview = reviewDate.toISOString().split('T')[0];
+            // Calculate next review time based on scientific intervals
+            const reviewTime = new Date(now);
+            const intervalDays = intervals[newLevel];
+            
+            if (intervalDays < 1) {
+                // For immediate review (10 minutes)
+                reviewTime.setMinutes(reviewTime.getMinutes() + Math.round(intervalDays * 24 * 60));
+                nextReview = reviewTime.toISOString();
+            } else {
+                // For daily intervals
+                reviewTime.setDate(reviewTime.getDate() + intervalDays);
+                nextReview = reviewTime.toISOString().split('T')[0];
+            }
+            
+            // Calculate proficiency score and attempt counts
+            const currentCorrect = (progress?.correct_attempts || 0) + (correct ? 1 : 0);
+            const currentTotal = (progress?.total_attempts || 0) + 1;
+            const proficiencyScore = currentTotal > 0 ? (currentCorrect / currentTotal) * 100 : 0;
             
             db.run(
                 `INSERT OR REPLACE INTO progress 
-                 (user_id, word_id, learning_level, last_studied, next_review, learned) 
-                 VALUES (?, ?, ?, ?, ?, ?)`,
-                [userId, wordId, newLevel, today, nextReview, learned],
+                 (user_id, word_id, learning_level, last_studied, next_review, learned, 
+                  proficiency_score, correct_attempts, total_attempts) 
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+                [userId, wordId, newLevel, today, nextReview, learned, 
+                 proficiencyScore, currentCorrect, currentTotal],
                 (err) => {
                     if (err) return res.status(500).json({ error: 'Database error' });
                     
@@ -544,7 +603,11 @@ app.post('/api/study', (req, res) => {
                         success: true, 
                         level: newLevel, 
                         nextReview, 
-                        learned: learned === 1 
+                        learned: learned === 1,
+                        proficiencyScore: Math.round(proficiencyScore),
+                        correctAttempts: currentCorrect,
+                        totalAttempts: currentTotal,
+                        feedbackMessage: getFeedbackMessage(newLevel, correct, proficiencyScore)
                     };
                     
                     // Check for achievements after successful study
@@ -1797,6 +1860,66 @@ app.post('/api/enhance-words', async (req, res) => {
         res.status(500).json({ error: 'Failed to enhance words' });
     }
 });
+
+// Get diversified practice questions for a word
+app.get('/api/practice-questions/:wordId', (req, res) => {
+    const { wordId } = req.params;
+    
+    db.get("SELECT * FROM words WHERE id = ?", [wordId], (err, word) => {
+        if (err) return res.status(500).json({ error: 'Database error' });
+        if (!word) return res.status(404).json({ error: 'Word not found' });
+        
+        // Generate multiple question types for this word
+        const questions = [
+            {
+                type: 'spelling',
+                question: 'Listen to the pronunciation and type the correct spelling:',
+                audioUrl: word.audio_url,
+                correctAnswer: word.word,
+                instruction: 'Type exactly what you hear'
+            },
+            {
+                type: 'meaning_choice',
+                question: `What does "${word.word}" mean?`,
+                correctAnswer: word.meaning,
+                instruction: 'Choose the correct meaning'
+            },
+            {
+                type: 'word_choice',
+                question: word.meaning,
+                correctAnswer: word.word,
+                instruction: 'Which word matches this definition?'
+            },
+            {
+                type: 'fill_blank',
+                question: word.example ? word.example.replace(new RegExp(word.word, 'gi'), '____') : `The ____ is very important.`,
+                correctAnswer: word.word,
+                instruction: 'Fill in the blank with the correct word'
+            }
+        ];
+        
+        res.json({
+            word: word,
+            questions: questions
+        });
+    });
+});
+
+// Feedback message generation based on performance
+function getFeedbackMessage(level, correct, proficiencyScore) {
+    if (correct) {
+        if (level === 0) return "Good job! Let's review this again soon to strengthen your memory.";
+        if (level === 1) return "Excellent! You'll see this word again tomorrow.";
+        if (level === 2) return "Great progress! Next review in one week.";
+        if (level === 3) return "Wonderful! You're building long-term memory.";
+        if (level >= 4) return "🎉 Mastered! This word is now in your long-term memory!";
+    } else {
+        if (proficiencyScore < 30) return "Don't worry! Let's practice this more to build stronger memory.";
+        if (proficiencyScore < 60) return "You're making progress! A few more attempts will help.";
+        return "Almost there! One more correct answer to move forward.";
+    }
+    return "Keep practicing!";
+}
 
 // Import Queensland vocabulary
 app.post('/api/import-queensland-vocab', async (req, res) => {

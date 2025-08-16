@@ -47,7 +47,8 @@
       "Bash(cmd /c:*)",
       "Bash(copy vocab.db vocab_backup.db)",
       "Bash(del vocab.db)",
-      "WebFetch(domain:www.flocabulary.com)"
+      "WebFetch(domain:www.flocabulary.com)",
+      "Bash(sqlite3:*)"
     ],
     "deny": []
   }
