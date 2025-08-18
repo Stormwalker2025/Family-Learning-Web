@@ -1,0 +1,105 @@
+{
+  "navigation": {
+    "home": "Home",
+    "dashboard": "Dashboard", 
+    "exercises": "Exercises",
+    "vocabulary": "Vocabulary",
+    "homework": "Homework",
+    "progress": "Progress",
+    "admin": "Admin",
+    "logout": "Logout"
+  },
+  "auth": {
+    "signIn": "Sign In",
+    "signOut": "Sign Out",
+    "username": "Username",
+    "password": "Password",
+    "welcome": "Welcome back",
+    "invalidCredentials": "Invalid username or password"
+  },
+  "dashboard": {
+    "welcomeStudent": "Welcome, {name}",
+    "welcomeParent": "Parent Dashboard",
+    "welcomeAdmin": "Administrator Dashboard",
+    "currentAssignments": "Current Assignments",
+    "recentProgress": "Recent Progress",
+    "quickActions": "Quick Actions"
+  },
+  "exercises": {
+    "english": "English Reading",
+    "maths": "Mathematics",
+    "hass": "HASS",
+    "startExercise": "Start Exercise",
+    "continueExercise": "Continue Exercise",
+    "viewResults": "View Results",
+    "difficulty": {
+      "easy": "Easy",
+      "medium": "Medium", 
+      "hard": "Hard"
+    }
+  },
+  "vocabulary": {
+    "title": "Vocabulary Builder",
+    "practiceWords": "Practise Words",
+    "addNewWord": "Add New Word",
+    "importWords": "Import Words",
+    "masteryLevel": "Mastery Level",
+    "reviewWords": "Review Words"
+  },
+  "homework": {
+    "title": "Homework",
+    "dueDate": "Due Date",
+    "status": "Status",
+    "assignHomework": "Assign Homework",
+    "submitHomework": "Submit Homework",
+    "gradeHomework": "Grade Homework",
+    "priority": {
+      "low": "Low Priority",
+      "medium": "Medium Priority",
+      "high": "High Priority"
+    }
+  },
+  "progress": {
+    "overallProgress": "Overall Progress",
+    "subjectProgress": "Subject Progress", 
+    "streakDays": "Day Streak",
+    "iPadUnlockTime": "iPad Unlock Time",
+    "minutesEarned": "{minutes} minutes earned"
+  },
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "submit": "Submit",
+    "edit": "Edit",
+    "delete": "Delete",
+    "confirm": "Confirm",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "score": "Score",
+    "timeSpent": "Time Spent",
+    "attempts": "Attempts"
+  },
+  "year": {
+    "3": "Year 3",
+    "6": "Year 6"
+  },
+  "subjects": {
+    "english": "English",
+    "mathematics": "Mathematics", 
+    "hass": "Humanities and Social Sciences"
+  },
+  "currency": {
+    "dollar": "Dollar",
+    "cents": "Cents"
+  },
+  "measurements": {
+    "centimetres": "Centimetres",
+    "metres": "Metres",
+    "kilometres": "Kilometres",
+    "grams": "Grams",
+    "kilograms": "Kilograms",
+    "litres": "Litres",
+    "millilitres": "Millilitres"
+  }
+}

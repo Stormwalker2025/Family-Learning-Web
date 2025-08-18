@@ -1,0 +1,7 @@
+word,definition_en,definition_zh,part_of_speech,pronunciation,difficulty_level,year_level,topic_category,example_sentence,synonyms,antonyms
+apple,A round fruit with red or green skin,苹果,NOUN,/ˈæpəl/,1,3,Daily Life,"I eat an apple every day for breakfast.",fruit,
+beautiful,Pleasing to look at,美丽的,ADJECTIVE,/ˈbjuːtɪfl/,2,3,General,"The sunset was very beautiful tonight.",pretty;lovely,ugly
+quickly,In a fast manner,快速地,ADVERB,/ˈkwɪkli/,2,4,General,"She ran quickly to catch the bus.",fast;rapidly,slowly
+kangaroo,A large Australian animal that hops,袋鼠,NOUN,/ˌkæŋɡəˈruː/,2,3,Animals,"The kangaroo jumped across the field.",roo,
+ecosystem,A community of living organisms and their environment,生态系统,NOUN,/ˈiːkəʊˌsɪstəm/,4,6,Science,"The coral reef is a complex marine ecosystem.",biome;habitat,
+analyse,To examine something carefully to understand it,分析,VERB,/ˈænəlaɪz/,4,6,Academic,"Students must analyse the data before making conclusions.",examine;study,ignore

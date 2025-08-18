@@ -1,0 +1,10 @@
+node_modules
+.next
+build
+dist
+.env*
+*.log
+.DS_Store
+coverage
+*.lock
+package-lock.json

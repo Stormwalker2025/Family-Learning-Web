@@ -1,0 +1,837 @@
+// Family Learning Web Platform - Prisma Schema
+// 支持澳洲本地化的家庭学习管理系统
+// 设计用于：August (Year 3), Michael (Year 6), Grace (母亲), Dan (父亲/管理员)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ========== 核心用户系统 ==========
+
+model User {
+  id          String    @id @default(cuid())
+  username    String    @unique
+  email       String?   @unique
+  password    String
+  displayName String
+  role        UserRole  @default(STUDENT)
+  isActive    Boolean   @default(true)
+  timezone    String    @default("Australia/Brisbane") // 澳洲时区
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  lastLoginAt DateTime?
+
+  // 学生特定信息
+  yearLevel     Int?        // Year 3, Year 6 等
+  birthYear     Int?        // 用于年龄计算
+  parentalCode  String?     // 家长监督码
+  
+  // 家庭关系
+  familyId      String?
+  family        Family?     @relation(fields: [familyId], references: [id])
+
+  // 学习相关关联
+  submissions         Submission[]
+  learningProgress    LearningProgress[]
+  vocabularyProgress  VocabularyProgress[]
+  vocabularyImports   VocabularyImport[]    @relation("VocabularyImports")
+  mistakeBook         MistakeBook[]
+  
+  // 作业系统关联
+  assignedHomework    HomeworkAssignment[] @relation("AssignedTo")
+  createdHomework     HomeworkAssignment[] @relation("CreatedBy")
+  homeworkSubmissions HomeworkSubmission[]
+  
+  // 解锁规则和活动日志
+  unlockRules         UnlockRule[]
+  unlockSessions      UnlockSession[]
+  activityLogs        ActivityLog[]
+  
+  // 内容管理 (仅管理员)
+  createdCourses      Course[]            @relation("CreatedBy")
+  createdExercises    Exercise[]          @relation("CreatedBy")
+  managedSubjects     SubjectManagement[]
+
+  @@index([familyId])
+  @@index([role, isActive])
+  @@index([yearLevel])
+  @@map("users")
+}
+
+model Family {
+  id          String   @id @default(cuid())
+  name        String   // 家庭名称，如 "The Chen Family"
+  timezone    String   @default("Australia/Brisbane")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // 关联用户
+  members     User[]
+  
+  // 家庭设置
+  settings    FamilySettings[]
+
+  @@map("families")
+}
+
+model FamilySettings {
+  id       String @id @default(cuid())
+  familyId String
+  key      String // 设置键，如 "ipad_time_rules", "study_schedule"
+  value    String // JSON 格式的设置值
+  
+  family   Family @relation(fields: [familyId], references: [id], onDelete: Cascade)
+  
+  @@unique([familyId, key])
+  @@map("family_settings")
+}
+
+// ========== 课程与内容管理 ==========
+
+model Course {
+  id          String      @id @default(cuid())
+  title       String
+  description String?
+  subject     SubjectType
+  yearLevel   Int         // 适用年级
+  isActive    Boolean     @default(true)
+  order       Int         @default(0) // 课程排序
+  createdBy   String
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  creator     User        @relation("CreatedBy", fields: [createdBy], references: [id])
+  units       CourseUnit[]
+  exercises   Exercise[]
+
+  @@index([subject, yearLevel])
+  @@index([isActive])
+  @@map("courses")
+}
+
+model CourseUnit {
+  id          String   @id @default(cuid())
+  courseId    String
+  title       String
+  description String?
+  order       Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  course      Course     @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  exercises   Exercise[]
+
+  @@index([courseId, order])
+  @@map("course_units")
+}
+
+model Exercise {
+  id            String         @id @default(cuid())
+  title         String
+  description   String?
+  subject       SubjectType
+  yearLevel     Int
+  difficulty    Difficulty
+  exerciseType  ExerciseType   // 练习类型：阅读、数学、HASS等
+  timeLimit     Int?           // 时间限制（分钟）
+  isActive      Boolean        @default(true)
+  order         Int            @default(0)
+  createdBy     String
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  // 内容结构
+  content       String?        // JSON格式的练习内容（文章、图片等）
+  instructions  String?        // 练习说明
+
+  // 关联关系
+  courseId      String?
+  unitId        String?
+  course        Course?        @relation(fields: [courseId], references: [id])
+  unit          CourseUnit?    @relation(fields: [unitId], references: [id])
+  creator       User           @relation("CreatedBy", fields: [createdBy], references: [id])
+  
+  // 题目和提交
+  questions            Question[]
+  submissions          Submission[]
+  learningProgress     LearningProgress[]
+  homeworkExercises    HomeworkExercise[]
+  mistakeBookEntries   MistakeBook[]
+  
+  // 英语阅读练习关联
+  readingArticle       ReadingArticle?
+
+  @@index([subject, yearLevel])
+  @@index([exerciseType, difficulty])
+  @@index([isActive])
+  @@index([courseId, unitId, order])
+  @@map("exercises")
+}
+
+model Question {
+  id              String           @id @default(cuid())
+  exerciseId      String
+  type            QuestionType
+  question        String           // 题目内容
+  options         String?          // JSON数组 - 选择题选项
+  correctAnswer   String           // 正确答案
+  explanation     String?          // 答案解释
+  points          Int              @default(1)
+  order           Int              @default(0)
+  
+  // 雅思GT特定字段
+  passageText     String?          // 阅读理解文章
+  keyWords        String?          // JSON数组 - 关键词
+  
+  // 数学特定字段
+  formula         String?          // 数学公式
+  unit            String?          // 单位（如cm, %, 等）
+  
+  // HASS特定字段
+  context         String?          // 历史/地理背景
+  
+  exercise        Exercise         @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+  submissions     SubmissionAnswer[]
+  mistakes        MistakeBook[]
+
+  @@index([exerciseId, order])
+  @@map("questions")
+}
+
+// ========== 英语阅读练习扩展 ==========
+
+model ReadingArticle {
+  id              String   @id @default(cuid())
+  exerciseId      String   @unique
+  title           String
+  content         String   // 文章内容
+  wordCount       Int      @default(0)
+  readingTime     Int      @default(1) // 预估阅读时间（分钟）
+  topic           String   // 文章主题
+  source          String?  // 文章来源
+  vocabulary      String?  // JSON数组 - 重点词汇
+  
+  exercise        Exercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+  
+  @@map("reading_articles")
+}
+
+model ReadingSubmission {
+  id               String    @id @default(cuid())
+  submissionId     String    @unique
+  exerciseId       String
+  userId           String
+  
+  // 阅读理解特定统计
+  correctAnswers   Int       @default(0)
+  totalQuestions   Int       @default(0)
+  
+  // 详细反馈数据
+  feedback         String?   // JSON格式的详细反馈
+  strengths        String?   // JSON数组 - 优势
+  improvements     String?   // JSON数组 - 需要改进的地方
+  recommendations  String?   // JSON数组 - 学习建议
+  questionAnalysis String?   // JSON数组 - 逐题分析
+  
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  
+  submission       Submission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  
+  @@map("reading_submissions")
+}
+
+// ========== 提交与评分系统 ==========
+
+model Submission {
+  id          String             @id @default(cuid())
+  userId      String
+  exerciseId  String
+  score       Int?               // 得分
+  maxScore    Int                // 总分
+  percentage  Float?             // 得分百分比
+  timeSpent   Int?               // 用时（秒）
+  startedAt   DateTime           @default(now())
+  submittedAt DateTime?
+  status      SubmissionStatus   @default(IN_PROGRESS)
+  
+  // 批改相关
+  isAutoGraded   Boolean         @default(false)
+  gradedBy       String?         // 手动批改者ID
+  gradedAt       DateTime?
+  feedback       String?         // 批改反馈
+
+  user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  exercise       Exercise        @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+  answers        SubmissionAnswer[]
+  
+  // 英语阅读练习关联
+  readingSubmission ReadingSubmission?
+  
+  @@index([userId, exerciseId])
+  @@index([status])
+  @@index([submittedAt])
+  @@map("submissions")
+}
+
+model SubmissionAnswer {
+  id           String     @id @default(cuid())
+  submissionId String
+  questionId   String
+  answer       String     // 学生答案
+  isCorrect    Boolean?   // 是否正确
+  points       Int?       // 得分
+  
+  submission   Submission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  question     Question   @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  
+  @@unique([submissionId, questionId])
+  @@map("submission_answers")
+}
+
+// ========== 学习进度跟踪 ==========
+
+model LearningProgress {
+  id              String         @id @default(cuid())
+  userId          String
+  exerciseId      String
+  subject         SubjectType
+  status          ProgressStatus @default(NOT_STARTED)
+  
+  // 进度统计
+  attempts        Int            @default(0)
+  bestScore       Int?           // 最高得分
+  bestPercentage  Float?         // 最高得分百分比
+  avgScore        Float?         // 平均得分
+  totalTimeSpent  Int            @default(0) // 总用时（秒）
+  
+  // 掌握度评估
+  masteryLevel    Int            @default(0) // 0-100
+  streakCount     Int            @default(0) // 连续正确次数
+  lastAttempt     DateTime?
+  
+  // 复习计划
+  nextReviewDate  DateTime?
+  reviewInterval  Int            @default(1) // 复习间隔（天）
+  
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  user            User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  exercise        Exercise       @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, exerciseId])
+  @@index([subject, userId])
+  @@index([status])
+  @@index([nextReviewDate])
+  @@map("learning_progress")
+}
+
+// ========== 单词学习系统 ==========
+
+model VocabularyWord {
+  id              String                @id @default(cuid())
+  word            String                @unique
+  definition      String                // 英文释义 (definition_en)
+  partOfSpeech    PartOfSpeech
+  pronunciation   String?               // 音标
+  example         String?               // 例句
+  chineseDefinition String?             // 中文释义 (definition_zh)
+  
+  // 词汇属性
+  difficulty      Int                   @default(1) // 1-5难度等级 (difficulty_level)
+  frequency       Int                   @default(1) // 使用频率
+  yearLevel       Int?                  // 适用年级 (year_level)
+  category        String?               // 词汇分类 (topic_category)
+  
+  // 扩展词汇信息 (CSV导入支持)
+  synonyms        String?               // JSON数组 - 同义词
+  antonyms        String?               // JSON数组 - 反义词
+  tags            String?               // JSON数组 - 标签
+  
+  // 元数据
+  source          String?               // 词汇来源（如Queensland, IELTS等）
+  importBatch     String?               // 导入批次
+  csvRowNumber    Int?                  // CSV行号（用于错误追踪）
+  
+  // 时间戳
+  createdAt       DateTime              @default(now())
+  updatedAt       DateTime              @updatedAt
+
+  progress        VocabularyProgress[]
+  
+  @@index([yearLevel, difficulty])
+  @@index([frequency])
+  @@index([category])
+  @@index([importBatch])
+  @@index([source])
+  @@map("vocabulary_words")
+}
+
+model VocabularyProgress {
+  id              String             @id @default(cuid())
+  userId          String
+  wordId          String
+  
+  // 学习进度
+  phase           LearningPhase      @default(RECOGNITION) // 4阶段学习法
+  masteryLevel    Int                @default(0) // 0-100
+  attempts        Int                @default(0)
+  correctAttempts Int                @default(0)
+  streakCount     Int                @default(0)
+  
+  // 时间追踪
+  lastSeen        DateTime           @default(now())
+  lastCorrect     DateTime?
+  totalStudyTime  Int                @default(0) // 秒
+  
+  // 复习计划 (遗忘曲线)
+  nextReviewDate  DateTime?
+  reviewInterval  Int                @default(1) // 天
+  ebbinghausLevel Int                @default(1) // 艾宾浩斯级别
+  
+  // 状态标记
+  isMemorized     Boolean            @default(false)
+  needsReview     Boolean            @default(false)
+  
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+
+  user            User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  word            VocabularyWord     @relation(fields: [wordId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, wordId])
+  @@index([userId, phase])
+  @@index([nextReviewDate])
+  @@index([masteryLevel])
+  @@map("vocabulary_progress")
+}
+
+// CSV导入历史记录
+model VocabularyImport {
+  id               String            @id @default(cuid())
+  fileName         String            // 原始文件名
+  importedBy       String            // 导入者ID
+  batchId          String            @unique // 批次ID
+  
+  // 导入统计
+  totalRows        Int               @default(0)
+  successfulRows   Int               @default(0)
+  failedRows       Int               @default(0)
+  duplicateWords   Int               @default(0)
+  
+  // 导入状态
+  status           ImportStatus      @default(PROCESSING)
+  errorLog         String?           // JSON格式的错误日志
+  
+  // 导入配置
+  csvMapping       String?           // JSON格式的字段映射
+  importSettings   String?           // JSON格式的导入设置
+  
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  completedAt      DateTime?
+
+  importedBy_user  User              @relation("VocabularyImports", fields: [importedBy], references: [id])
+
+  @@index([importedBy, createdAt])
+  @@index([status])
+  @@map("vocabulary_imports")
+}
+
+// ========== 作业管理系统 ==========
+
+model HomeworkAssignment {
+  id              String               @id @default(cuid())
+  title           String
+  description     String?
+  instructions    String?              // 作业说明
+  
+  // 分配信息
+  assignedBy      String
+  dueDate         DateTime?
+  estimatedTime   Int?                 // 预估完成时间（分钟）
+  
+  // 状态和优先级
+  priority        Priority             @default(MEDIUM)
+  status          HomeworkStatus       @default(ASSIGNED)
+  isVisible       Boolean              @default(true)
+  
+  // 评分设置
+  totalPoints     Int                  @default(100)
+  passingScore    Int                  @default(70)
+  allowMultipleAttempts Boolean        @default(true)
+  
+  createdAt       DateTime             @default(now())
+  updatedAt       DateTime             @updatedAt
+
+  assignedByUser  User                 @relation("CreatedBy", fields: [assignedBy], references: [id])
+  assignedTo      User[]               @relation("AssignedTo")
+  exercises       HomeworkExercise[]
+  submissions     HomeworkSubmission[]
+
+  @@index([status, dueDate])
+  @@index([assignedBy])
+  @@map("homework_assignments")
+}
+
+model HomeworkExercise {
+  id             String             @id @default(cuid())
+  homeworkId     String
+  exerciseId     String
+  order          Int                @default(0)
+  isRequired     Boolean            @default(true)
+  minScore       Int?               // 最低得分要求
+  maxAttempts    Int?               // 最大尝试次数
+  
+  homework       HomeworkAssignment @relation(fields: [homeworkId], references: [id], onDelete: Cascade)
+  exercise       Exercise           @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+
+  @@unique([homeworkId, exerciseId])
+  @@index([homeworkId, order])
+  @@map("homework_exercises")
+}
+
+model HomeworkSubmission {
+  id             String               @id @default(cuid())
+  homeworkId     String
+  userId         String
+  status         HomeworkSubmissionStatus @default(NOT_STARTED)
+  
+  // 提交统计
+  totalScore     Int?
+  maxPossibleScore Int?
+  percentage     Float?
+  completedExercises Int              @default(0)
+  totalExercises Int
+  
+  // 时间追踪
+  startedAt      DateTime?
+  submittedAt    DateTime?
+  lastWorkedAt   DateTime?
+  totalTimeSpent Int                  @default(0) // 秒
+  
+  // 评价
+  feedback       String?
+  isLate         Boolean              @default(false)
+  
+  createdAt      DateTime             @default(now())
+  updatedAt      DateTime             @updatedAt
+
+  homework       HomeworkAssignment   @relation(fields: [homeworkId], references: [id], onDelete: Cascade)
+  user           User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([homeworkId, userId])
+  @@index([status])
+  @@index([submittedAt])
+  @@map("homework_submissions")
+}
+
+// ========== 错题本系统 ==========
+
+model MistakeBook {
+  id             String         @id @default(cuid())
+  userId         String
+  exerciseId     String
+  questionId     String
+  
+  // 错误信息
+  wrongAnswer    String         // 错误答案
+  correctAnswer  String         // 正确答案
+  explanation    String?        // 解释
+  
+  // 错误分类
+  mistakeType    MistakeType
+  topic          String?        // 错误涉及的知识点
+  difficulty     Difficulty
+  
+  // 复习状态
+  isResolved     Boolean        @default(false)
+  reviewCount    Int            @default(0)
+  lastReviewed   DateTime?
+  nextReviewDate DateTime?
+  
+  // 标记
+  notes          String?        // 学生或家长备注
+  isStarred      Boolean        @default(false)
+  
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  exercise       Exercise       @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+  question       Question       @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@index([userId, isResolved])
+  @@index([mistakeType])
+  @@index([nextReviewDate])
+  @@map("mistake_book")
+}
+
+// ========== iPad解锁系统 ==========
+
+model UnlockRule {
+  id                   String             @id @default(cuid())
+  userId               String
+  name                 String             // 规则名称
+  isActive             Boolean            @default(true)
+  
+  // 解锁条件
+  minScore             Int                // 最低得分百分比
+  requiredSubjects     String             // JSON: 必须完成的科目要求
+  requiredExercises    Int                @default(1) // 必须完成的练习数量
+  
+  // 解锁奖励
+  unlockDuration       Int                // 解锁时长（分钟）
+  bonusTime            Int                @default(0) // 满分奖励时间
+  
+  // 时间限制
+  dailyLimit           Int?               // 每日解锁限制（分钟）
+  weeklyLimit          Int?               // 每周解锁限制（分钟）
+  
+  // 有效期
+  validFrom            DateTime?
+  validTo              DateTime?
+  
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+
+  user                 User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sessions             UnlockSession[]
+
+  @@index([userId, isActive])
+  @@index([validFrom, validTo])
+  @@map("unlock_rules")
+}
+
+model UnlockSession {
+  id              String          @id @default(cuid())
+  userId          String
+  ruleId          String?         // 触发的规则ID
+  
+  // 解锁信息
+  duration        Int             // 解锁时长（分钟）
+  triggerScore    Int?            // 触发解锁的得分
+  triggerSubject  SubjectType?    // 触发学科
+  
+  // 时间记录
+  unlockedAt      DateTime        @default(now())
+  expiresAt       DateTime
+  actualUsedTime  Int?            // 实际使用时间（分钟）
+  
+  // 状态
+  status          UnlockStatus    @default(ACTIVE)
+  
+  user            User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  rule            UnlockRule?     @relation(fields: [ruleId], references: [id])
+
+  @@index([userId, status])
+  @@index([expiresAt])
+  @@map("unlock_sessions")
+}
+
+// ========== 系统管理 ==========
+
+model SubjectManagement {
+  id             String       @id @default(cuid())
+  userId         String       // 管理员ID
+  subject        SubjectType
+  canCreate      Boolean      @default(false)
+  canEdit        Boolean      @default(false)
+  canDelete      Boolean      @default(false)
+  canAssign      Boolean      @default(false)
+  
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, subject])
+  @@map("subject_management")
+}
+
+model ActivityLog {
+  id            String         @id @default(cuid())
+  userId        String?
+  action        ActivityType
+  details       String?        // JSON格式的详细信息
+  ipAddress     String?
+  userAgent     String?
+  
+  // 关联资源
+  resourceType  String?        // 如 "Exercise", "Homework"
+  resourceId    String?        // 资源ID
+  
+  createdAt     DateTime       @default(now())
+
+  user          User?          @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([userId, createdAt])
+  @@index([action, createdAt])
+  @@index([resourceType, resourceId])
+  @@map("activity_logs")
+}
+
+model SystemConfig {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String   // JSON格式配置值
+  category  String   // 配置分类
+  description String?
+  updatedAt DateTime @updatedAt
+
+  @@index([category])
+  @@map("system_config")
+}
+
+// ========== 枚举定义 ==========
+
+enum UserRole {
+  STUDENT     // 学生
+  PARENT      // 家长
+  ADMIN       // 系统管理员
+}
+
+enum SubjectType {
+  ENGLISH     // 英语 (雅思GT阅读)
+  MATHS       // 数学 (place value, fraction, area, perimeter, decimal)
+  HASS        // 人文社会科学
+  VOCABULARY  // 单词学习
+}
+
+enum ExerciseType {
+  READING_COMPREHENSION  // 阅读理解
+  IELTS_GT              // 雅思GT
+  ENGLISH_READING       // 英语阅读练习
+  PLACE_VALUE           // 位值
+  FRACTION              // 分数
+  AREA_PERIMETER        // 面积周长
+  DECIMAL               // 小数
+  HASS_ARTICLE          // HASS文章
+  VOCABULARY_PRACTICE   // 单词练习
+  MIXED_PRACTICE        // 综合练习
+}
+
+enum Difficulty {
+  BEGINNER    // 初级
+  EASY        // 简单
+  MEDIUM      // 中等
+  HARD        // 困难
+  ADVANCED    // 高级
+}
+
+enum QuestionType {
+  MULTIPLE_CHOICE       // 选择题
+  SHORT_ANSWER         // 简答题
+  ESSAY               // 作文题
+  CALCULATION         // 计算题
+  TRUE_FALSE          // 判断题
+  FILL_IN_BLANK       // 填空题
+  MATCHING            // 匹配题
+  ORDERING            // 排序题
+  SENTENCE_COMPLETION  // 完形填空
+  TRUE_FALSE_NOT_GIVEN // 雅思判断题 (True/False/Not Given)
+}
+
+enum SubmissionStatus {
+  IN_PROGRESS    // 进行中
+  SUBMITTED      // 已提交
+  GRADED         // 已批改
+  REVIEWED       // 已复查
+}
+
+enum ProgressStatus {
+  NOT_STARTED    // 未开始
+  IN_PROGRESS    // 进行中
+  COMPLETED      // 已完成
+  MASTERED       // 已掌握
+  REVIEW_NEEDED  // 需要复习
+}
+
+enum Priority {
+  LOW     // 低优先级
+  MEDIUM  // 中优先级
+  HIGH    // 高优先级
+  URGENT  // 紧急
+}
+
+enum HomeworkStatus {
+  ASSIGNED      // 已分配
+  IN_PROGRESS   // 进行中
+  COMPLETED     // 已完成
+  OVERDUE       // 已过期
+  REVIEWED      // 已审查
+}
+
+enum HomeworkSubmissionStatus {
+  NOT_STARTED   // 未开始
+  IN_PROGRESS   // 进行中
+  COMPLETED     // 已完成
+  SUBMITTED     // 已提交
+  LATE_SUBMIT   // 迟交
+}
+
+enum PartOfSpeech {
+  NOUN          // 名词
+  VERB          // 动词
+  ADJECTIVE     // 形容词
+  ADVERB        // 副词
+  PREPOSITION   // 介词
+  CONJUNCTION   // 连词
+  PRONOUN       // 代词
+  INTERJECTION  // 感叹词
+  ARTICLE       // 冠词
+  PHRASE        // 短语
+}
+
+enum LearningPhase {
+  RECOGNITION   // 第一阶段：认识
+  UNDERSTANDING // 第二阶段：理解
+  APPLICATION   // 第三阶段：应用
+  MASTERY       // 第四阶段：掌握
+}
+
+enum MistakeType {
+  CARELESS_ERROR      // 粗心错误
+  CONCEPT_ERROR       // 概念错误
+  METHOD_ERROR        // 方法错误
+  CALCULATION_ERROR   // 计算错误
+  READING_ERROR       // 理解错误
+  TIME_PRESSURE       // 时间压力
+  VOCABULARY_ERROR    // 词汇错误
+  GRAMMAR_ERROR       // 语法错误
+}
+
+enum UnlockStatus {
+  ACTIVE     // 激活中
+  USED       // 已使用
+  EXPIRED    // 已过期
+  CANCELLED  // 已取消
+}
+
+enum ActivityType {
+  LOGIN               // 登录
+  LOGOUT              // 登出
+  EXERCISE_START      // 开始练习
+  EXERCISE_SUBMIT     // 提交练习
+  HOMEWORK_ASSIGN     // 分配作业
+  HOMEWORK_SUBMIT     // 提交作业
+  VOCABULARY_STUDY    // 单词学习
+  VOCABULARY_IMPORT   // 词汇导入
+  UNLOCK_IPAD         // 解锁iPad
+  REVIEW_MISTAKES     // 复习错题
+  CREATE_CONTENT      // 创建内容
+  EDIT_CONTENT        // 编辑内容
+  DELETE_CONTENT      // 删除内容
+  SYSTEM_CONFIG       // 系统配置
+}
+
+enum ImportStatus {
+  PROCESSING    // 处理中
+  COMPLETED     // 已完成
+  FAILED        // 失败
+  CANCELLED     // 已取消
+}

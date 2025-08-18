@@ -48,7 +48,18 @@
       "Bash(copy vocab.db vocab_backup.db)",
       "Bash(del vocab.db)",
       "WebFetch(domain:www.flocabulary.com)",
-      "Bash(sqlite3:*)"
+      "Bash(sqlite3:*)",
+      "Bash(powershell:*)",
+      "Bash(mkdir:*)",
+      "Bash(npx create-next-app:*)",
+      "Bash(npx prisma init:*)",
+      "Bash(npx prisma generate:*)",
+      "Bash(touch:*)",
+      "Bash(npx prisma:*)",
+      "Bash(npm run build:*)",
+      "Bash(npx prettier:*)",
+      "Bash(npm run:*)",
+      "Bash(npx tsx:*)"
     ],
     "deny": []
   }
