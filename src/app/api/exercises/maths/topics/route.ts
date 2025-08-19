@@ -21,89 +21,28 @@ const validTopics: MathTopic[] = [
   'money'
 ]
 
-// GET /api/exercises/maths/[topic] - Get math exercises by topic
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { topic: string } }
-) {
+// GET /api/exercises/maths/topics - Get all available topics
+export async function GET(request: NextRequest) {
   try {
-    // Verify authentication
-    const token = request.headers.get('authorization')?.replace('Bearer ', '')
-    if (!token) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    const decoded = await verifyToken(token)
-    if (!decoded) {
-      return NextResponse.json({ error: 'Invalid token' }, { status: 401 })
-    }
-
-    const topic = params.topic as MathTopic
-
-    // Validate topic
-    if (!validTopics.includes(topic)) {
-      return NextResponse.json(
-        { 
-          error: 'Invalid topic',
-          validTopics: validTopics,
-          message: `Topic '${topic}' is not supported. Valid topics are: ${validTopics.join(', ')}`
-        },
-        { status: 400 }
-      )
-    }
-
-    // Get query parameters
-    const { searchParams } = new URL(request.url)
-    const yearLevel = searchParams.get('yearLevel')
-    const difficulty = searchParams.get('difficulty')
-    const limit = searchParams.get('limit')
-
-    // Filter exercises by topic
-    let filteredExercises = mockMathExercises.filter(
-      exercise => exercise.topic === topic
-    )
-
-    // Apply additional filters
-    if (yearLevel) {
-      filteredExercises = filteredExercises.filter(
-        exercise => exercise.yearLevel === parseInt(yearLevel)
-      )
-    }
-
-    if (difficulty) {
-      filteredExercises = filteredExercises.filter(
-        exercise => exercise.difficulty === difficulty
-      )
-    }
-
-    // Limit results if specified
-    if (limit) {
-      const limitNum = parseInt(limit)
-      if (limitNum > 0) {
-        filteredExercises = filteredExercises.slice(0, limitNum)
-      }
-    }
-
-    // Sort by difficulty and year level
-    filteredExercises.sort((a, b) => {
-      if (a.yearLevel !== b.yearLevel) {
-        return a.yearLevel - b.yearLevel
-      }
+    // Get topic statistics
+    const topicStats = validTopics.map(topic => {
+      const topicExercises = mockMathExercises.filter(ex => ex.topic === topic)
+      const yearLevels = [...new Set(topicExercises.map(ex => ex.yearLevel))].sort()
+      const difficulties = [...new Set(topicExercises.map(ex => ex.difficulty))]
       
-      const difficultyOrder = { foundation: 1, developing: 2, proficient: 3, advanced: 4 }
-      return difficultyOrder[a.difficulty] - difficultyOrder[b.difficulty]
+      return {
+        topic,
+        count: topicExercises.length,
+        yearLevels,
+        difficulties,
+        description: getTopicDescription(topic)
+      }
     })
 
     return NextResponse.json({
       success: true,
-      topic: topic,
-      exercises: filteredExercises,
-      total: filteredExercises.length,
-      filters: {
-        yearLevel: yearLevel ? parseInt(yearLevel) : null,
-        difficulty: difficulty || null,
-        limit: limit ? parseInt(limit) : null
-      }
+      availableTopics: topicStats,
+      totalTopics: validTopics.length
     })
 
   } catch (error) {

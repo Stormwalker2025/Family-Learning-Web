@@ -48,9 +48,11 @@ model User {
   homeworkSubmissions HomeworkSubmission[]
   
   // 解锁规则和活动日志
-  unlockRules         UnlockRule[]
-  unlockSessions      UnlockSession[]
-  activityLogs        ActivityLog[]
+  unlockRules             UnlockRule[]
+  unlockSessions          UnlockSession[]
+  activityLogs            ActivityLog[]
+  ipadUnlockRecords       IpadUnlockRecord[]
+  createdUnlockConfigs    IpadUnlockConfiguration[]
   
   // 内容管理 (仅管理员)
   createdCourses      Course[]            @relation("CreatedBy")
@@ -566,6 +568,7 @@ model MistakeBook {
 
   user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   exercise       Exercise       @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+  reviews        MistakeBookReview[]
   question       Question       @relation(fields: [questionId], references: [id], onDelete: Cascade)
 
   @@index([userId, isResolved])
@@ -834,4 +837,63 @@ enum ImportStatus {
   COMPLETED     // 已完成
   FAILED        // 失败
   CANCELLED     // 已取消
+}
+
+// iPad解锁配置模型
+model IpadUnlockConfiguration {
+  id          String   @id @default(cuid())
+  name        String   // 配置名称
+  description String?  // 配置描述
+  rules       String   // JSON格式的规则配置
+  isActive    Boolean  @default(true)
+  createdBy   String   // 创建者ID
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // 关联
+  creator     User              @relation(fields: [createdBy], references: [id])
+  unlockRecords IpadUnlockRecord[]
+
+  @@map("ipad_unlock_configurations")
+}
+
+// iPad解锁记录模型
+model IpadUnlockRecord {
+  id                String   @id @default(cuid())
+  userId            String   // 用户ID
+  ruleId            String   // 规则ID
+  configurationId   String   // 配置ID
+  achievedScore     Float    // 获得的分数
+  subjectScores     String   // JSON格式的各学科分数
+  unlockedMinutes   Int      // 解锁的分钟数
+  unlockedAt        DateTime @default(now()) // 解锁时间
+  expiresAt         DateTime // 过期时间
+  used              Boolean  @default(false) // 是否已使用
+  usedAt            DateTime? // 使用时间
+  triggeredBy       String   // 触发的作业或练习ID
+
+  // 关联
+  user              User                     @relation(fields: [userId], references: [id])
+  configuration     IpadUnlockConfiguration @relation(fields: [configurationId], references: [id])
+
+  @@index([userId, expiresAt])
+  @@index([used, expiresAt])
+  @@index([configurationId])
+  @@map("ipad_unlock_records")
+}
+
+// 错题本复习记录模型
+model MistakeBookReview {
+  id          String   @id @default(cuid())
+  mistakeId   String   // 错题记录ID
+  isCorrect   Boolean  // 复习时是否答对
+  timeSpent   Int?     // 花费时间（秒）
+  notes       String?  // 复习笔记
+  reviewedAt  DateTime @default(now()) // 复习时间
+
+  // 关联
+  mistake     MistakeBook @relation(fields: [mistakeId], references: [id])
+
+  @@index([mistakeId, reviewedAt])
+  @@map("mistake_book_reviews")
 }

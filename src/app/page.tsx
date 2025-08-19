@@ -12,7 +12,7 @@ export default function HomePage() {
         </p>
         
         {/* 学习模块快捷入口 */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6 mt-8 mb-12">
           <Link href="/vocabulary" className="group">
             <div className="p-6 border rounded-lg hover:border-blue-500 hover:shadow-lg transition-all">
               <div className="flex items-center space-x-3 mb-3">
@@ -60,6 +60,57 @@ export default function HomePage() {
               </p>
               <div className="mt-3 text-sm text-purple-600">
                 培养数学思维 →
+              </div>
+            </div>
+          </Link>
+
+          <Link href="/homework" className="group">
+            <div className="p-6 border rounded-lg hover:border-orange-500 hover:shadow-lg transition-all">
+              <div className="flex items-center space-x-3 mb-3">
+                <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
+                  📝
+                </div>
+                <h3 className="text-xl font-semibold group-hover:text-orange-600">作业管理</h3>
+              </div>
+              <p className="text-gray-600">
+                智能作业布置、提交、批改和分析系统
+              </p>
+              <div className="mt-3 text-sm text-orange-600">
+                全流程作业管理 →
+              </div>
+            </div>
+          </Link>
+
+          <Link href="/ipad-unlock" className="group">
+            <div className="p-6 border rounded-lg hover:border-indigo-500 hover:shadow-lg transition-all">
+              <div className="flex items-center space-x-3 mb-3">
+                <div className="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
+                  📱
+                </div>
+                <h3 className="text-xl font-semibold group-hover:text-indigo-600">iPad时间</h3>
+              </div>
+              <p className="text-gray-600">
+                通过学习成绩解锁iPad使用时间
+              </p>
+              <div className="mt-3 text-sm text-indigo-600">
+                激励学习系统 →
+              </div>
+            </div>
+          </Link>
+
+          <Link href="/mistakes" className="group">
+            <div className="p-6 border rounded-lg hover:border-red-500 hover:shadow-lg transition-all">
+              <div className="flex items-center space-x-3 mb-3">
+                <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
+                  📖
+                </div>
+                <h3 className="text-xl font-semibold group-hover:text-red-600">错题本</h3>
+              </div>
+              <p className="text-gray-600">
+                收集和复习错题，提高学习效率
+              </p>
+              <div className="mt-3 text-sm text-red-600">
+                学习反思工具 →
               </div>
             </div>
           </Link>

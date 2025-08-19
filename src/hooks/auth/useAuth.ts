@@ -234,19 +234,19 @@ export function usePermissions(user: User | null) {
 
 // 角色检查 Hooks
 export function useIsAdmin(user: User | null): boolean {
-  return user?.role === 'ADMIN' ?? false
+  return user?.role === 'ADMIN' || false
 }
 
 export function useIsParent(user: User | null): boolean {
-  return user?.role === 'PARENT' ?? false
+  return user?.role === 'PARENT' || false
 }
 
 export function useIsStudent(user: User | null): boolean {
-  return user?.role === 'STUDENT' ?? false
+  return user?.role === 'STUDENT' || false
 }
 
 export function useIsParentOrAdmin(user: User | null): boolean {
-  return user?.role === 'PARENT' || user?.role === 'ADMIN' ?? false
+  return (user?.role === 'PARENT' || user?.role === 'ADMIN') ?? false
 }
 
 // 登录状态检查 Hook

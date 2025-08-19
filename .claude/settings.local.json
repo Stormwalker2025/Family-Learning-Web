@@ -59,7 +59,11 @@
       "Bash(npm run build:*)",
       "Bash(npx prettier:*)",
       "Bash(npm run:*)",
-      "Bash(npx tsx:*)"
+      "Bash(npx tsx:*)",
+      "Bash(mv:*)",
+      "Bash(find:*)",
+      "Bash(sed:*)",
+      "Bash(npx playwright:*)"
     ],
     "deny": []
   }

@@ -676,6 +676,62 @@ export interface UnlockRule {
   updatedAt: Date
 }
 
+// iPad解锁记录
+export interface IpadUnlockRecord {
+  id: string
+  userId: string
+  ruleId: string
+  achievedScore: number
+  subjectScores: Record<SubjectType, number>
+  unlockedMinutes: number
+  unlockedAt: Date
+  expiresAt: Date
+  used: boolean
+  usedAt?: Date
+  triggeredBy: string // 触发的作业或练习ID
+}
+
+// iPad解锁状态
+export interface IpadUnlockStatus {
+  userId: string
+  currentUnlockedMinutes: number
+  totalEarnedMinutes: number
+  totalUsedMinutes: number
+  activeUnlocks: IpadUnlockRecord[]
+  recentAchievements: IpadUnlockRecord[]
+  nextUnlockRequirements: {
+    subject: SubjectType
+    currentScore: number
+    requiredScore: number
+    potentialMinutes: number
+  }[]
+}
+
+// iPad解锁规则配置
+export interface IpadUnlockConfiguration {
+  id: string
+  name: string
+  description: string
+  rules: {
+    subject: SubjectType
+    scoreThresholds: {
+      minScore: number // 最低分数（百分比）
+      maxScore: number // 最高分数（百分比）
+      baseMinutes: number // 基础解锁分钟数
+      bonusMinutes: number // 奖励分钟数（满分时）
+    }[]
+    dailyLimit?: number // 每日最大解锁分钟数
+    consecutiveDaysBonus?: {
+      days: number
+      bonusMultiplier: number
+    }[]
+  }[]
+  isActive: boolean
+  createdBy: string
+  createdAt: Date
+  updatedAt: Date
+}
+
 // ========== 数学练习相关类型 ==========
 
 // 数学主题枚举
@@ -897,4 +953,541 @@ export interface MathQuestionAnalysis {
   timeSpent: number
   hintsUsed: number
   toolsUsed: MathToolType[]
+}
+
+// ========== 作业管理系统类型定义 ==========
+
+// 作业状态枚举
+export type HomeworkStatusType = 'assigned' | 'in-progress' | 'completed' | 'overdue' | 'reviewed'
+
+// 作业提交状态
+export type HomeworkSubmissionStatusType = 'not-started' | 'in-progress' | 'completed' | 'submitted' | 'late-submit'
+
+// 作业优先级
+export type PriorityType = 'low' | 'medium' | 'high' | 'urgent'
+
+// 批改状态
+export type GradingStatus = 'pending' | 'auto-graded' | 'manual-grading' | 'completed' | 'reviewed'
+
+// 批改类型
+export type GradingType = 'automatic' | 'manual' | 'hybrid'
+
+// 通知类型
+export type NotificationType = 'homework-assigned' | 'homework-due' | 'homework-completed' | 'homework-graded' | 'reminder'
+
+// 作业模板类型
+export type HomeworkTemplateType = 'quick-assignment' | 'weekly-plan' | 'exam-prep' | 'custom'
+
+// 评分标准类型
+export type ScoringCriteriaType = 'percentage' | 'points' | 'rubric' | 'competency'
+
+// 作业分配配置
+export interface HomeworkAssignmentConfig {
+  id: string
+  title: string
+  description?: string
+  instructions?: string
+  
+  // 分配信息
+  assignedBy: string
+  assignedTo: string[] // 学生ID数组
+  dueDate?: Date
+  estimatedTime?: number // 预估完成时间（分钟）
+  
+  // 优先级和可见性
+  priority: PriorityType
+  isVisible: boolean
+  
+  // 评分设置
+  totalPoints: number
+  passingScore: number
+  allowMultipleAttempts: boolean
+  maxAttempts?: number
+  
+  // 时间设置
+  autoRelease?: boolean
+  releaseDate?: Date
+  lateSubmissionAllowed: boolean
+  latePenalty?: number // 迟交扣分百分比
+  
+  // 练习组合
+  exercises: HomeworkExerciseConfig[]
+  
+  // 通知设置
+  notifications: NotificationConfig[]
+  
+  createdAt: Date
+  updatedAt: Date
+}
+
+// 作业练习配置
+export interface HomeworkExerciseConfig {
+  exerciseId: string
+  order: number
+  isRequired: boolean
+  minScore?: number // 最低得分要求
+  maxAttempts?: number // 最大尝试次数
+  timeLimit?: number // 单题时间限制
+  weight: number // 权重
+  adaptiveDifficulty?: boolean // 自适应难度
+}
+
+// 通知配置
+export interface NotificationConfig {
+  type: NotificationType
+  enabled: boolean
+  timing?: number // 提前多少时间通知（小时）
+  recipients: string[] // 接收人角色或ID
+  message?: string // 自定义消息
+}
+
+// 完整的作业分配
+export interface HomeworkAssignmentFull extends HomeworkAssignmentConfig {
+  status: HomeworkStatusType
+  submissions: HomeworkSubmissionSummary[]
+  analytics: HomeworkAnalytics
+}
+
+// 作业提交摘要
+export interface HomeworkSubmissionSummary {
+  id: string
+  userId: string
+  userName: string
+  status: HomeworkSubmissionStatusType
+  score?: number
+  percentage?: number
+  submittedAt?: Date
+  isLate: boolean
+  timeSpent: number
+  completedExercises: number
+  totalExercises: number
+}
+
+// 作业完整提交信息
+export interface HomeworkSubmissionFull {
+  id: string
+  homeworkId: string
+  userId: string
+  status: HomeworkSubmissionStatusType
+  
+  // 分数统计
+  totalScore?: number
+  maxPossibleScore: number
+  percentage?: number
+  completedExercises: number
+  totalExercises: number
+  
+  // 时间追踪
+  startedAt?: Date
+  submittedAt?: Date
+  lastWorkedAt?: Date
+  totalTimeSpent: number // 秒
+  
+  // 练习详情
+  exerciseSubmissions: ExerciseSubmissionDetail[]
+  
+  // 评价反馈
+  feedback?: HomeworkFeedback
+  gradingStatus: GradingStatus
+  gradedBy?: string
+  gradedAt?: Date
+  isLate: boolean
+  
+  createdAt: Date
+  updatedAt: Date
+}
+
+// 练习提交详情
+export interface ExerciseSubmissionDetail {
+  exerciseId: string
+  exerciseTitle: string
+  status: 'not-started' | 'in-progress' | 'completed'
+  score?: number
+  maxScore: number
+  percentage?: number
+  attempts: number
+  timeSpent: number
+  lastAttemptAt?: Date
+  isRequired: boolean
+  minScoreRequired?: number
+  submissionId?: string // 关联的Submission记录
+}
+
+// 作业反馈
+export interface HomeworkFeedback {
+  overallPerformance: PerformanceAnalysis
+  subjectBreakdown: Record<SubjectType, SubjectPerformance>
+  strengthsAndWeaknesses: {
+    strengths: string[]
+    weaknesses: string[]
+    improvements: string[]
+  }
+  timeManagement: TimeManagementAnalysis
+  recommendations: LearningRecommendation[]
+  nextSteps: string[]
+  parentalSummary?: string // 给家长的总结
+}
+
+// 绩效分析
+export interface PerformanceAnalysis {
+  overallScore: number
+  gradeLevel: 'below' | 'at' | 'above' // 相对年级水平
+  consistency: number // 0-100，答题一致性
+  accuracy: number // 正确率
+  efficiency: number // 时间效率
+  improvement: number // 相比上次的提升
+}
+
+// 学科表现
+export interface SubjectPerformance {
+  subject: SubjectType
+  score: number
+  masteryLevel: number // 0-100
+  conceptsStrong: string[]
+  conceptsNeedWork: string[]
+  recommendedActivities: string[]
+}
+
+// 时间管理分析
+export interface TimeManagementAnalysis {
+  totalTimeSpent: number
+  averageTimePerQuestion: number
+  timeDistribution: Record<string, number> // 各部分用时
+  pacing: 'too-fast' | 'appropriate' | 'too-slow'
+  suggestions: string[]
+}
+
+// 作业分析统计
+export interface HomeworkAnalytics {
+  assignmentId: string
+  
+  // 整体统计
+  totalStudents: number
+  submittedCount: number
+  completedCount: number
+  overdueCount: number
+  
+  // 分数统计
+  averageScore: number
+  medianScore: number
+  highestScore: number
+  lowestScore: number
+  scoreDistribution: ScoreDistribution[]
+  
+  // 时间统计
+  averageTimeSpent: number
+  timeDistribution: TimeDistribution[]
+  
+  // 题目分析
+  questionAnalytics: QuestionAnalyticsItem[]
+  
+  // 学科掌握度
+  subjectMastery: Record<SubjectType, SubjectMasteryData>
+  
+  // 趋势分析
+  trends: TrendAnalysis
+  
+  // 需要关注的学生
+  studentsNeedAttention: StudentAttentionItem[]
+  
+  generatedAt: Date
+}
+
+// 分数分布
+export interface ScoreDistribution {
+  range: string // 如 "90-100", "80-89"
+  count: number
+  percentage: number
+}
+
+// 时间分布
+export interface TimeDistribution {
+  timeRange: string // 如 "0-30min", "30-60min"
+  count: number
+  percentage: number
+}
+
+// 题目分析项
+export interface QuestionAnalyticsItem {
+  questionId: string
+  exerciseId: string
+  questionText: string
+  type: string
+  subject: SubjectType
+  
+  // 统计数据
+  totalAttempts: number
+  correctAnswers: number
+  successRate: number
+  averageTimeSpent: number
+  
+  // 分析结果
+  difficulty: 'easy' | 'medium' | 'hard'
+  discrimination: number // 区分度
+  commonMistakes: CommonMistake[]
+  
+  // 建议
+  teachingPoints: string[]
+  needsReview: boolean
+}
+
+// 常见错误
+export interface CommonMistake {
+  incorrectAnswer: string
+  frequency: number
+  possibleCauses: string[]
+  remediation: string[]
+}
+
+// 学科掌握度数据
+export interface SubjectMasteryData {
+  subject: SubjectType
+  overallMastery: number // 0-100
+  topicBreakdown: Record<string, number>
+  conceptsNeedReinforcement: string[]
+  studentsStrugglingMost: string[]
+}
+
+// 趋势分析
+export interface TrendAnalysis {
+  performanceTrend: 'improving' | 'stable' | 'declining'
+  comparedToPrevious: number // 百分比变化
+  strongestSubjects: SubjectType[]
+  weakestSubjects: SubjectType[]
+  timeManagementTrend: 'improving' | 'stable' | 'declining'
+}
+
+// 需要关注的学生
+export interface StudentAttentionItem {
+  userId: string
+  userName: string
+  reason: 'low-score' | 'not-submitted' | 'time-management' | 'struggling-concepts'
+  details: string
+  urgency: 'low' | 'medium' | 'high'
+  suggestedActions: string[]
+}
+
+// 自动批改配置
+export interface AutoGradingConfig {
+  enabled: boolean
+  subjectSettings: Record<SubjectType, SubjectGradingConfig>
+  generalSettings: GeneralGradingSettings
+}
+
+// 学科批改配置
+export interface SubjectGradingConfig {
+  autoGradeEnabled: boolean
+  questionTypes: Record<string, QuestionGradingConfig>
+  customRules: GradingRule[]
+  requireManualReview: boolean
+  reviewThreshold: number // 分数阈值，低于此分数需要人工复查
+}
+
+// 题目批改配置
+export interface QuestionGradingConfig {
+  method: 'exact-match' | 'fuzzy-match' | 'keyword-match' | 'numeric-tolerance' | 'manual'
+  tolerance?: number // 数值题容差
+  keyWords?: string[] // 关键词匹配
+  fuzzyThreshold?: number // 模糊匹配阈值
+  caseSensitive?: boolean
+  ignoreWhitespace?: boolean
+  partialCredit?: boolean
+  partialCreditRules?: PartialCreditRule[]
+}
+
+// 部分得分规则
+export interface PartialCreditRule {
+  condition: string
+  creditPercentage: number
+  feedback?: string
+}
+
+// 批改规则
+export interface GradingRule {
+  id: string
+  name: string
+  condition: string // 条件表达式
+  action: 'add-points' | 'deduct-points' | 'set-score' | 'flag-for-review'
+  value: number
+  feedback?: string
+}
+
+// 通用批改设置
+export interface GeneralGradingSettings {
+  autoFeedbackEnabled: boolean
+  detailedAnalysis: boolean
+  comparisonWithPeers: boolean
+  learningRecommendations: boolean
+  parentalSummary: boolean
+  instantResults: boolean // 是否立即显示结果
+  gradingDelay?: number // 延迟显示结果（分钟）
+}
+
+// 批改结果
+export interface GradingResult {
+  submissionId: string
+  gradingType: GradingType
+  
+  // 分数信息
+  totalScore: number
+  maxScore: number
+  percentage: number
+  
+  // 题目结果
+  questionResults: QuestionGradingResult[]
+  
+  // 批改统计
+  autoGradedQuestions: number
+  manualGradedQuestions: number
+  flaggedForReview: number
+  
+  // 质量指标
+  confidence: number // 批改置信度 0-100
+  needsReview: boolean
+  reviewReason?: string
+  
+  // 时间信息
+  gradedAt: Date
+  gradingDuration: number // 批改用时（毫秒）
+  gradedBy?: string // 批改者ID（人工批改时）
+}
+
+// 题目批改结果
+export interface QuestionGradingResult {
+  questionId: string
+  score: number
+  maxScore: number
+  isCorrect: boolean
+  gradingMethod: string
+  confidence: number
+  
+  // 错误分析
+  mistakeType?: string
+  feedback?: string
+  explanation?: string
+  
+  // 学习建议
+  suggestions?: string[]
+  relatedTopics?: string[]
+  
+  // 人工批改标记
+  needsManualReview: boolean
+  reviewReason?: string
+  manualOverride?: boolean
+}
+
+// 作业模板
+export interface HomeworkTemplate {
+  id: string
+  name: string
+  description?: string
+  type: HomeworkTemplateType
+  
+  // 适用范围
+  yearLevels: number[]
+  subjects: SubjectType[]
+  
+  // 模板配置
+  exerciseSelectionRules: ExerciseSelectionRule[]
+  defaultSettings: Partial<HomeworkAssignmentConfig>
+  
+  // 使用统计
+  usageCount: number
+  averageScore?: number
+  estimatedTime: number
+  
+  // 自适应设置
+  adaptiveDifficulty: boolean
+  personalizedContent: boolean
+  
+  createdBy: string
+  createdAt: Date
+  updatedAt: Date
+  isActive: boolean
+}
+
+// 练习选择规则
+export interface ExerciseSelectionRule {
+  subject: SubjectType
+  minCount: number
+  maxCount: number
+  difficultyDistribution?: Record<string, number> // 难度分布
+  topicCoverage?: string[] // 必须覆盖的主题
+  adaptToStudentLevel: boolean
+}
+
+// 快速分配选项
+export interface QuickAssignmentOptions {
+  targetStudents: string[]
+  timeframe: 'daily' | 'weekly' | 'weekend' | 'custom'
+  customDuration?: number // 自定义时长（小时）
+  subjectFocus?: SubjectType
+  difficultyLevel?: 'easy' | 'medium' | 'hard' | 'adaptive'
+  includeReview: boolean // 是否包含复习内容
+  priority: PriorityType
+}
+
+// 批量操作配置
+export interface BatchOperationConfig {
+  operation: 'assign' | 'extend-deadline' | 'cancel' | 'grade' | 'send-reminder'
+  targetHomeworkIds: string[]
+  targetStudentIds?: string[]
+  parameters?: Record<string, any>
+  executeAt?: Date // 计划执行时间
+  notification?: boolean
+}
+
+// 学习路径推荐
+export interface LearningPathRecommendation {
+  studentId: string
+  currentLevel: number
+  
+  // 推荐内容
+  recommendedExercises: ExerciseRecommendation[]
+  skillsToFocus: string[]
+  estimatedTimeToMastery: number // 预估掌握时间（天）
+  
+  // 个性化设置
+  learningStyle: 'visual' | 'auditory' | 'kinesthetic' | 'mixed'
+  pacePreference: 'slow' | 'normal' | 'fast'
+  challengeLevel: 'comfort' | 'stretch' | 'challenge'
+  
+  // 进度预测
+  projectedGrowth: GrowthProjection[]
+  milestones: LearningMilestone[]
+  
+  generatedAt: Date
+  validUntil: Date
+}
+
+// 练习推荐
+export interface ExerciseRecommendation {
+  exerciseId: string
+  subject: SubjectType
+  reason: string
+  priority: number
+  estimatedTime: number
+  expectedDifficulty: number
+  confidenceBoost: number // 预期的信心提升
+}
+
+// 成长预测
+export interface GrowthProjection {
+  timeframe: string // 如 "1 week", "1 month"
+  expectedMastery: number
+  keyMilestones: string[]
+  requiredPracticeHours: number
+}
+
+// 学习里程碑
+export interface LearningMilestone {
+  id: string
+  title: string
+  description: string
+  subject: SubjectType
+  targetDate: Date
+  isAchieved: boolean
+  achievedDate?: Date
+  requirements: string[]
+  rewards?: string[]
 }
