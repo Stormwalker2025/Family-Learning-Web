@@ -1,0 +1,284 @@
+Office — 好的 Dan！下面给你一整套**可直接复制到 Claude Code 里使用的指令模板**，用于搭建“家庭作业网站”的多专家 Agent 协作。结构分三类：①总控（Orchestrator）②专家角色（Role Playbooks）③执行流水线（Tasks/Sprints/Checklists）。你只要把这些块按顺序发给 Claude（在 VS Code 里运行 `claude`），它就能分工、落库、写测、起站点。
+
+---
+
+# 0. 目标与范围（复制给 Claude 的总任务宣言）
+
+```
+你是技术总导演，带领一组“专家代理”在我的仓库中交付一个 MVP 级别的“家庭作业网站”（Web-only）。硬性需求：
+- 目标用户：澳大利亚 QLD 年级：Year 3（August）与 Year 6（Michael）
+- 角色/权限：学生（August/Michael）、家长（Grace/Dan，Dan=系统管理员）
+- 登录：仅网页端，初期用本地账户，后续可换 Firebase/Auth0
+- 功能 MVP：
+  1) 英语阅读练习（支持雅思GT风格题型），数学（place value、fraction、area、perimeter、decimal）、HASS 文章+题库；
+  2) 单词本（复习+新词，CSV 导入），作业布置与自动批改（客观题自动、主观题手动），错题本；
+  3) 成绩规则→iPad 解锁分钟数（示例：数学≥90%解锁15分钟，满分30分钟）——先做可配置规则与记录，不对接真实设备；
+  4) 数据结构：课程→知识点→题目/试卷→提交→评测；
+  5) 本地化：en-AU（拼写和课程术语澳式）。
+- 技术栈：Next.js + TypeScript + Tailwind + shadcn/ui；后端先用 Next API Routes + SQLite（Prisma），可扩展至 Postgres。
+- 质量：单测（Vitest/Playwright）、ESLint+Prettier、无障碍（WCAG 2.1 AA 基线）、基础 SEO、分析埋点（本地事件日志）。
+- 工具：使用 MCP（文件系统/受限 shell/git），严格白名单；主分支保护，只在 feature/* 分支改动；提交 PR 才能合并。
+交付物：可运行站点、脚手架、示例题库、最少 30 条端到端测试、文档与管理员操作指南。
+```
+
+---
+
+# 1. Orchestrator（总控代理）提示词
+
+把这段作为第一条给 Claude，之后让它派工给各专家：
+
+```
+/goal 你是 Orchestrator，负责拆分、分配、合并专家代理成果。要求：
+- 读取本对话后续我提供的“专家角色 Playbooks”“任务分解与工单”“质量闸口清单”；
+- 产出：任务分解图（依赖关系）、时间线、分支命名与 PR 计划；
+- 搭建 repo 脚手架并创建首批 issue（以 docs/roadmap.md、docs/tasks.md 形式落库）；
+- 所有代码改动必须：创建 feature 分支→生成补丁→本地测试→开 PR→输出变更说明。
+- 每个专家的产物，先由你审阅（定义域、接口、DoD），再合并进主线。
+
+请先输出：
+1) 任务甘特/依赖清单（文本）
+2) 分支策略与命名（feature/hw-<模块>-<简述>）
+3) 首批里程碑与 PR 目录
+```
+
+---
+
+# 2. 专家角色 Playbooks（逐条发给 Claude，或合并为一条发送）
+
+## 2.1 产品/课程专家（澳洲本地化）
+
+```
+角色：Curriculum PM（AU）
+使命：把 QLD Curriculum 约束转成功能与数据模型。
+输出：
+- docs/curriculum.md：术语、年级-知识点映射（Year3/Year6 重点），题型规范（MCQ/TF/Matching/Fill-in）
+- docs/policies.md：学术诚信、家长监管与数据最小化
+- 功能优先级（MoSCoW）
+- 成绩→解锁规则配置（JSON Schema）
+```
+
+## 2.2 系统架构师
+
+```
+角色：Solution Architect
+输出：
+- docs/architecture.md：Next.js 目录、API 边界、Prisma schema、鉴权策略、扩展路线
+- /app/* 路由/布局草图、组件分层（UI、feature、entity、shared）
+- 安全基线（输入校验、速率限制、审计日志）
+```
+
+## 2.3 UX/UI 设计（线框到组件）
+
+```
+角色：UX/UI
+输出：
+- docs/ux/wireframes.md（家长/学生/管理员三条主线）
+- shadcn/ui 组件地图：题目组件（MCQ/TF/Matching/Fill-in）、题单、计时、提交、结果页、错题本
+- 无障碍要求：键盘可达、语义标签、对比度
+```
+
+## 2.4 前端工程
+
+```
+角色：Frontend Engineer
+任务：
+- 创建 Next.js + TS + Tailwind + shadcn/ui 脚手架
+- Feature：题目渲染与判分（客观题），CSV 导入（Papaparse）
+- 页面：登录/作业列表/做题/结果/错题本/家长面板/管理员控制台
+- 单测 Vitest + React Testing Library；E2E Playwright ≥10 条
+```
+
+## 2.5 后端 & 数据（Prisma/SQLite）
+
+```
+角色：Backend/Data
+任务：
+- Prisma schema：User、Role、Assignment、Question、Attempt、Rule、UnlockLog、Wordbook
+- API：作业 CRUD、判分、规则评估、错题收集、CSV 上传入库
+- 种子数据：Year3/Year6 示例题与单词
+- 单测：API 层≥80% 行覆盖
+```
+
+## 2.6 评测/出题引擎
+
+```
+角色：Assessment Engine
+任务：
+- 判分策略：MCQ/TF/Matching/填空（精确/同义词/大小写/空白处理）
+- 题目 DSL（JSON）与渲染协议
+- 难度分层与自适应（可选），错题再练队列
+```
+
+## 2.7 DevEx / DevOps（本地优先）
+
+```
+角色：DevEx
+任务：
+- scripts：dev、lint、test、e2e、db:push、db:seed
+- pre-commit（lint-staged）、CI（GitHub Actions）跑 lint+test+e2e
+- 环境模板 .env.example；主分支保护策略说明
+```
+
+## 2.8 安全与合规
+
+```
+角色：AppSec
+任务：
+- 威胁建模（STRIDE 简版）
+- 输入/文件上传校验、速率限制、审计与删除策略
+- 合规基线：儿童用户、家长可视、最小化收集
+```
+
+## 2.9 QA（测试计划）
+
+```
+角色：QA Lead
+任务：
+- 测试计划与覆盖矩阵（功能/边界/无障碍/性能/安全）
+- 30 条端到端场景（学生做题、家长查看、管理员导入 CSV）
+- 缺陷报告模板与优先级
+```
+
+---
+
+# 3. MCP 与仓库约束（复制后先让 Claude 生成文件）
+
+```
+/goal 在仓库根创建 claude.mcp.json，权限最小化：
+- filesystem.read: ["./","app/","src/","prisma/","tests/","docs/"]
+- filesystem.write: ["app/","src/","prisma/","tests/","docs/","public/"]
+- shell.allow: ["git status","git diff","npm i","npm run build","npm run dev","npm run test","npm run e2e","npx prisma db push","npx prisma db seed"]
+- deny: ["rm -rf","sudo","docker system prune -af"]
+同时生成 docs/CONTRIBUTING.md：分支策略、提交规范、PR 审核清单。
+```
+
+---
+
+# 4. 仓库脚手架（让 Claude 直接创建）
+
+```
+/goal 初始化项目：
+- Next.js + TS + Tailwind + shadcn/ui
+- 目录：app/(auth|dashboard|assignments|review|admin)、src/(components|lib|features)、prisma/schema.prisma、docs/*
+- 脚本：
+  "dev","build","start","lint","test","e2e","db:push","db:seed"
+- 基础页面：登录、学生作业列表、做题页、结果页、错题本、家长面板、管理员导入
+- 放入最小题库样例（Year3/Year6 各 1 套，GT 风格 10 题）
+- 提交到分支：feature/hw-scaffold
+- 运行测试并输出报告；开 PR，生成变更说明
+```
+
+---
+
+# 5. 数据建模与题目 DSL（直接让 Claude 产出 schema 与示例）
+
+```
+/goal 生成 prisma/schema.prisma（SQLite），包含：
+- User(id,email,displayName,role: 'student'|'parent'|'admin', childOfId?),
+- Assignment(id,title,grade,subject,dueAt),
+- Question(id,assignmentId,type:'mcq'|'tf'|'match'|'fill',payload JSON,answerKey JSON,difficulty),
+- Attempt(id,userId,assignmentId,score,items JSON,createdAt),
+- Rule(id,name,criteria JSON,unlockMinutes int),
+- UnlockLog(id,userId,attemptId,minutes,createdAt),
+- Wordbook(id,grade,words JSON)
+并生成 docs/dsl.md：题目 JSON 规范 + 示例（四题型）+ 判分伪代码。
+```
+
+---
+
+# 6. 判分与“iPad 解锁规则”引擎（配置先行）
+
+```
+/goal 在 src/features/rules/ 下实现：
+- rules.schema.json：criteria: {subject, minScore, grade?} ; action: {unlockMinutes}
+- evaluator.ts：给定 Attempt 与规则列表，输出解锁分钟（可累加或取最大，提供配置开关）
+- 单测：覆盖边界（89.5% vs 90%、不同科目/年级叠加）
+```
+
+---
+
+# 7. 内容导入（CSV→题库/单词）
+
+```
+/goal 实现 CSV 导入：
+- /app/admin/import：上传 CSV（题目/单词），显示解析预览→入库
+- 解析库：Papaparse；字段校验与错误行回显
+- 文档：docs/importers.md，包含模板 CSV
+- 单测：解析器纯函数测试；E2E：上传成功/失败场景
+```
+
+---
+
+# 8. 页面与交互（关键用户旅程）
+
+```
+/goal 完成以下端到端旅程（每条开 PR）：
+1) 学生：登录→查看“今日作业”→做题→提交→结果页→错题本重练
+2) 家长：登录→查看两个孩子成绩→查看错题→设置解锁规则
+3) 管理员：导入 CSV→发布作业→查看提交统计→导出成绩 CSV
+无障碍：表单标签、键盘导航、ARIA；Playwright 用 getByRole 选择器。
+```
+
+---
+
+# 9. 质量闸口与 Definition of Done（发给 Claude 作为强约束）
+
+```
+/goal 每个 PR 必须满足：
+- 单测全部通过，行覆盖≥80%；新增 UI 有基本 E2E；
+- ESLint/Prettier 无报错；a11y 检查通过（至少 Axe-core 无严重问题）；
+- 安全：所有 API 路由有输入校验、速率限制（中间件）；
+- 文档：README 变更、docs/* 更新；管理员操作指南章节更新；
+- 变更说明：目的、实现要点、风险与回滚；
+- 不修改主分支/生产配置；仅改动白名单路径；CI 成功。
+```
+
+---
+
+# 10. 首次 Sprint（工单清单，复制给 Orchestrator 让它自动派给专家）
+
+```
+Sprint 1（5–7 天）——MVP 起步
+- T1 架构文档与路由蓝图（Architect）→ PR#A1
+- T2 Next+TS+Tailwind+shadcn 脚手架（Frontend）→ PR#F1
+- T3 Prisma schema + 种子数据（Backend）→ PR#B1
+- T4 题目 DSL + 判分核心（Assessment）→ PR#E1
+- T5 CSV 导入后端接口与解析器（Backend/Frontend）→ PR#B2/F2
+- T6 学生旅程 v0（列表/做题/结果）（Frontend）→ PR#F3
+- T7 家长面板 v0（查看成绩/规则设置）（Frontend/Backend）→ PR#F4/B3
+- T8 QA 基线（Vitest/Playwright 10 条）→ PR#Q1
+- T9 DevEx：CI、lint、pre-commit、MCP 白名单（DevEx）→ PR#X1
+依赖：T1→T2/T3/T4，T3→T6/T7，T4→T6
+```
+
+---
+
+# 11. 给 Claude 的“代码生成与提交规范”提示（强约束模板）
+
+```
+/goal 严格遵守以下规范：
+- 只在 feature/* 分支工作；每个任务单独分支；
+- 任何破坏性命令禁止（见 MCP）；所有脚本用 npm run；
+- 变更最小化：可运行、可回滚、可测试；
+- 代码同时产出：单测、最小演示数据、文档；
+- PR 模板（.github/pull_request_template.md）必须填写：动机/实现/测试/风险/回滚。
+完成后：输出 git diff 要点 + 下一步建议。
+```
+
+---
+
+# 12. 与 Claude 的高效交互小抄（你这边操作）
+
+* 在 VS Code 里：打开文件→选中需要作为上下文的片段→运行 `claude` 输入上面的指令块。
+* 快速派单：先发 **Orchestrator 指令**，随后依次发送 **Playbooks** 与 **Sprint 工单**。
+* 审查：让 Orchestrator 先产出“任务图+分支计划”，你确认后再让它“开始 T1…Tn”。
+* 迭代：每个 PR 出来后，提醒它“按 DoD 自检+修复再提交”。
+* 复用：把本页保存为 `docs/agent-prompts.md`，让项目长期可重复使用。
+
+---
+
+如果你愿意，我可以直接把**上述所有模板落库**（docs/、prisma/、src/ 初始文件、CI 与脚手架命令），并为 Sprint 1 自动开 9 个 PR 的骨架说明。你只需告诉我：
+
+1. 仓库是否已初始化、用 npm 还是 pnpm；
+2. 你偏好的 UI 主题（浅色/深色/系统）；
+3. 先做 Year 3 还是 Year 6 的端到端旅程。

@@ -1,0 +1,53 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo "📝 Validating commit message..."
+
+# Check conventional commit format
+npx --no-install commitlint --edit "$1"
+
+# Extract commit message
+commit_message=$(cat "$1")
+
+# Check for required patterns
+if echo "$commit_message" | grep -qE "^(feat|fix|docs|style|refactor|test|chore|perf|ci|build)(\(.+\))?: .{1,72}"; then
+  echo "✅ Commit message format is valid"
+else
+  echo "❌ Commit message does not follow conventional commit format"
+  echo ""
+  echo "Expected format: type(scope): description"
+  echo ""
+  echo "Types:"
+  echo "  feat:     New feature"
+  echo "  fix:      Bug fix"
+  echo "  docs:     Documentation only changes"
+  echo "  style:    Changes that don't affect code meaning"
+  echo "  refactor: Code change that neither fixes a bug nor adds a feature"
+  echo "  test:     Adding missing tests or correcting existing tests"
+  echo "  chore:    Changes to build process or auxiliary tools"
+  echo "  perf:     Performance improvement"
+  echo "  ci:       Changes to CI configuration files and scripts"
+  echo "  build:    Changes that affect the build system or dependencies"
+  echo ""
+  echo "Examples:"
+  echo "  feat(auth): add parent login functionality"
+  echo "  fix(homework): resolve submission validation error"
+  echo "  docs(readme): update installation instructions"
+  exit 1
+fi
+
+# Check message length
+if [ ${#commit_message} -gt 72 ]; then
+  echo "⚠️  Commit message is longer than 72 characters"
+  echo "Consider making it more concise"
+fi
+
+# Check for issue references in certain types
+if echo "$commit_message" | grep -qE "^(feat|fix)"; then
+  if ! echo "$commit_message" | grep -qE "(#[0-9]+|closes|fixes|resolves)"; then
+    echo "💡 Consider referencing an issue number for features and fixes"
+    echo "Example: feat(auth): add login (#123)"
+  fi
+fi
+
+echo "✅ Commit message validation passed!"

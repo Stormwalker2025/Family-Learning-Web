@@ -1,0 +1,411 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "iPad Unlock Rules Schema",
+  "description": "Schema for defining iPad unlock rules based on academic performance and behavior",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for the rule"
+    },
+    "name": {
+      "type": "string",
+      "description": "Human-readable name for the rule",
+      "maxLength": 100
+    },
+    "description": {
+      "type": "string",
+      "description": "Detailed description of what triggers this rule",
+      "maxLength": 500
+    },
+    "isActive": {
+      "type": "boolean",
+      "description": "Whether this rule is currently active",
+      "default": true
+    },
+    "priority": {
+      "type": "integer",
+      "description": "Rule priority (higher numbers = higher priority)",
+      "minimum": 0,
+      "maximum": 100,
+      "default": 10
+    },
+    "criteria": {
+      "type": "object",
+      "description": "Conditions that must be met to trigger this rule",
+      "properties": {
+        "subject": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["english", "mathematics", "hass", "science", "all"]
+          },
+          "description": "Which subjects this rule applies to"
+        },
+        "yearLevel": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 3,
+            "maximum": 12
+          },
+          "description": "Which year levels this rule applies to"
+        },
+        "minScore": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Minimum score percentage required"
+        },
+        "maxScore": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Maximum score percentage (for penalties)"
+        },
+        "consecutiveSuccess": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Number of consecutive successes required"
+        },
+        "timeLimit": {
+          "type": "object",
+          "properties": {
+            "maxSeconds": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Maximum time allowed in seconds"
+            },
+            "bonusUnderSeconds": {
+              "type": "integer", 
+              "minimum": 1,
+              "description": "Time under which speed bonus applies"
+            }
+          }
+        },
+        "exerciseType": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["homework", "practice", "test", "review"]
+          },
+          "description": "Types of exercises this rule applies to"
+        },
+        "difficulty": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["easy", "medium", "hard", "challenge"]
+          },
+          "description": "Difficulty levels this rule applies to"
+        },
+        "timeOfDay": {
+          "type": "object",
+          "properties": {
+            "startHour": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 23
+            },
+            "endHour": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 23
+            }
+          },
+          "description": "Time of day restrictions"
+        },
+        "dayOfWeek": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
+          },
+          "description": "Days of week this rule applies to"
+        },
+        "behaviorModifiers": {
+          "type": "object",
+          "properties": {
+            "completionStreak": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Consecutive days of completed tasks"
+            },
+            "mistakeReduction": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Required reduction in mistake rate (0-1)"
+            },
+            "improvementRate": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Required percentage improvement from previous attempts"
+            }
+          }
+        },
+        "customConditions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "field": {
+                "type": "string",
+                "description": "Field name to check"
+              },
+              "operator": {
+                "type": "string",
+                "enum": ["equals", "greaterThan", "lessThan", "contains", "between"]
+              },
+              "value": {
+                "description": "Value to compare against"
+              }
+            },
+            "required": ["field", "operator", "value"]
+          }
+        }
+      },
+      "required": ["subject"],
+      "additionalProperties": false
+    },
+    "action": {
+      "type": "object",
+      "description": "What happens when this rule is triggered",
+      "properties": {
+        "unlockMinutes": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 480,
+          "description": "Minutes of iPad time to unlock (max 8 hours)"
+        },
+        "bonusMinutes": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 120,
+          "description": "Additional bonus minutes for exceptional performance"
+        },
+        "message": {
+          "type": "string",
+          "maxLength": 200,
+          "description": "Message to display to the student"
+        },
+        "achievements": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Achievement badges to award"
+        },
+        "parentNotification": {
+          "type": "boolean",
+          "description": "Whether to notify parents",
+          "default": false
+        },
+        "restrictions": {
+          "type": "object",
+          "properties": {
+            "allowedApps": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Specific apps allowed during this unlock"
+            },
+            "blockedApps": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Apps to block during this unlock"
+            },
+            "timeWindows": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "startTime": {
+                    "type": "string",
+                    "pattern": "^([0-1][0-9]|2[0-3]):[0-5][0-9]$"
+                  },
+                  "endTime": {
+                    "type": "string", 
+                    "pattern": "^([0-1][0-9]|2[0-3]):[0-5][0-9]$"
+                  }
+                }
+              },
+              "description": "Time windows when unlock can be used"
+            }
+          }
+        }
+      },
+      "required": ["unlockMinutes"],
+      "additionalProperties": false
+    },
+    "limits": {
+      "type": "object",
+      "description": "Limits and constraints for this rule",
+      "properties": {
+        "maxDaily": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 480,
+          "description": "Maximum minutes this rule can unlock per day"
+        },
+        "maxWeekly": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 3360,
+          "description": "Maximum minutes this rule can unlock per week"
+        },
+        "cooldownMinutes": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Minutes to wait before this rule can trigger again"
+        },
+        "maxTriggers": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Maximum times this rule can trigger per day"
+        },
+        "requiresParentalApproval": {
+          "type": "boolean",
+          "description": "Whether parent approval is required",
+          "default": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "stackable": {
+      "type": "boolean",
+      "description": "Whether this rule can stack with other rules",
+      "default": false
+    },
+    "validFrom": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When this rule becomes valid"
+    },
+    "validTo": {
+      "type": "string",
+      "format": "date-time", 
+      "description": "When this rule expires"
+    },
+    "createdBy": {
+      "type": "string",
+      "description": "User ID who created this rule"
+    },
+    "appliesTo": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Specific user IDs this rule applies to (empty = all users)"
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Tags for categorizing rules"
+        },
+        "category": {
+          "type": "string",
+          "enum": ["academic", "behavioral", "bonus", "penalty", "emergency"],
+          "description": "Rule category"
+        },
+        "version": {
+          "type": "string",
+          "description": "Rule version for tracking changes"
+        },
+        "notes": {
+          "type": "string",
+          "maxLength": 1000,
+          "description": "Internal notes about this rule"
+        }
+      }
+    }
+  },
+  "required": ["name", "criteria", "action"],
+  "additionalProperties": false,
+  "examples": [
+    {
+      "name": "Mathematics Excellence Reward",
+      "description": "Unlock iPad time for scoring 90%+ on mathematics exercises",
+      "criteria": {
+        "subject": ["mathematics"],
+        "yearLevel": [3, 4, 5, 6],
+        "minScore": 90,
+        "exerciseType": ["homework", "practice"]
+      },
+      "action": {
+        "unlockMinutes": 30,
+        "message": "Excellent work on your maths! You've earned 30 minutes of iPad time! 🎉",
+        "achievements": ["math-star", "high-achiever"],
+        "parentNotification": true
+      },
+      "limits": {
+        "maxDaily": 120,
+        "maxTriggers": 4,
+        "cooldownMinutes": 60
+      },
+      "stackable": true,
+      "metadata": {
+        "category": "academic",
+        "tags": ["mathematics", "high-performance", "daily-reward"]
+      }
+    },
+    {
+      "name": "Consecutive Learning Streak",
+      "description": "Bonus time for completing exercises 5 days in a row",
+      "criteria": {
+        "subject": ["all"],
+        "behaviorModifiers": {
+          "completionStreak": 5
+        }
+      },
+      "action": {
+        "unlockMinutes": 60,
+        "bonusMinutes": 30,
+        "message": "Amazing! 5 days of consistent learning has earned you extra iPad time! 🏆",
+        "achievements": ["consistency-champion", "week-warrior"],
+        "parentNotification": true
+      },
+      "limits": {
+        "maxWeekly": 120,
+        "cooldownMinutes": 10080
+      },
+      "metadata": {
+        "category": "behavioral",
+        "tags": ["consistency", "habit-building", "weekly-bonus"]
+      }
+    },
+    {
+      "name": "Speed Bonus",
+      "description": "Extra time for completing exercises quickly and correctly",
+      "criteria": {
+        "subject": ["english", "mathematics"],
+        "minScore": 80,
+        "timeLimit": {
+          "bonusUnderSeconds": 300
+        }
+      },
+      "action": {
+        "unlockMinutes": 15,
+        "message": "Lightning fast and accurate! ⚡ Here's your speed bonus!",
+        "achievements": ["speed-demon"]
+      },
+      "limits": {
+        "maxDaily": 60,
+        "maxTriggers": 8
+      },
+      "stackable": true,
+      "metadata": {
+        "category": "bonus",
+        "tags": ["speed", "accuracy", "micro-reward"]
+      }
+    }
+  ]
+}

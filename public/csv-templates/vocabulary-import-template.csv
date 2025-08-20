@@ -1,0 +1,6 @@
+word,definition,yearLevel,subject,difficulty,pronunciation,partOfSpeech,exampleSentence,synonyms,antonyms,topic,curriculumCode
+kangaroo,A large Australian marsupial with strong hind legs for hopping,3,english,easy,/ˈkæŋɡəruː/,noun,"The kangaroo hopped across the field.",roo,,australian-animals,ACELA1459
+enormous,Extremely large in size or extent,4,english,medium,/ɪˈnɔːməs/,adjective,"The enormous elephant walked slowly through the zoo.","huge,gigantic,massive","tiny,small,minuscule",descriptive-words,ACELA1470
+celebrate,To acknowledge or honor with festivities or other deviation from routine,5,english,medium,/ˈseləbreɪt/,verb,"We will celebrate her birthday with a party.","commemorate,observe,honor","ignore,neglect,forget",actions-emotions,ACELA1487
+democracy,A system of government by the whole population through elected representatives,6,hass,hard,/dɪˈmɒkrəsi/,noun,"Australia is a democracy where people vote for their leaders.","republic,freedom",,government-civics,ACHCK094
+fraction,A numerical quantity that is not a whole number,4,mathematics,medium,/ˈfrækʃən/,noun,"One half is a fraction written as 1/2.","part,portion,segment","whole,entirety,total",numbers-math,ACMNA077
