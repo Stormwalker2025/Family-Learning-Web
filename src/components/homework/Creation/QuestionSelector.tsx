@@ -5,17 +5,17 @@ import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
-import { 
-  Plus, 
-  Trash2, 
-  ArrowUp, 
+import {
+  Plus,
+  Trash2,
+  ArrowUp,
   ArrowDown,
   Search,
   Filter,
   BookOpen,
   Clock,
   Target,
-  Settings2
+  Settings2,
 } from 'lucide-react'
 import { Exercise, HomeworkExerciseConfig, SubjectType } from '@/types'
 
@@ -25,7 +25,10 @@ interface QuestionSelectorProps {
   onAddExercise: (exercise: Exercise) => void
   onRemoveExercise: (exerciseId: string) => void
   onMoveExercise: (exerciseId: string, direction: 'up' | 'down') => void
-  onUpdateConfig: (exerciseId: string, updates: Partial<HomeworkExerciseConfig>) => void
+  onUpdateConfig: (
+    exerciseId: string,
+    updates: Partial<HomeworkExerciseConfig>
+  ) => void
 }
 
 export default function QuestionSelector({
@@ -34,28 +37,40 @@ export default function QuestionSelector({
   onAddExercise,
   onRemoveExercise,
   onMoveExercise,
-  onUpdateConfig
+  onUpdateConfig,
 }: QuestionSelectorProps) {
   const [searchTerm, setSearchTerm] = useState('')
   const [filters, setFilters] = useState({
     subject: '',
     difficulty: '',
-    yearLevel: ''
+    yearLevel: '',
   })
   const [showConfigModal, setShowConfigModal] = useState<string | null>(null)
 
   // 过滤可用练习
   const filteredExercises = exercises.filter(exercise => {
-    const matchesSearch = !searchTerm || 
+    const matchesSearch =
+      !searchTerm ||
       exercise.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       exercise.description?.toLowerCase().includes(searchTerm.toLowerCase())
-    
-    const matchesSubject = !filters.subject || exercise.subject === filters.subject
-    const matchesDifficulty = !filters.difficulty || exercise.difficulty === filters.difficulty
-    const matchesYearLevel = !filters.yearLevel || exercise.yearLevel.toString() === filters.yearLevel
-    const notSelected = !selectedExercises.some(selected => selected.exerciseId === exercise.id)
 
-    return matchesSearch && matchesSubject && matchesDifficulty && matchesYearLevel && notSelected
+    const matchesSubject =
+      !filters.subject || exercise.subject === filters.subject
+    const matchesDifficulty =
+      !filters.difficulty || exercise.difficulty === filters.difficulty
+    const matchesYearLevel =
+      !filters.yearLevel || exercise.yearLevel.toString() === filters.yearLevel
+    const notSelected = !selectedExercises.some(
+      selected => selected.exerciseId === exercise.id
+    )
+
+    return (
+      matchesSearch &&
+      matchesSubject &&
+      matchesDifficulty &&
+      matchesYearLevel &&
+      notSelected
+    )
   })
 
   // 获取已选练习的详细信息
@@ -120,9 +135,7 @@ export default function QuestionSelector({
         <Badge className={getDifficultyColor(exercise.difficulty)}>
           {exercise.difficulty}
         </Badge>
-        <Badge variant="outline">
-          Year {exercise.yearLevel}
-        </Badge>
+        <Badge variant="outline">Year {exercise.yearLevel}</Badge>
       </div>
 
       <div className="flex justify-between text-xs text-gray-500">
@@ -139,7 +152,10 @@ export default function QuestionSelector({
   )
 
   // 渲染已选练习列表
-  const renderSelectedExercise = (config: HomeworkExerciseConfig, index: number) => {
+  const renderSelectedExercise = (
+    config: HomeworkExerciseConfig,
+    index: number
+  ) => {
     const exercise = getSelectedExerciseDetails(config.exerciseId)
     if (!exercise) return null
 
@@ -175,10 +191,12 @@ export default function QuestionSelector({
                 </span>
                 <h4 className="font-medium text-gray-900">{exercise.title}</h4>
                 {config.isRequired && (
-                  <Badge variant="destructive" className="text-xs">必做</Badge>
+                  <Badge variant="destructive" className="text-xs">
+                    必做
+                  </Badge>
                 )}
               </div>
-              
+
               <div className="flex gap-2 mb-2">
                 <Badge className={getSubjectColor(exercise.subject)}>
                   {exercise.subject}
@@ -196,13 +214,15 @@ export default function QuestionSelector({
                     min="1"
                     max="10"
                     value={config.weight}
-                    onChange={(e) => onUpdateConfig(config.exerciseId, { 
-                      weight: parseInt(e.target.value) || 1 
-                    })}
+                    onChange={e =>
+                      onUpdateConfig(config.exerciseId, {
+                        weight: parseInt(e.target.value) || 1,
+                      })
+                    }
                     className="ml-2 w-16 px-2 py-1 border border-gray-300 rounded"
                   />
                 </div>
-                
+
                 {config.minScore !== undefined && (
                   <div>
                     <span className="text-gray-500">最低分:</span>
@@ -211,9 +231,11 @@ export default function QuestionSelector({
                       min="0"
                       max="100"
                       value={config.minScore}
-                      onChange={(e) => onUpdateConfig(config.exerciseId, { 
-                        minScore: parseInt(e.target.value) || 0 
-                      })}
+                      onChange={e =>
+                        onUpdateConfig(config.exerciseId, {
+                          minScore: parseInt(e.target.value) || 0,
+                        })
+                      }
                       className="ml-2 w-16 px-2 py-1 border border-gray-300 rounded"
                     />
                   </div>
@@ -227,9 +249,11 @@ export default function QuestionSelector({
                       min="1"
                       max="10"
                       value={config.maxAttempts}
-                      onChange={(e) => onUpdateConfig(config.exerciseId, { 
-                        maxAttempts: parseInt(e.target.value) || 1 
-                      })}
+                      onChange={e =>
+                        onUpdateConfig(config.exerciseId, {
+                          maxAttempts: parseInt(e.target.value) || 1,
+                        })
+                      }
                       className="ml-2 w-16 px-2 py-1 border border-gray-300 rounded"
                     />
                   </div>
@@ -272,17 +296,21 @@ export default function QuestionSelector({
     return (
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
         <Card className="p-6 w-full max-w-md">
-          <h3 className="text-lg font-semibold mb-4">配置练习: {exercise.title}</h3>
-          
+          <h3 className="text-lg font-semibold mb-4">
+            配置练习: {exercise.title}
+          </h3>
+
           <div className="space-y-4">
             <div>
               <label className="flex items-center gap-2">
                 <input
                   type="checkbox"
                   checked={config.isRequired}
-                  onChange={(e) => onUpdateConfig(exerciseId, { 
-                    isRequired: e.target.checked 
-                  })}
+                  onChange={e =>
+                    onUpdateConfig(exerciseId, {
+                      isRequired: e.target.checked,
+                    })
+                  }
                 />
                 <span>必做练习</span>
               </label>
@@ -297,9 +325,11 @@ export default function QuestionSelector({
                 min="1"
                 max="10"
                 value={config.weight}
-                onChange={(e) => onUpdateConfig(exerciseId, { 
-                  weight: parseInt(e.target.value) || 1 
-                })}
+                onChange={e =>
+                  onUpdateConfig(exerciseId, {
+                    weight: parseInt(e.target.value) || 1,
+                  })
+                }
               />
             </div>
 
@@ -313,9 +343,13 @@ export default function QuestionSelector({
                 max="100"
                 value={config.minScore || ''}
                 placeholder="不限制"
-                onChange={(e) => onUpdateConfig(exerciseId, { 
-                  minScore: e.target.value ? parseInt(e.target.value) : undefined 
-                })}
+                onChange={e =>
+                  onUpdateConfig(exerciseId, {
+                    minScore: e.target.value
+                      ? parseInt(e.target.value)
+                      : undefined,
+                  })
+                }
               />
             </div>
 
@@ -329,9 +363,13 @@ export default function QuestionSelector({
                 max="10"
                 value={config.maxAttempts || ''}
                 placeholder="不限制"
-                onChange={(e) => onUpdateConfig(exerciseId, { 
-                  maxAttempts: e.target.value ? parseInt(e.target.value) : undefined 
-                })}
+                onChange={e =>
+                  onUpdateConfig(exerciseId, {
+                    maxAttempts: e.target.value
+                      ? parseInt(e.target.value)
+                      : undefined,
+                  })
+                }
               />
             </div>
 
@@ -345,9 +383,13 @@ export default function QuestionSelector({
                 max="300"
                 value={config.timeLimit || ''}
                 placeholder="使用练习默认时间"
-                onChange={(e) => onUpdateConfig(exerciseId, { 
-                  timeLimit: e.target.value ? parseInt(e.target.value) : undefined 
-                })}
+                onChange={e =>
+                  onUpdateConfig(exerciseId, {
+                    timeLimit: e.target.value
+                      ? parseInt(e.target.value)
+                      : undefined,
+                  })
+                }
               />
             </div>
           </div>
@@ -360,10 +402,7 @@ export default function QuestionSelector({
             >
               取消
             </Button>
-            <Button
-              onClick={() => setShowConfigModal(null)}
-              className="flex-1"
-            >
+            <Button onClick={() => setShowConfigModal(null)} className="flex-1">
               确定
             </Button>
           </div>
@@ -379,19 +418,20 @@ export default function QuestionSelector({
         <h3 className="text-lg font-semibold mb-4">
           已选练习 ({selectedExercises.length})
         </h3>
-        
+
         {selectedExercises.length === 0 ? (
           <Card className="p-8 text-center">
             <BookOpen size={48} className="mx-auto text-gray-400 mb-4" />
             <p className="text-gray-600">还没有选择任何练习</p>
-            <p className="text-sm text-gray-500">从下方的练习库中选择合适的练习</p>
+            <p className="text-sm text-gray-500">
+              从下方的练习库中选择合适的练习
+            </p>
           </Card>
         ) : (
           <div className="space-y-3">
             {selectedExercises
               .sort((a, b) => a.order - b.order)
-              .map((config, index) => renderSelectedExercise(config, index))
-            }
+              .map((config, index) => renderSelectedExercise(config, index))}
           </div>
         )}
       </div>
@@ -399,7 +439,7 @@ export default function QuestionSelector({
       {/* 练习库 */}
       <div>
         <h3 className="text-lg font-semibold mb-4">练习库</h3>
-        
+
         {/* 搜索和过滤 */}
         <Card className="p-4 mb-4">
           <div className="flex flex-wrap gap-4 items-center">
@@ -408,16 +448,18 @@ export default function QuestionSelector({
               <Input
                 placeholder="搜索练习..."
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                onChange={e => setSearchTerm(e.target.value)}
                 className="w-64"
               />
             </div>
-            
+
             <div className="flex items-center gap-2">
               <Filter size={16} className="text-gray-500" />
               <select
                 value={filters.subject}
-                onChange={(e) => setFilters(prev => ({ ...prev, subject: e.target.value }))}
+                onChange={e =>
+                  setFilters(prev => ({ ...prev, subject: e.target.value }))
+                }
                 className="px-3 py-2 border border-gray-300 rounded-md"
               >
                 <option value="">所有学科</option>
@@ -426,10 +468,12 @@ export default function QuestionSelector({
                 <option value="HASS">HASS</option>
                 <option value="VOCABULARY">词汇</option>
               </select>
-              
+
               <select
                 value={filters.difficulty}
-                onChange={(e) => setFilters(prev => ({ ...prev, difficulty: e.target.value }))}
+                onChange={e =>
+                  setFilters(prev => ({ ...prev, difficulty: e.target.value }))
+                }
                 className="px-3 py-2 border border-gray-300 rounded-md"
               >
                 <option value="">所有难度</option>
@@ -439,15 +483,19 @@ export default function QuestionSelector({
                 <option value="HARD">困难</option>
                 <option value="ADVANCED">高级</option>
               </select>
-              
+
               <select
                 value={filters.yearLevel}
-                onChange={(e) => setFilters(prev => ({ ...prev, yearLevel: e.target.value }))}
+                onChange={e =>
+                  setFilters(prev => ({ ...prev, yearLevel: e.target.value }))
+                }
                 className="px-3 py-2 border border-gray-300 rounded-md"
               >
                 <option value="">所有年级</option>
                 {[3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(year => (
-                  <option key={year} value={year.toString()}>Year {year}</option>
+                  <option key={year} value={year.toString()}>
+                    Year {year}
+                  </option>
                 ))}
               </select>
             </div>
@@ -459,10 +507,9 @@ export default function QuestionSelector({
           <Card className="p-8 text-center">
             <BookOpen size={48} className="mx-auto text-gray-400 mb-4" />
             <p className="text-gray-600">
-              {searchTerm || Object.values(filters).some(f => f) 
-                ? '没有找到符合条件的练习' 
-                : '暂无可用练习'
-              }
+              {searchTerm || Object.values(filters).some(f => f)
+                ? '没有找到符合条件的练习'
+                : '暂无可用练习'}
             </p>
           </Card>
         ) : (

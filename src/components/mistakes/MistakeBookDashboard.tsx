@@ -5,9 +5,9 @@ import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
-import { 
-  BookX, 
-  Target, 
+import {
+  BookX,
+  Target,
   TrendingUp,
   Clock,
   CheckCircle,
@@ -16,7 +16,7 @@ import {
   Eye,
   Filter,
   BookOpen,
-  Award
+  Award,
 } from 'lucide-react'
 import { useAuth } from '@/hooks/auth/useAuth'
 
@@ -64,9 +64,9 @@ interface MistakeBookDashboardProps {
   isParentView?: boolean
 }
 
-export default function MistakeBookDashboard({ 
-  userId, 
-  isParentView = false 
+export default function MistakeBookDashboard({
+  userId,
+  isParentView = false,
 }: MistakeBookDashboardProps) {
   const { user } = useAuth()
   const [mistakes, setMistakes] = useState<MistakeRecord[]>([])
@@ -75,9 +75,11 @@ export default function MistakeBookDashboard({
   const [filters, setFilters] = useState({
     subject: '',
     status: 'active',
-    mistakeType: ''
+    mistakeType: '',
   })
-  const [selectedMistake, setSelectedMistake] = useState<MistakeRecord | null>(null)
+  const [selectedMistake, setSelectedMistake] = useState<MistakeRecord | null>(
+    null
+  )
 
   const targetUserId = userId || user?.id
 
@@ -92,13 +94,13 @@ export default function MistakeBookDashboard({
       setLoading(true)
       const queryParams = new URLSearchParams({
         userId: targetUserId!,
-        ...Object.fromEntries(Object.entries(filters).filter(([_, v]) => v))
+        ...Object.fromEntries(Object.entries(filters).filter(([_, v]) => v)),
       })
 
       const response = await fetch(`/api/mistakes?${queryParams}`, {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
       })
 
       if (response.ok) {
@@ -113,25 +115,29 @@ export default function MistakeBookDashboard({
     }
   }
 
-  const reviewMistake = async (mistakeId: string, isCorrect: boolean, notes?: string) => {
+  const reviewMistake = async (
+    mistakeId: string,
+    isCorrect: boolean,
+    notes?: string
+  ) => {
     try {
       const response = await fetch('/api/mistakes', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
         body: JSON.stringify({
           mistakeId,
           isCorrect,
-          notes
-        })
+          notes,
+        }),
       })
 
       if (response.ok) {
         const data = await response.json()
         fetchMistakeBook() // 刷新数据
-        
+
         if (data.data.isMastered) {
           alert('恭喜！你已掌握这道题！')
         }
@@ -143,32 +149,34 @@ export default function MistakeBookDashboard({
 
   const getMistakeTypeLabel = (type: string) => {
     const labels = {
-      'CARELESS_ERROR': '粗心错误',
-      'CONCEPT_ERROR': '概念错误',
-      'METHOD_ERROR': '方法错误',
-      'TIME_PRESSURE': '时间压力',
-      'UNKNOWN': '未知原因'
+      CARELESS_ERROR: '粗心错误',
+      CONCEPT_ERROR: '概念错误',
+      METHOD_ERROR: '方法错误',
+      TIME_PRESSURE: '时间压力',
+      UNKNOWN: '未知原因',
     }
     return labels[type as keyof typeof labels] || type
   }
 
   const getSubjectColor = (subject: string) => {
     const colors = {
-      'ENGLISH': 'bg-blue-100 text-blue-800',
-      'MATHS': 'bg-green-100 text-green-800',
-      'HASS': 'bg-purple-100 text-purple-800',
-      'VOCABULARY': 'bg-orange-100 text-orange-800'
+      ENGLISH: 'bg-blue-100 text-blue-800',
+      MATHS: 'bg-green-100 text-green-800',
+      HASS: 'bg-purple-100 text-purple-800',
+      VOCABULARY: 'bg-orange-100 text-orange-800',
     }
     return colors[subject as keyof typeof colors] || 'bg-gray-100 text-gray-800'
   }
 
   const getDifficultyColor = (difficulty: string) => {
     const colors = {
-      'easy': 'bg-green-100 text-green-700',
-      'medium': 'bg-yellow-100 text-yellow-700',
-      'hard': 'bg-red-100 text-red-700'
+      easy: 'bg-green-100 text-green-700',
+      medium: 'bg-yellow-100 text-yellow-700',
+      hard: 'bg-red-100 text-red-700',
     }
-    return colors[difficulty as keyof typeof colors] || 'bg-gray-100 text-gray-700'
+    return (
+      colors[difficulty as keyof typeof colors] || 'bg-gray-100 text-gray-700'
+    )
   }
 
   if (loading) {
@@ -189,9 +197,7 @@ export default function MistakeBookDashboard({
               <div className="p-3 bg-red-100 rounded-lg">
                 <BookX className="h-6 w-6 text-red-600" />
               </div>
-              <Badge className="bg-red-100 text-red-800">
-                总计
-              </Badge>
+              <Badge className="bg-red-100 text-red-800">总计</Badge>
             </div>
             <div>
               <p className="text-2xl font-bold text-gray-900 mb-1">
@@ -206,9 +212,7 @@ export default function MistakeBookDashboard({
               <div className="p-3 bg-yellow-100 rounded-lg">
                 <Target className="h-6 w-6 text-yellow-600" />
               </div>
-              <Badge className="bg-yellow-100 text-yellow-800">
-                待复习
-              </Badge>
+              <Badge className="bg-yellow-100 text-yellow-800">待复习</Badge>
             </div>
             <div>
               <p className="text-2xl font-bold text-gray-900 mb-1">
@@ -223,9 +227,7 @@ export default function MistakeBookDashboard({
               <div className="p-3 bg-green-100 rounded-lg">
                 <Award className="h-6 w-6 text-green-600" />
               </div>
-              <Badge className="bg-green-100 text-green-800">
-                已掌握
-              </Badge>
+              <Badge className="bg-green-100 text-green-800">已掌握</Badge>
             </div>
             <div>
               <p className="text-2xl font-bold text-gray-900 mb-1">
@@ -259,9 +261,11 @@ export default function MistakeBookDashboard({
             <span className="text-sm text-gray-600">筛选:</span>
           </div>
 
-          <select 
+          <select
             value={filters.subject}
-            onChange={(e) => setFilters(prev => ({ ...prev, subject: e.target.value }))}
+            onChange={e =>
+              setFilters(prev => ({ ...prev, subject: e.target.value }))
+            }
             className="px-3 py-1 border border-gray-300 rounded-md text-sm"
           >
             <option value="">所有学科</option>
@@ -271,9 +275,11 @@ export default function MistakeBookDashboard({
             <option value="VOCABULARY">词汇</option>
           </select>
 
-          <select 
+          <select
             value={filters.status}
-            onChange={(e) => setFilters(prev => ({ ...prev, status: e.target.value }))}
+            onChange={e =>
+              setFilters(prev => ({ ...prev, status: e.target.value }))
+            }
             className="px-3 py-1 border border-gray-300 rounded-md text-sm"
           >
             <option value="all">全部状态</option>
@@ -281,9 +287,11 @@ export default function MistakeBookDashboard({
             <option value="mastered">已掌握</option>
           </select>
 
-          <select 
+          <select
             value={filters.mistakeType}
-            onChange={(e) => setFilters(prev => ({ ...prev, mistakeType: e.target.value }))}
+            onChange={e =>
+              setFilters(prev => ({ ...prev, mistakeType: e.target.value }))
+            }
             className="px-3 py-1 border border-gray-300 rounded-md text-sm"
           >
             <option value="">所有错误类型</option>
@@ -300,18 +308,19 @@ export default function MistakeBookDashboard({
         <Card className="p-8 text-center">
           <BookOpen size={48} className="mx-auto text-gray-400 mb-4" />
           <h3 className="text-lg font-medium text-gray-900 mb-2">
-            {filters.status === 'active' ? '没有需要复习的错题' : '没有找到错题'}
+            {filters.status === 'active'
+              ? '没有需要复习的错题'
+              : '没有找到错题'}
           </h3>
           <p className="text-gray-600">
-            {filters.status === 'active' 
+            {filters.status === 'active'
               ? '太棒了！所有错题都已掌握。'
-              : '尝试调整筛选条件或完成更多练习。'
-            }
+              : '尝试调整筛选条件或完成更多练习。'}
           </p>
         </Card>
       ) : (
         <div className="space-y-4">
-          {mistakes.map((mistake) => (
+          {mistakes.map(mistake => (
             <Card key={mistake.id} className="p-6">
               <div className="flex justify-between items-start mb-4">
                 <div className="flex items-center gap-3">
@@ -327,7 +336,7 @@ export default function MistakeBookDashboard({
                     </Badge>
                   </div>
                 </div>
-                
+
                 <div className="flex items-center gap-2">
                   {mistake.isMastered ? (
                     <Badge className="bg-green-100 text-green-800">
@@ -340,7 +349,7 @@ export default function MistakeBookDashboard({
                       需复习
                     </Badge>
                   )}
-                  
+
                   {mistake.repeatCount > 1 && (
                     <Badge className="bg-red-100 text-red-800">
                       重复错误 {mistake.repeatCount}次
@@ -355,26 +364,34 @@ export default function MistakeBookDashboard({
                 </h3>
                 <div className="bg-gray-50 rounded-lg p-4">
                   <h4 className="font-medium mb-2">题目:</h4>
-                  <p className="text-gray-700 mb-3">{mistake.questionContent}</p>
-                  
+                  <p className="text-gray-700 mb-3">
+                    {mistake.questionContent}
+                  </p>
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <h5 className="text-sm font-medium text-red-700 mb-1">你的答案:</h5>
+                      <h5 className="text-sm font-medium text-red-700 mb-1">
+                        你的答案:
+                      </h5>
                       <p className="text-red-600 bg-red-50 p-2 rounded">
                         {mistake.incorrectAnswer}
                       </p>
                     </div>
                     <div>
-                      <h5 className="text-sm font-medium text-green-700 mb-1">正确答案:</h5>
+                      <h5 className="text-sm font-medium text-green-700 mb-1">
+                        正确答案:
+                      </h5>
                       <p className="text-green-600 bg-green-50 p-2 rounded">
                         {mistake.correctAnswer}
                       </p>
                     </div>
                   </div>
-                  
+
                   {mistake.explanation && (
                     <div className="mt-3">
-                      <h5 className="text-sm font-medium text-blue-700 mb-1">解析:</h5>
+                      <h5 className="text-sm font-medium text-blue-700 mb-1">
+                        解析:
+                      </h5>
                       <p className="text-blue-600 bg-blue-50 p-2 rounded text-sm">
                         {mistake.explanation}
                       </p>
@@ -387,11 +404,15 @@ export default function MistakeBookDashboard({
                 <div className="flex items-center gap-4 text-sm text-gray-500">
                   <span>复习 {mistake.reviewCount} 次</span>
                   <span>
-                    错误时间: {new Date(mistake.createdAt).toLocaleDateString('zh-CN')}
+                    错误时间:{' '}
+                    {new Date(mistake.createdAt).toLocaleDateString('zh-CN')}
                   </span>
                   {mistake.lastReviewAt && (
                     <span>
-                      最后复习: {new Date(mistake.lastReviewAt).toLocaleDateString('zh-CN')}
+                      最后复习:{' '}
+                      {new Date(mistake.lastReviewAt).toLocaleDateString(
+                        'zh-CN'
+                      )}
                     </span>
                   )}
                 </div>
@@ -427,8 +448,11 @@ export default function MistakeBookDashboard({
         <Card className="p-6">
           <h3 className="text-lg font-semibold mb-4">错题分布</h3>
           <div className="space-y-3">
-            {stats.subjectBreakdown.map((item) => (
-              <div key={item.subject} className="flex items-center justify-between">
+            {stats.subjectBreakdown.map(item => (
+              <div
+                key={item.subject}
+                className="flex items-center justify-between"
+              >
                 <div className="flex items-center gap-2">
                   <Badge className={getSubjectColor(item.subject)}>
                     {item.subject}
@@ -436,8 +460,12 @@ export default function MistakeBookDashboard({
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="w-32">
-                    <Progress 
-                      value={stats.totalMistakes > 0 ? (item.count / stats.totalMistakes) * 100 : 0}
+                    <Progress
+                      value={
+                        stats.totalMistakes > 0
+                          ? (item.count / stats.totalMistakes) * 100
+                          : 0
+                      }
                       className="h-2"
                     />
                   </div>

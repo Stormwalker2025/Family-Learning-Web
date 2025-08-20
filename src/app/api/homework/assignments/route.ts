@@ -11,7 +11,10 @@ const createAssignmentSchema = z.object({
   description: z.string().optional(),
   instructions: z.string().optional(),
   assignedTo: z.array(z.string()).min(1, '必须至少分配给一个学生'),
-  dueDate: z.string().optional().transform(str => str ? new Date(str) : undefined),
+  dueDate: z
+    .string()
+    .optional()
+    .transform(str => (str ? new Date(str) : undefined)),
   estimatedTime: z.number().optional(),
   priority: z.enum(['LOW', 'MEDIUM', 'HIGH', 'URGENT']).default('MEDIUM'),
   totalPoints: z.number().default(100),
@@ -19,25 +22,42 @@ const createAssignmentSchema = z.object({
   allowMultipleAttempts: z.boolean().default(true),
   maxAttempts: z.number().optional(),
   autoRelease: z.boolean().default(true),
-  releaseDate: z.string().optional().transform(str => str ? new Date(str) : undefined),
+  releaseDate: z
+    .string()
+    .optional()
+    .transform(str => (str ? new Date(str) : undefined)),
   lateSubmissionAllowed: z.boolean().default(true),
   latePenalty: z.number().optional(),
-  exercises: z.array(z.object({
-    exerciseId: z.string(),
-    order: z.number(),
-    isRequired: z.boolean().default(true),
-    minScore: z.number().optional(),
-    maxAttempts: z.number().optional(),
-    timeLimit: z.number().optional(),
-    weight: z.number().default(1)
-  })).min(1, '必须包含至少一个练习'),
-  notifications: z.array(z.object({
-    type: z.enum(['homework-assigned', 'homework-due', 'homework-completed', 'homework-graded', 'reminder']),
-    enabled: z.boolean(),
-    timing: z.number().optional(),
-    recipients: z.array(z.string()),
-    message: z.string().optional()
-  })).default([])
+  exercises: z
+    .array(
+      z.object({
+        exerciseId: z.string(),
+        order: z.number(),
+        isRequired: z.boolean().default(true),
+        minScore: z.number().optional(),
+        maxAttempts: z.number().optional(),
+        timeLimit: z.number().optional(),
+        weight: z.number().default(1),
+      })
+    )
+    .min(1, '必须包含至少一个练习'),
+  notifications: z
+    .array(
+      z.object({
+        type: z.enum([
+          'homework-assigned',
+          'homework-due',
+          'homework-completed',
+          'homework-graded',
+          'reminder',
+        ]),
+        enabled: z.boolean(),
+        timing: z.number().optional(),
+        recipients: z.array(z.string()),
+        message: z.string().optional(),
+      })
+    )
+    .default([]),
 })
 
 // GET - 获取作业列表
@@ -62,27 +82,27 @@ export async function GET(request: NextRequest) {
 
     // 构建查询条件
     const where: any = {}
-    
+
     // 根据用户角色过滤
     if (payload.role === 'STUDENT') {
       where.assignedTo = {
-        some: { id: payload.userId }
+        some: { id: payload.userId },
       }
     } else if (payload.role === 'PARENT') {
       // 家长可以看到家庭成员的作业
       const family = await prisma.user.findUnique({
         where: { id: payload.userId },
-        include: { family: { include: { members: true } } }
+        include: { family: { include: { members: true } } },
       })
-      
+
       if (family?.family?.members) {
         const studentIds = family.family.members
           .filter(member => member.role === 'STUDENT')
           .map(student => student.id)
-        
+
         if (studentIds.length > 0) {
           where.assignedTo = {
-            some: { id: { in: studentIds } }
+            some: { id: { in: studentIds } },
           }
         }
       }
@@ -95,7 +115,7 @@ export async function GET(request: NextRequest) {
 
     if (assignedTo) {
       where.assignedTo = {
-        some: { id: assignedTo }
+        some: { id: assignedTo },
       }
     }
 
@@ -107,50 +127,54 @@ export async function GET(request: NextRequest) {
         where,
         include: {
           assignedByUser: {
-            select: { id: true, displayName: true, username: true }
+            select: { id: true, displayName: true, username: true },
           },
           assignedTo: {
-            select: { id: true, displayName: true, username: true, yearLevel: true }
+            select: {
+              id: true,
+              displayName: true,
+              username: true,
+              yearLevel: true,
+            },
           },
           exercises: {
             include: {
               exercise: {
-                select: { 
-                  id: true, 
-                  title: true, 
-                  subject: true, 
-                  difficulty: true, 
-                  timeLimit: true 
-                }
-              }
+                select: {
+                  id: true,
+                  title: true,
+                  subject: true,
+                  difficulty: true,
+                  timeLimit: true,
+                },
+              },
             },
-            orderBy: { order: 'asc' }
+            orderBy: { order: 'asc' },
           },
           submissions: {
             include: {
               user: {
-                select: { id: true, displayName: true, username: true }
-              }
-            }
-          }
+                select: { id: true, displayName: true, username: true },
+              },
+            },
+          },
         },
-        orderBy: [
-          { dueDate: 'asc' },
-          { createdAt: 'desc' }
-        ],
+        orderBy: [{ dueDate: 'asc' }, { createdAt: 'desc' }],
         skip,
-        take: limit
+        take: limit,
       }),
-      prisma.homeworkAssignment.count({ where })
+      prisma.homeworkAssignment.count({ where }),
     ])
 
     // 计算统计信息
     const assignmentsWithStats = assignments.map(assignment => {
       const totalStudents = assignment.assignedTo.length
       const submissions = assignment.submissions
-      const completedSubmissions = submissions.filter(s => s.status === 'COMPLETED' || s.status === 'SUBMITTED')
+      const completedSubmissions = submissions.filter(
+        s => s.status === 'COMPLETED' || s.status === 'SUBMITTED'
+      )
       const overdueSubmissions = submissions.filter(s => s.isLate)
-      
+
       return {
         ...assignment,
         statistics: {
@@ -158,8 +182,11 @@ export async function GET(request: NextRequest) {
           submittedCount: submissions.length,
           completedCount: completedSubmissions.length,
           overdueCount: overdueSubmissions.length,
-          completionRate: totalStudents > 0 ? (completedSubmissions.length / totalStudents) * 100 : 0
-        }
+          completionRate:
+            totalStudents > 0
+              ? (completedSubmissions.length / totalStudents) * 100
+              : 0,
+        },
       }
     })
 
@@ -170,16 +197,12 @@ export async function GET(request: NextRequest) {
         page,
         limit,
         total,
-        totalPages: Math.ceil(total / limit)
-      }
+        totalPages: Math.ceil(total / limit),
+      },
     })
-
   } catch (error) {
     console.error('获取作业列表失败:', error)
-    return NextResponse.json(
-      { error: '获取作业列表失败' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: '获取作业列表失败' }, { status: 500 })
   }
 }
 
@@ -208,12 +231,12 @@ export async function POST(request: NextRequest) {
     const exerciseIds = validatedData.exercises.map(e => e.exerciseId)
     const existingExercises = await prisma.exercise.findMany({
       where: { id: { in: exerciseIds } },
-      select: { id: true, title: true, subject: true }
+      select: { id: true, title: true, subject: true },
     })
 
     if (existingExercises.length !== exerciseIds.length) {
-      const missingIds = exerciseIds.filter(id => 
-        !existingExercises.some(e => e.id === id)
+      const missingIds = exerciseIds.filter(
+        id => !existingExercises.some(e => e.id === id)
       )
       return NextResponse.json(
         { error: `练习不存在: ${missingIds.join(', ')}` },
@@ -223,16 +246,16 @@ export async function POST(request: NextRequest) {
 
     // 验证分配的学生是否存在
     const existingStudents = await prisma.user.findMany({
-      where: { 
+      where: {
         id: { in: validatedData.assignedTo },
-        role: 'STUDENT'
+        role: 'STUDENT',
       },
-      select: { id: true, displayName: true }
+      select: { id: true, displayName: true },
     })
 
     if (existingStudents.length !== validatedData.assignedTo.length) {
-      const missingIds = validatedData.assignedTo.filter(id => 
-        !existingStudents.some(s => s.id === id)
+      const missingIds = validatedData.assignedTo.filter(
+        id => !existingStudents.some(s => s.id === id)
       )
       return NextResponse.json(
         { error: `学生不存在或角色不正确: ${missingIds.join(', ')}` },
@@ -256,7 +279,7 @@ export async function POST(request: NextRequest) {
         passingScore: validatedData.passingScore,
         allowMultipleAttempts: validatedData.allowMultipleAttempts,
         assignedTo: {
-          connect: validatedData.assignedTo.map(id => ({ id }))
+          connect: validatedData.assignedTo.map(id => ({ id })),
         },
         exercises: {
           create: validatedData.exercises.map(exercise => ({
@@ -264,31 +287,36 @@ export async function POST(request: NextRequest) {
             order: exercise.order,
             isRequired: exercise.isRequired,
             minScore: exercise.minScore,
-            maxAttempts: exercise.maxAttempts
-          }))
-        }
+            maxAttempts: exercise.maxAttempts,
+          })),
+        },
       },
       include: {
         assignedByUser: {
-          select: { id: true, displayName: true, username: true }
+          select: { id: true, displayName: true, username: true },
         },
         assignedTo: {
-          select: { id: true, displayName: true, username: true, yearLevel: true }
+          select: {
+            id: true,
+            displayName: true,
+            username: true,
+            yearLevel: true,
+          },
         },
         exercises: {
           include: {
             exercise: {
-              select: { 
-                id: true, 
-                title: true, 
-                subject: true, 
-                difficulty: true 
-              }
-            }
+              select: {
+                id: true,
+                title: true,
+                subject: true,
+                difficulty: true,
+              },
+            },
           },
-          orderBy: { order: 'asc' }
-        }
-      }
+          orderBy: { order: 'asc' },
+        },
+      },
     })
 
     // 为每个学生创建作业提交记录
@@ -300,8 +328,8 @@ export async function POST(request: NextRequest) {
             userId: studentId,
             status: 'NOT_STARTED',
             totalExercises: validatedData.exercises.length,
-            maxPossibleScore: validatedData.totalPoints
-          }
+            maxPossibleScore: validatedData.totalPoints,
+          },
         })
       )
     )
@@ -312,9 +340,8 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: true,
       data: assignment,
-      message: '作业创建成功'
+      message: '作业创建成功',
     })
-
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
@@ -324,9 +351,6 @@ export async function POST(request: NextRequest) {
     }
 
     console.error('创建作业失败:', error)
-    return NextResponse.json(
-      { error: '创建作业失败' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: '创建作业失败' }, { status: 500 })
   }
 }

@@ -6,24 +6,27 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Badge } from '@/components/ui/badge'
-import { 
-  Settings, 
-  Plus, 
-  Trash2, 
+import {
+  Settings,
+  Plus,
+  Trash2,
   Edit3,
   Save,
   AlertTriangle,
   CheckCircle,
-  Target
+  Target,
 } from 'lucide-react'
 import { useAuth } from '@/hooks/auth/useAuth'
 import { IpadUnlockConfiguration, SubjectType } from '@/types'
 
 export default function IpadUnlockConfigurationManager() {
   const { user } = useAuth()
-  const [configurations, setConfigurations] = useState<IpadUnlockConfiguration[]>([])
+  const [configurations, setConfigurations] = useState<
+    IpadUnlockConfiguration[]
+  >([])
   const [loading, setLoading] = useState(true)
-  const [editingConfig, setEditingConfig] = useState<Partial<IpadUnlockConfiguration> | null>(null)
+  const [editingConfig, setEditingConfig] =
+    useState<Partial<IpadUnlockConfiguration> | null>(null)
   const [showCreateForm, setShowCreateForm] = useState(false)
 
   useEffect(() => {
@@ -35,8 +38,8 @@ export default function IpadUnlockConfigurationManager() {
       setLoading(true)
       const response = await fetch('/api/ipad-unlock?action=config', {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
       })
 
       if (response.ok) {
@@ -50,15 +53,17 @@ export default function IpadUnlockConfigurationManager() {
     }
   }
 
-  const saveConfiguration = async (config: Partial<IpadUnlockConfiguration>) => {
+  const saveConfiguration = async (
+    config: Partial<IpadUnlockConfiguration>
+  ) => {
     try {
       const response = await fetch('/api/ipad-unlock', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
-        body: JSON.stringify(config)
+        body: JSON.stringify(config),
       })
 
       if (response.ok) {
@@ -84,25 +89,25 @@ export default function IpadUnlockConfigurationManager() {
             minScore: 70,
             maxScore: 79,
             baseMinutes: 10,
-            bonusMinutes: 0
+            bonusMinutes: 0,
           },
           {
             minScore: 80,
             maxScore: 89,
             baseMinutes: 15,
-            bonusMinutes: 0
+            bonusMinutes: 0,
           },
           {
             minScore: 90,
             maxScore: 100,
             baseMinutes: 20,
-            bonusMinutes: 10
-          }
+            bonusMinutes: 10,
+          },
         ],
-        dailyLimit: 60
-      }
+        dailyLimit: 60,
+      },
     ],
-    isActive: true
+    isActive: true,
   }
 
   const renderConfigurationForm = (
@@ -125,14 +130,14 @@ export default function IpadUnlockConfigurationManager() {
             minScore: 70,
             maxScore: 100,
             baseMinutes: 15,
-            bonusMinutes: 5
-          }
+            bonusMinutes: 5,
+          },
         ],
-        dailyLimit: 60
+        dailyLimit: 60,
       }
-      
+
       updateConfig({
-        rules: [...(config.rules || []), newRule]
+        rules: [...(config.rules || []), newRule],
       })
     }
 
@@ -159,11 +164,11 @@ export default function IpadUnlockConfigurationManager() {
               </label>
               <Input
                 value={config.name || ''}
-                onChange={(e) => updateConfig({ name: e.target.value })}
+                onChange={e => updateConfig({ name: e.target.value })}
                 placeholder="例如：标准解锁规则"
               />
             </div>
-            
+
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 状态
@@ -172,7 +177,7 @@ export default function IpadUnlockConfigurationManager() {
                 <input
                   type="checkbox"
                   checked={config.isActive ?? true}
-                  onChange={(e) => updateConfig({ isActive: e.target.checked })}
+                  onChange={e => updateConfig({ isActive: e.target.checked })}
                   className="rounded"
                 />
                 <span className="text-sm">启用此配置</span>
@@ -186,7 +191,7 @@ export default function IpadUnlockConfigurationManager() {
             </label>
             <Textarea
               value={config.description || ''}
-              onChange={(e) => updateConfig({ description: e.target.value })}
+              onChange={e => updateConfig({ description: e.target.value })}
               placeholder="描述这个解锁规则的用途..."
               rows={3}
             />
@@ -229,9 +234,11 @@ export default function IpadUnlockConfigurationManager() {
                       </label>
                       <select
                         value={rule.subject}
-                        onChange={(e) => updateRule(index, { 
-                          subject: e.target.value as SubjectType 
-                        })}
+                        onChange={e =>
+                          updateRule(index, {
+                            subject: e.target.value as SubjectType,
+                          })
+                        }
                         className="w-full px-3 py-2 border border-gray-300 rounded-md"
                       >
                         <option value="ENGLISH">英语</option>
@@ -249,9 +256,13 @@ export default function IpadUnlockConfigurationManager() {
                         type="number"
                         min="0"
                         value={rule.dailyLimit || ''}
-                        onChange={(e) => updateRule(index, { 
-                          dailyLimit: e.target.value ? parseInt(e.target.value) : undefined 
-                        })}
+                        onChange={e =>
+                          updateRule(index, {
+                            dailyLimit: e.target.value
+                              ? parseInt(e.target.value)
+                              : undefined,
+                          })
+                        }
                         placeholder="无限制"
                       />
                     </div>
@@ -261,19 +272,24 @@ export default function IpadUnlockConfigurationManager() {
                     <h5 className="font-medium mb-2">分数阈值</h5>
                     <div className="space-y-2">
                       {rule.scoreThresholds.map((threshold, thresholdIndex) => (
-                        <div key={thresholdIndex} className="grid grid-cols-4 gap-2 items-center">
+                        <div
+                          key={thresholdIndex}
+                          className="grid grid-cols-4 gap-2 items-center"
+                        >
                           <Input
                             type="number"
                             min="0"
                             max="100"
                             value={threshold.minScore}
-                            onChange={(e) => {
+                            onChange={e => {
                               const newThresholds = [...rule.scoreThresholds]
                               newThresholds[thresholdIndex] = {
                                 ...newThresholds[thresholdIndex],
-                                minScore: parseInt(e.target.value) || 0
+                                minScore: parseInt(e.target.value) || 0,
                               }
-                              updateRule(index, { scoreThresholds: newThresholds })
+                              updateRule(index, {
+                                scoreThresholds: newThresholds,
+                              })
                             }}
                             placeholder="最低分"
                           />
@@ -282,13 +298,15 @@ export default function IpadUnlockConfigurationManager() {
                             min="0"
                             max="100"
                             value={threshold.maxScore}
-                            onChange={(e) => {
+                            onChange={e => {
                               const newThresholds = [...rule.scoreThresholds]
                               newThresholds[thresholdIndex] = {
                                 ...newThresholds[thresholdIndex],
-                                maxScore: parseInt(e.target.value) || 100
+                                maxScore: parseInt(e.target.value) || 100,
                               }
-                              updateRule(index, { scoreThresholds: newThresholds })
+                              updateRule(index, {
+                                scoreThresholds: newThresholds,
+                              })
                             }}
                             placeholder="最高分"
                           />
@@ -296,13 +314,15 @@ export default function IpadUnlockConfigurationManager() {
                             type="number"
                             min="0"
                             value={threshold.baseMinutes}
-                            onChange={(e) => {
+                            onChange={e => {
                               const newThresholds = [...rule.scoreThresholds]
                               newThresholds[thresholdIndex] = {
                                 ...newThresholds[thresholdIndex],
-                                baseMinutes: parseInt(e.target.value) || 0
+                                baseMinutes: parseInt(e.target.value) || 0,
                               }
-                              updateRule(index, { scoreThresholds: newThresholds })
+                              updateRule(index, {
+                                scoreThresholds: newThresholds,
+                              })
                             }}
                             placeholder="基础分钟"
                           />
@@ -310,13 +330,15 @@ export default function IpadUnlockConfigurationManager() {
                             type="number"
                             min="0"
                             value={threshold.bonusMinutes}
-                            onChange={(e) => {
+                            onChange={e => {
                               const newThresholds = [...rule.scoreThresholds]
                               newThresholds[thresholdIndex] = {
                                 ...newThresholds[thresholdIndex],
-                                bonusMinutes: parseInt(e.target.value) || 0
+                                bonusMinutes: parseInt(e.target.value) || 0,
                               }
-                              updateRule(index, { scoreThresholds: newThresholds })
+                              updateRule(index, {
+                                scoreThresholds: newThresholds,
+                              })
                             }}
                             placeholder="奖励分钟"
                           />
@@ -367,9 +389,11 @@ export default function IpadUnlockConfigurationManager() {
       <div className="flex justify-between items-center">
         <div>
           <h2 className="text-2xl font-bold text-gray-900">iPad解锁规则配置</h2>
-          <p className="text-gray-600">设置学生通过完成作业和练习解锁iPad使用时间的规则</p>
+          <p className="text-gray-600">
+            设置学生通过完成作业和练习解锁iPad使用时间的规则
+          </p>
         </div>
-        
+
         {!showCreateForm && !editingConfig && (
           <Button onClick={() => setShowCreateForm(true)}>
             <Plus size={16} className="mr-2" />
@@ -400,7 +424,9 @@ export default function IpadUnlockConfigurationManager() {
           {configurations.length === 0 ? (
             <Card className="p-8 text-center">
               <Settings size={48} className="mx-auto text-gray-400 mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">还没有配置</h3>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">
+                还没有配置
+              </h3>
               <p className="text-gray-600 mb-4">
                 创建第一个iPad解锁规则配置，让学生通过学习来获得iPad使用时间。
               </p>
@@ -410,13 +436,19 @@ export default function IpadUnlockConfigurationManager() {
               </Button>
             </Card>
           ) : (
-            configurations.map((config) => (
+            configurations.map(config => (
               <Card key={config.id} className="p-6">
                 <div className="flex justify-between items-start mb-4">
                   <div>
                     <div className="flex items-center gap-2 mb-2">
                       <h3 className="text-lg font-semibold">{config.name}</h3>
-                      <Badge className={config.isActive ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}>
+                      <Badge
+                        className={
+                          config.isActive
+                            ? 'bg-green-100 text-green-800'
+                            : 'bg-gray-100 text-gray-800'
+                        }
+                      >
                         {config.isActive ? '启用' : '禁用'}
                       </Badge>
                     </div>
@@ -424,7 +456,7 @@ export default function IpadUnlockConfigurationManager() {
                       <p className="text-gray-600">{config.description}</p>
                     )}
                   </div>
-                  
+
                   <Button
                     variant="outline"
                     size="sm"
@@ -436,35 +468,52 @@ export default function IpadUnlockConfigurationManager() {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                  {JSON.parse(config.rules as any).map((rule: any, index: number) => (
-                    <Card key={index} className="p-3 bg-blue-50">
-                      <div className="flex items-center gap-2 mb-2">
-                        <Badge variant="outline">{rule.subject}</Badge>
-                        {rule.dailyLimit && (
-                          <span className="text-xs text-gray-500">
-                            限制{rule.dailyLimit}分钟/天
-                          </span>
-                        )}
-                      </div>
-                      
-                      <div className="text-sm space-y-1">
-                        {rule.scoreThresholds.map((threshold: any, thIndex: number) => (
-                          <div key={thIndex} className="flex justify-between">
-                            <span>{threshold.minScore}-{threshold.maxScore}%:</span>
-                            <span className="font-medium">
-                              {threshold.baseMinutes}
-                              {threshold.bonusMinutes > 0 && `+${threshold.bonusMinutes}`}分钟
+                  {JSON.parse(config.rules as any).map(
+                    (rule: any, index: number) => (
+                      <Card key={index} className="p-3 bg-blue-50">
+                        <div className="flex items-center gap-2 mb-2">
+                          <Badge variant="outline">{rule.subject}</Badge>
+                          {rule.dailyLimit && (
+                            <span className="text-xs text-gray-500">
+                              限制{rule.dailyLimit}分钟/天
                             </span>
-                          </div>
-                        ))}
-                      </div>
-                    </Card>
-                  ))}
+                          )}
+                        </div>
+
+                        <div className="text-sm space-y-1">
+                          {rule.scoreThresholds.map(
+                            (threshold: any, thIndex: number) => (
+                              <div
+                                key={thIndex}
+                                className="flex justify-between"
+                              >
+                                <span>
+                                  {threshold.minScore}-{threshold.maxScore}%:
+                                </span>
+                                <span className="font-medium">
+                                  {threshold.baseMinutes}
+                                  {threshold.bonusMinutes > 0 &&
+                                    `+${threshold.bonusMinutes}`}
+                                  分钟
+                                </span>
+                              </div>
+                            )
+                          )}
+                        </div>
+                      </Card>
+                    )
+                  )}
                 </div>
 
                 <div className="flex items-center gap-4 mt-4 pt-4 border-t text-sm text-gray-500">
-                  <span>创建时间: {new Date(config.createdAt).toLocaleDateString('zh-CN')}</span>
-                  <span>更新时间: {new Date(config.updatedAt).toLocaleDateString('zh-CN')}</span>
+                  <span>
+                    创建时间:{' '}
+                    {new Date(config.createdAt).toLocaleDateString('zh-CN')}
+                  </span>
+                  <span>
+                    更新时间:{' '}
+                    {new Date(config.updatedAt).toLocaleDateString('zh-CN')}
+                  </span>
                 </div>
               </Card>
             ))

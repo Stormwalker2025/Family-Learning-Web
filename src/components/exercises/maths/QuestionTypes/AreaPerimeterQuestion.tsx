@@ -21,7 +21,7 @@ export const AreaPerimeterQuestion: React.FC<AreaPerimeterQuestionProps> = ({
   onAnswer,
   showFeedback = false,
   isCorrect = null,
-  className = ''
+  className = '',
 }) => {
   const [userAnswer, setUserAnswer] = useState<any>(null)
   const [showShapeDrawer, setShowShapeDrawer] = useState(false)
@@ -49,15 +49,20 @@ export const AreaPerimeterQuestion: React.FC<AreaPerimeterQuestionProps> = ({
       rectangle: { width: length || 150, height: width || 100 },
       square: { width: side || 100, height: side || 100 },
       triangle: { width: base || 120, height: height || 80 },
-      circle: { width: (radius || 50) * 2, height: (radius || 50) * 2 }
+      circle: { width: (radius || 50) * 2, height: (radius || 50) * 2 },
     }
 
-    const currentShape = shapeProps[shape as keyof typeof shapeProps] || shapeProps.rectangle
+    const currentShape =
+      shapeProps[shape as keyof typeof shapeProps] || shapeProps.rectangle
 
     return (
       <div className="bg-gray-50 p-4 rounded-lg mb-4">
         <div className="text-center">
-          <svg width={currentShape.width + 40} height={currentShape.height + 60} className="mx-auto">
+          <svg
+            width={currentShape.width + 40}
+            height={currentShape.height + 60}
+            className="mx-auto"
+          >
             {/* Shape */}
             {shape === 'rectangle' && (
               <>
@@ -71,10 +76,21 @@ export const AreaPerimeterQuestion: React.FC<AreaPerimeterQuestionProps> = ({
                   strokeWidth="2"
                 />
                 {/* Dimension labels */}
-                <text x={20 + currentShape.width / 2} y="15" textAnchor="middle" className="text-sm fill-gray-700">
+                <text
+                  x={20 + currentShape.width / 2}
+                  y="15"
+                  textAnchor="middle"
+                  className="text-sm fill-gray-700"
+                >
                   {length}m
                 </text>
-                <text x="10" y={20 + currentShape.height / 2} textAnchor="middle" className="text-sm fill-gray-700" transform={`rotate(-90, 10, ${20 + currentShape.height / 2})`}>
+                <text
+                  x="10"
+                  y={20 + currentShape.height / 2}
+                  textAnchor="middle"
+                  className="text-sm fill-gray-700"
+                  transform={`rotate(-90, 10, ${20 + currentShape.height / 2})`}
+                >
                   {width}m
                 </text>
               </>
@@ -91,7 +107,12 @@ export const AreaPerimeterQuestion: React.FC<AreaPerimeterQuestionProps> = ({
                   stroke="#0284C7"
                   strokeWidth="2"
                 />
-                <text x={20 + currentShape.width / 2} y="15" textAnchor="middle" className="text-sm fill-gray-700">
+                <text
+                  x={20 + currentShape.width / 2}
+                  y="15"
+                  textAnchor="middle"
+                  className="text-sm fill-gray-700"
+                >
                   {side}m
                 </text>
               </>
@@ -105,10 +126,21 @@ export const AreaPerimeterQuestion: React.FC<AreaPerimeterQuestionProps> = ({
                   stroke="#D97706"
                   strokeWidth="2"
                 />
-                <text x={20 + currentShape.width / 2} y={20 + currentShape.height + 15} textAnchor="middle" className="text-sm fill-gray-700">
+                <text
+                  x={20 + currentShape.width / 2}
+                  y={20 + currentShape.height + 15}
+                  textAnchor="middle"
+                  className="text-sm fill-gray-700"
+                >
                   base: {base}m
                 </text>
-                <text x="10" y={20 + currentShape.height / 2} textAnchor="middle" className="text-sm fill-gray-700" transform={`rotate(-90, 10, ${20 + currentShape.height / 2})`}>
+                <text
+                  x="10"
+                  y={20 + currentShape.height / 2}
+                  textAnchor="middle"
+                  className="text-sm fill-gray-700"
+                  transform={`rotate(-90, 10, ${20 + currentShape.height / 2})`}
+                >
                   height: {height}m
                 </text>
               </>
@@ -133,7 +165,12 @@ export const AreaPerimeterQuestion: React.FC<AreaPerimeterQuestionProps> = ({
                   strokeWidth="1"
                   strokeDasharray="3,3"
                 />
-                <text x={20 + currentShape.width * 0.75} y={20 + currentShape.height / 2 - 5} textAnchor="middle" className="text-sm fill-gray-700">
+                <text
+                  x={20 + currentShape.width * 0.75}
+                  y={20 + currentShape.height / 2 - 5}
+                  textAnchor="middle"
+                  className="text-sm fill-gray-700"
+                >
                   r = {radius}m
                 </text>
               </>
@@ -152,7 +189,7 @@ export const AreaPerimeterQuestion: React.FC<AreaPerimeterQuestionProps> = ({
     <div className="space-y-4">
       <div className="text-lg font-medium">{question.question}</div>
       <div className="text-sm text-gray-600">{question.instructions}</div>
-      
+
       {problemData?.context && (
         <div className="p-3 bg-blue-50 rounded-lg">
           <div className="text-sm text-blue-800">
@@ -165,7 +202,9 @@ export const AreaPerimeterQuestion: React.FC<AreaPerimeterQuestionProps> = ({
 
       {/* Formula Helper */}
       <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-        <div className="text-sm font-medium text-yellow-800 mb-2">Formula Reminder:</div>
+        <div className="text-sm font-medium text-yellow-800 mb-2">
+          Formula Reminder:
+        </div>
         <div className="text-sm text-yellow-700 space-y-1">
           {problemData?.shape === 'rectangle' && (
             <>
@@ -200,7 +239,7 @@ export const AreaPerimeterQuestion: React.FC<AreaPerimeterQuestionProps> = ({
         <Input
           type="number"
           value={userAnswer || ''}
-          onChange={(e) => setUserAnswer(e.target.value)}
+          onChange={e => setUserAnswer(e.target.value)}
           className={`
             text-lg font-mono w-32
             ${showFeedback && isCorrect === true ? 'border-green-500 bg-green-50' : ''}
@@ -220,7 +259,9 @@ export const AreaPerimeterQuestion: React.FC<AreaPerimeterQuestionProps> = ({
       {/* Calculation History */}
       {calculationSteps.length > 0 && (
         <div className="bg-gray-50 p-3 rounded-lg">
-          <div className="text-sm font-medium text-gray-700 mb-2">Recent Calculations:</div>
+          <div className="text-sm font-medium text-gray-700 mb-2">
+            Recent Calculations:
+          </div>
           {calculationSteps.map((calc, index) => (
             <div key={index} className="text-sm font-mono text-gray-600">
               {calc}
@@ -243,7 +284,7 @@ export const AreaPerimeterQuestion: React.FC<AreaPerimeterQuestionProps> = ({
     <div className="space-y-4">
       <div className="text-lg font-medium">{question.question}</div>
       <div className="text-sm text-gray-600">{question.instructions}</div>
-      
+
       {problemData?.context && (
         <div className="p-3 bg-blue-50 rounded-lg">
           <div className="text-sm text-blue-800">
@@ -254,7 +295,9 @@ export const AreaPerimeterQuestion: React.FC<AreaPerimeterQuestionProps> = ({
 
       {/* Conversion Helper */}
       <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
-        <div className="text-sm font-medium text-purple-800 mb-2">Unit Conversions:</div>
+        <div className="text-sm font-medium text-purple-800 mb-2">
+          Unit Conversions:
+        </div>
         <div className="grid grid-cols-2 gap-2 text-sm text-purple-700">
           <div>1 metre = 100 centimetres</div>
           <div>1 m² = 10,000 cm²</div>
@@ -271,20 +314,20 @@ export const AreaPerimeterQuestion: React.FC<AreaPerimeterQuestionProps> = ({
       {/* Show the original measurement */}
       {problemData?.sideCm && (
         <div className="text-center p-4 bg-gray-50 rounded-lg">
-          <div className="text-xl font-bold">
-            {problemData.sideCm} cm
-          </div>
+          <div className="text-xl font-bold">{problemData.sideCm} cm</div>
           <div className="text-sm text-gray-600">Original measurement</div>
         </div>
       )}
 
       {/* Answer Input */}
       <div className="flex items-center gap-4 justify-center">
-        <label className="text-sm font-medium">Answer in {question.unit?.symbol || 'm²'}:</label>
+        <label className="text-sm font-medium">
+          Answer in {question.unit?.symbol || 'm²'}:
+        </label>
         <Input
           type="number"
           value={userAnswer || ''}
-          onChange={(e) => setUserAnswer(e.target.value)}
+          onChange={e => setUserAnswer(e.target.value)}
           className={`
             text-lg font-mono w-32
             ${showFeedback && isCorrect === true ? 'border-green-500 bg-green-50' : ''}
@@ -311,12 +354,12 @@ export const AreaPerimeterQuestion: React.FC<AreaPerimeterQuestionProps> = ({
 
   const renderCompositeShapes = () => {
     const shapes = problemData?.shapes || []
-    
+
     return (
       <div className="space-y-4">
         <div className="text-lg font-medium">{question.question}</div>
         <div className="text-sm text-gray-600">{question.instructions}</div>
-        
+
         {problemData?.context && (
           <div className="p-3 bg-blue-50 rounded-lg">
             <div className="text-sm text-blue-800">
@@ -330,7 +373,8 @@ export const AreaPerimeterQuestion: React.FC<AreaPerimeterQuestionProps> = ({
           {shapes.map((shape: any, index: number) => (
             <div key={index} className="bg-gray-50 p-4 rounded-lg">
               <div className="text-center mb-2 font-medium">
-                {shape.type === 'rectangle' ? 'Rectangle' : 'Square'} {index + 1}
+                {shape.type === 'rectangle' ? 'Rectangle' : 'Square'}{' '}
+                {index + 1}
               </div>
               <div className="flex justify-center mb-2">
                 <svg width="160" height="100">
@@ -343,10 +387,21 @@ export const AreaPerimeterQuestion: React.FC<AreaPerimeterQuestionProps> = ({
                     stroke="#0284C7"
                     strokeWidth="2"
                   />
-                  <text x="80" y="25" textAnchor="middle" className="text-xs fill-gray-700">
+                  <text
+                    x="80"
+                    y="25"
+                    textAnchor="middle"
+                    className="text-xs fill-gray-700"
+                  >
                     {shape.length}m
                   </text>
-                  <text x="5" y="50" textAnchor="middle" className="text-xs fill-gray-700" transform="rotate(-90, 5, 50)">
+                  <text
+                    x="5"
+                    y="50"
+                    textAnchor="middle"
+                    className="text-xs fill-gray-700"
+                    transform="rotate(-90, 5, 50)"
+                  >
                     {shape.width}m
                   </text>
                 </svg>
@@ -359,7 +414,9 @@ export const AreaPerimeterQuestion: React.FC<AreaPerimeterQuestionProps> = ({
         </div>
 
         <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-          <div className="text-sm font-medium text-green-800 mb-2">Step-by-step approach:</div>
+          <div className="text-sm font-medium text-green-800 mb-2">
+            Step-by-step approach:
+          </div>
           <ol className="text-sm text-green-700 space-y-1 list-decimal list-inside">
             <li>Calculate the area of each shape separately</li>
             <li>Add the areas together for the total area</li>
@@ -373,7 +430,7 @@ export const AreaPerimeterQuestion: React.FC<AreaPerimeterQuestionProps> = ({
           <Input
             type="number"
             value={userAnswer || ''}
-            onChange={(e) => setUserAnswer(e.target.value)}
+            onChange={e => setUserAnswer(e.target.value)}
             className={`
               text-lg font-mono w-32
               ${showFeedback && isCorrect === true ? 'border-green-500 bg-green-50' : ''}
@@ -404,8 +461,12 @@ export const AreaPerimeterQuestion: React.FC<AreaPerimeterQuestionProps> = ({
       <div className="space-y-6">
         {/* Question Content */}
         <div>
-          {question.type === 'calculation' && !problemData?.shapes && renderCalculation()}
-          {question.type === 'calculation' && problemData?.shapes && renderCompositeShapes()}
+          {question.type === 'calculation' &&
+            !problemData?.shapes &&
+            renderCalculation()}
+          {question.type === 'calculation' &&
+            problemData?.shapes &&
+            renderCompositeShapes()}
           {question.type === 'unit-conversion' && renderUnitConversion()}
         </div>
 
@@ -430,7 +491,13 @@ export const AreaPerimeterQuestion: React.FC<AreaPerimeterQuestionProps> = ({
             {showCalculator && (
               <Calculator
                 onCalculation={handleCalculation}
-                allowedOperations={['add', 'subtract', 'multiply', 'divide', 'decimal']}
+                allowedOperations={[
+                  'add',
+                  'subtract',
+                  'multiply',
+                  'divide',
+                  'decimal',
+                ]}
               />
             )}
 
@@ -460,7 +527,10 @@ export const AreaPerimeterQuestion: React.FC<AreaPerimeterQuestionProps> = ({
             </summary>
             <div className="mt-2 space-y-2">
               {question.hints.map((hint, index) => (
-                <div key={index} className="p-3 bg-yellow-50 border border-yellow-200 rounded text-sm">
+                <div
+                  key={index}
+                  className="p-3 bg-yellow-50 border border-yellow-200 rounded text-sm"
+                >
                   <strong>Hint {index + 1}:</strong> {hint}
                 </div>
               ))}

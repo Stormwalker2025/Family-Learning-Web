@@ -3,44 +3,44 @@
  * 词汇编辑器 - 添加和编辑单个词汇
  */
 
-'use client';
+'use client'
 
-import React, { useState, useEffect } from 'react';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import { Textarea } from '@/components/ui/textarea';
-import { 
-  Save, 
-  X, 
-  Volume2, 
-  Plus, 
+import React, { useState, useEffect } from 'react'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Badge } from '@/components/ui/badge'
+import { Textarea } from '@/components/ui/textarea'
+import {
+  Save,
+  X,
+  Volume2,
+  Plus,
   Minus,
   BookOpen,
-  AlertCircle
-} from 'lucide-react';
+  AlertCircle,
+} from 'lucide-react'
 
 interface WordEditorProps {
-  wordId?: string; // 如果提供则为编辑模式
-  onWordSaved?: () => void;
-  onCancel?: () => void;
+  wordId?: string // 如果提供则为编辑模式
+  onWordSaved?: () => void
+  onCancel?: () => void
 }
 
 interface WordFormData {
-  word: string;
-  definition: string;
-  chineseDefinition: string;
-  pronunciation: string;
-  partOfSpeech: string;
-  difficulty: number;
-  yearLevel: number | null;
-  category: string;
-  example: string;
-  synonyms: string[];
-  antonyms: string[];
-  tags: string[];
-  source: string;
+  word: string
+  definition: string
+  chineseDefinition: string
+  pronunciation: string
+  partOfSpeech: string
+  difficulty: number
+  yearLevel: number | null
+  category: string
+  example: string
+  synonyms: string[]
+  antonyms: string[]
+  tags: string[]
+  source: string
 }
 
 const PARTS_OF_SPEECH = [
@@ -53,22 +53,34 @@ const PARTS_OF_SPEECH = [
   { value: 'PRONOUN', label: '代词 (Pronoun)' },
   { value: 'INTERJECTION', label: '感叹词 (Interjection)' },
   { value: 'ARTICLE', label: '冠词 (Article)' },
-  { value: 'PHRASE', label: '短语 (Phrase)' }
-];
+  { value: 'PHRASE', label: '短语 (Phrase)' },
+]
 
 const DIFFICULTY_LEVELS = [
   { value: 1, label: '1 - 入门', color: 'bg-green-100 text-green-800' },
   { value: 2, label: '2 - 简单', color: 'bg-blue-100 text-blue-800' },
   { value: 3, label: '3 - 中等', color: 'bg-yellow-100 text-yellow-800' },
   { value: 4, label: '4 - 困难', color: 'bg-orange-100 text-orange-800' },
-  { value: 5, label: '5 - 高级', color: 'bg-red-100 text-red-800' }
-];
+  { value: 5, label: '5 - 高级', color: 'bg-red-100 text-red-800' },
+]
 
 const COMMON_CATEGORIES = [
-  'Academic', 'General', 'Science', 'History', 'Geography', 
-  'Literature', 'Animals', 'Food', 'Sports', 'Technology',
-  'Nature', 'Family', 'School', 'Daily Life', 'Queensland'
-];
+  'Academic',
+  'General',
+  'Science',
+  'History',
+  'Geography',
+  'Literature',
+  'Animals',
+  'Food',
+  'Sports',
+  'Technology',
+  'Nature',
+  'Family',
+  'School',
+  'Daily Life',
+  'Queensland',
+]
 
 export function WordEditor({ wordId, onWordSaved, onCancel }: WordEditorProps) {
   const [formData, setFormData] = useState<WordFormData>({
@@ -84,31 +96,31 @@ export function WordEditor({ wordId, onWordSaved, onCancel }: WordEditorProps) {
     synonyms: [],
     antonyms: [],
     tags: [],
-    source: 'manual'
-  });
+    source: 'manual',
+  })
 
-  const [errors, setErrors] = useState<Record<string, string>>({});
-  const [loading, setLoading] = useState(false);
-  const [saving, setSaving] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({})
+  const [loading, setLoading] = useState(false)
+  const [saving, setSaving] = useState(false)
 
   // 新增同义词/反义词/标签的临时输入
-  const [newSynonym, setNewSynonym] = useState('');
-  const [newAntonym, setNewAntonym] = useState('');
-  const [newTag, setNewTag] = useState('');
+  const [newSynonym, setNewSynonym] = useState('')
+  const [newAntonym, setNewAntonym] = useState('')
+  const [newTag, setNewTag] = useState('')
 
   // 编辑模式：加载现有词汇
   useEffect(() => {
     if (wordId) {
-      loadWord(wordId);
+      loadWord(wordId)
     }
-  }, [wordId]);
+  }, [wordId])
 
   const loadWord = async (id: string) => {
-    setLoading(true);
+    setLoading(true)
     try {
-      const response = await fetch(`/api/vocabulary/${id}`);
+      const response = await fetch(`/api/vocabulary/${id}`)
       if (response.ok) {
-        const { word } = await response.json();
+        const { word } = await response.json()
         setFormData({
           word: word.word,
           definition: word.definition,
@@ -122,63 +134,66 @@ export function WordEditor({ wordId, onWordSaved, onCancel }: WordEditorProps) {
           synonyms: word.synonyms || [],
           antonyms: word.antonyms || [],
           tags: word.tags || [],
-          source: word.source || 'manual'
-        });
+          source: word.source || 'manual',
+        })
       } else {
-        throw new Error('Failed to load word');
+        throw new Error('Failed to load word')
       }
     } catch (error) {
-      console.error('加载词汇失败:', error);
-      alert('加载词汇失败');
+      console.error('加载词汇失败:', error)
+      alert('加载词汇失败')
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   // 表单验证
   const validateForm = (): boolean => {
-    const newErrors: Record<string, string> = {};
+    const newErrors: Record<string, string> = {}
 
     if (!formData.word.trim()) {
-      newErrors.word = '单词不能为空';
+      newErrors.word = '单词不能为空'
     } else if (!/^[a-zA-Z\s\-']+$/.test(formData.word.trim())) {
-      newErrors.word = '单词只能包含英文字母、空格、连字符和撇号';
+      newErrors.word = '单词只能包含英文字母、空格、连字符和撇号'
     }
 
     if (!formData.definition.trim()) {
-      newErrors.definition = '英文释义不能为空';
+      newErrors.definition = '英文释义不能为空'
     }
 
-    if (formData.yearLevel && (formData.yearLevel < 1 || formData.yearLevel > 12)) {
-      newErrors.yearLevel = '年级必须在1-12之间';
+    if (
+      formData.yearLevel &&
+      (formData.yearLevel < 1 || formData.yearLevel > 12)
+    ) {
+      newErrors.yearLevel = '年级必须在1-12之间'
     }
 
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
 
   // 保存词汇
   const handleSave = async () => {
-    if (!validateForm()) return;
+    if (!validateForm()) return
 
-    setSaving(true);
+    setSaving(true)
     try {
-      const url = wordId ? `/api/vocabulary/${wordId}` : '/api/vocabulary';
-      const method = wordId ? 'PUT' : 'POST';
+      const url = wordId ? `/api/vocabulary/${wordId}` : '/api/vocabulary'
+      const method = wordId ? 'PUT' : 'POST'
 
       const response = await fetch(url, {
         method,
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           ...formData,
-          yearLevel: formData.yearLevel || undefined
-        })
-      });
+          yearLevel: formData.yearLevel || undefined,
+        }),
+      })
 
       if (response.ok) {
-        onWordSaved?.();
+        onWordSaved?.()
         if (!wordId) {
           // 新增模式：重置表单
           setFormData({
@@ -194,78 +209,81 @@ export function WordEditor({ wordId, onWordSaved, onCancel }: WordEditorProps) {
             synonyms: [],
             antonyms: [],
             tags: [],
-            source: 'manual'
-          });
+            source: 'manual',
+          })
         }
       } else {
-        const error = await response.json();
-        alert('保存失败: ' + error.error);
+        const error = await response.json()
+        alert('保存失败: ' + error.error)
       }
     } catch (error) {
-      console.error('保存词汇失败:', error);
-      alert('保存失败');
+      console.error('保存词汇失败:', error)
+      alert('保存失败')
     } finally {
-      setSaving(false);
+      setSaving(false)
     }
-  };
+  }
 
   // 文本转语音
   const handleSpeak = (text: string) => {
     if ('speechSynthesis' in window) {
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'en-AU';
-      utterance.rate = 0.8;
-      speechSynthesis.speak(utterance);
+      const utterance = new SpeechSynthesisUtterance(text)
+      utterance.lang = 'en-AU'
+      utterance.rate = 0.8
+      speechSynthesis.speak(utterance)
     }
-  };
+  }
 
   // 添加同义词
   const addSynonym = () => {
     if (newSynonym.trim() && !formData.synonyms.includes(newSynonym.trim())) {
       setFormData(prev => ({
         ...prev,
-        synonyms: [...prev.synonyms, newSynonym.trim()]
-      }));
-      setNewSynonym('');
+        synonyms: [...prev.synonyms, newSynonym.trim()],
+      }))
+      setNewSynonym('')
     }
-  };
+  }
 
   // 添加反义词
   const addAntonym = () => {
     if (newAntonym.trim() && !formData.antonyms.includes(newAntonym.trim())) {
       setFormData(prev => ({
         ...prev,
-        antonyms: [...prev.antonyms, newAntonym.trim()]
-      }));
-      setNewAntonym('');
+        antonyms: [...prev.antonyms, newAntonym.trim()],
+      }))
+      setNewAntonym('')
     }
-  };
+  }
 
   // 添加标签
   const addTag = () => {
     if (newTag.trim() && !formData.tags.includes(newTag.trim())) {
       setFormData(prev => ({
         ...prev,
-        tags: [...prev.tags, newTag.trim()]
-      }));
-      setNewTag('');
+        tags: [...prev.tags, newTag.trim()],
+      }))
+      setNewTag('')
     }
-  };
+  }
 
   // 删除项目
-  const removeItem = (type: 'synonyms' | 'antonyms' | 'tags', index: number) => {
+  const removeItem = (
+    type: 'synonyms' | 'antonyms' | 'tags',
+    index: number
+  ) => {
     setFormData(prev => ({
       ...prev,
-      [type]: prev[type].filter((_, i) => i !== index)
-    }));
-  };
+      [type]: prev[type].filter((_, i) => i !== index),
+    }))
+  }
 
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
       </div>
-    );
+    )
   }
 
   return (
@@ -306,7 +324,9 @@ export function WordEditor({ wordId, onWordSaved, onCancel }: WordEditorProps) {
               <div className="flex items-center space-x-2">
                 <Input
                   value={formData.word}
-                  onChange={(e) => setFormData(prev => ({ ...prev, word: e.target.value }))}
+                  onChange={e =>
+                    setFormData(prev => ({ ...prev, word: e.target.value }))
+                  }
                   placeholder="输入英文单词"
                   className={errors.word ? 'border-red-500' : ''}
                 />
@@ -333,7 +353,12 @@ export function WordEditor({ wordId, onWordSaved, onCancel }: WordEditorProps) {
               <label className="block text-sm font-medium mb-1">音标</label>
               <Input
                 value={formData.pronunciation}
-                onChange={(e) => setFormData(prev => ({ ...prev, pronunciation: e.target.value }))}
+                onChange={e =>
+                  setFormData(prev => ({
+                    ...prev,
+                    pronunciation: e.target.value,
+                  }))
+                }
                 placeholder="如: /ˈæpəl/"
               />
             </div>
@@ -345,7 +370,9 @@ export function WordEditor({ wordId, onWordSaved, onCancel }: WordEditorProps) {
               </label>
               <Textarea
                 value={formData.definition}
-                onChange={(e) => setFormData(prev => ({ ...prev, definition: e.target.value }))}
+                onChange={e =>
+                  setFormData(prev => ({ ...prev, definition: e.target.value }))
+                }
                 placeholder="输入英文释义"
                 rows={3}
                 className={errors.definition ? 'border-red-500' : ''}
@@ -363,7 +390,12 @@ export function WordEditor({ wordId, onWordSaved, onCancel }: WordEditorProps) {
               <label className="block text-sm font-medium mb-1">中文释义</label>
               <Textarea
                 value={formData.chineseDefinition}
-                onChange={(e) => setFormData(prev => ({ ...prev, chineseDefinition: e.target.value }))}
+                onChange={e =>
+                  setFormData(prev => ({
+                    ...prev,
+                    chineseDefinition: e.target.value,
+                  }))
+                }
                 placeholder="输入中文释义（可选）"
                 rows={2}
               />
@@ -374,7 +406,9 @@ export function WordEditor({ wordId, onWordSaved, onCancel }: WordEditorProps) {
               <label className="block text-sm font-medium mb-1">例句</label>
               <Textarea
                 value={formData.example}
-                onChange={(e) => setFormData(prev => ({ ...prev, example: e.target.value }))}
+                onChange={e =>
+                  setFormData(prev => ({ ...prev, example: e.target.value }))
+                }
                 placeholder="输入例句"
                 rows={2}
               />
@@ -391,7 +425,12 @@ export function WordEditor({ wordId, onWordSaved, onCancel }: WordEditorProps) {
               <label className="block text-sm font-medium mb-1">词性</label>
               <select
                 value={formData.partOfSpeech}
-                onChange={(e) => setFormData(prev => ({ ...prev, partOfSpeech: e.target.value }))}
+                onChange={e =>
+                  setFormData(prev => ({
+                    ...prev,
+                    partOfSpeech: e.target.value,
+                  }))
+                }
                 className="w-full p-2 border rounded-md"
               >
                 {PARTS_OF_SPEECH.map(pos => (
@@ -407,16 +446,21 @@ export function WordEditor({ wordId, onWordSaved, onCancel }: WordEditorProps) {
               <label className="block text-sm font-medium mb-1">难度等级</label>
               <div className="space-y-2">
                 {DIFFICULTY_LEVELS.map(level => (
-                  <label key={level.value} className="flex items-center space-x-2">
+                  <label
+                    key={level.value}
+                    className="flex items-center space-x-2"
+                  >
                     <input
                       type="radio"
                       name="difficulty"
                       value={level.value}
                       checked={formData.difficulty === level.value}
-                      onChange={(e) => setFormData(prev => ({ 
-                        ...prev, 
-                        difficulty: parseInt(e.target.value) 
-                      }))}
+                      onChange={e =>
+                        setFormData(prev => ({
+                          ...prev,
+                          difficulty: parseInt(e.target.value),
+                        }))
+                      }
                     />
                     <Badge className={level.color}>{level.label}</Badge>
                   </label>
@@ -429,15 +473,19 @@ export function WordEditor({ wordId, onWordSaved, onCancel }: WordEditorProps) {
               <label className="block text-sm font-medium mb-1">适用年级</label>
               <select
                 value={formData.yearLevel || ''}
-                onChange={(e) => setFormData(prev => ({ 
-                  ...prev, 
-                  yearLevel: e.target.value ? parseInt(e.target.value) : null 
-                }))}
+                onChange={e =>
+                  setFormData(prev => ({
+                    ...prev,
+                    yearLevel: e.target.value ? parseInt(e.target.value) : null,
+                  }))
+                }
                 className="w-full p-2 border rounded-md"
               >
                 <option value="">不指定</option>
                 {Array.from({ length: 12 }, (_, i) => (
-                  <option key={i + 1} value={i + 1}>Year {i + 1}</option>
+                  <option key={i + 1} value={i + 1}>
+                    Year {i + 1}
+                  </option>
                 ))}
               </select>
               {errors.yearLevel && (
@@ -450,17 +498,23 @@ export function WordEditor({ wordId, onWordSaved, onCancel }: WordEditorProps) {
               <label className="block text-sm font-medium mb-1">主题分类</label>
               <select
                 value={formData.category}
-                onChange={(e) => setFormData(prev => ({ ...prev, category: e.target.value }))}
+                onChange={e =>
+                  setFormData(prev => ({ ...prev, category: e.target.value }))
+                }
                 className="w-full p-2 border rounded-md mb-2"
               >
                 <option value="">选择分类</option>
                 {COMMON_CATEGORIES.map(cat => (
-                  <option key={cat} value={cat}>{cat}</option>
+                  <option key={cat} value={cat}>
+                    {cat}
+                  </option>
                 ))}
               </select>
               <Input
                 value={formData.category}
-                onChange={(e) => setFormData(prev => ({ ...prev, category: e.target.value }))}
+                onChange={e =>
+                  setFormData(prev => ({ ...prev, category: e.target.value }))
+                }
                 placeholder="或输入自定义分类"
                 className="text-sm"
               />
@@ -471,7 +525,9 @@ export function WordEditor({ wordId, onWordSaved, onCancel }: WordEditorProps) {
               <label className="block text-sm font-medium mb-1">词汇来源</label>
               <Input
                 value={formData.source}
-                onChange={(e) => setFormData(prev => ({ ...prev, source: e.target.value }))}
+                onChange={e =>
+                  setFormData(prev => ({ ...prev, source: e.target.value }))
+                }
                 placeholder="如: Queensland, IELTS, manual"
               />
             </div>
@@ -488,9 +544,9 @@ export function WordEditor({ wordId, onWordSaved, onCancel }: WordEditorProps) {
             <div className="flex space-x-2">
               <Input
                 value={newSynonym}
-                onChange={(e) => setNewSynonym(e.target.value)}
+                onChange={e => setNewSynonym(e.target.value)}
                 placeholder="添加同义词"
-                onKeyPress={(e) => e.key === 'Enter' && addSynonym()}
+                onKeyPress={e => e.key === 'Enter' && addSynonym()}
               />
               <Button size="sm" onClick={addSynonym}>
                 <Plus className="h-4 w-4" />
@@ -498,7 +554,11 @@ export function WordEditor({ wordId, onWordSaved, onCancel }: WordEditorProps) {
             </div>
             <div className="flex flex-wrap gap-1">
               {formData.synonyms.map((synonym, index) => (
-                <Badge key={index} variant="secondary" className="flex items-center space-x-1">
+                <Badge
+                  key={index}
+                  variant="secondary"
+                  className="flex items-center space-x-1"
+                >
                   <span>{synonym}</span>
                   <button
                     onClick={() => removeItem('synonyms', index)}
@@ -519,9 +579,9 @@ export function WordEditor({ wordId, onWordSaved, onCancel }: WordEditorProps) {
             <div className="flex space-x-2">
               <Input
                 value={newAntonym}
-                onChange={(e) => setNewAntonym(e.target.value)}
+                onChange={e => setNewAntonym(e.target.value)}
                 placeholder="添加反义词"
-                onKeyPress={(e) => e.key === 'Enter' && addAntonym()}
+                onKeyPress={e => e.key === 'Enter' && addAntonym()}
               />
               <Button size="sm" onClick={addAntonym}>
                 <Plus className="h-4 w-4" />
@@ -529,7 +589,11 @@ export function WordEditor({ wordId, onWordSaved, onCancel }: WordEditorProps) {
             </div>
             <div className="flex flex-wrap gap-1">
               {formData.antonyms.map((antonym, index) => (
-                <Badge key={index} variant="destructive" className="flex items-center space-x-1">
+                <Badge
+                  key={index}
+                  variant="destructive"
+                  className="flex items-center space-x-1"
+                >
                   <span>{antonym}</span>
                   <button
                     onClick={() => removeItem('antonyms', index)}
@@ -550,9 +614,9 @@ export function WordEditor({ wordId, onWordSaved, onCancel }: WordEditorProps) {
             <div className="flex space-x-2">
               <Input
                 value={newTag}
-                onChange={(e) => setNewTag(e.target.value)}
+                onChange={e => setNewTag(e.target.value)}
                 placeholder="添加标签"
-                onKeyPress={(e) => e.key === 'Enter' && addTag()}
+                onKeyPress={e => e.key === 'Enter' && addTag()}
               />
               <Button size="sm" onClick={addTag}>
                 <Plus className="h-4 w-4" />
@@ -560,7 +624,11 @@ export function WordEditor({ wordId, onWordSaved, onCancel }: WordEditorProps) {
             </div>
             <div className="flex flex-wrap gap-1">
               {formData.tags.map((tag, index) => (
-                <Badge key={index} variant="outline" className="flex items-center space-x-1">
+                <Badge
+                  key={index}
+                  variant="outline"
+                  className="flex items-center space-x-1"
+                >
                   <span>{tag}</span>
                   <button
                     onClick={() => removeItem('tags', index)}
@@ -575,5 +643,5 @@ export function WordEditor({ wordId, onWordSaved, onCancel }: WordEditorProps) {
         </Card>
       </div>
     </div>
-  );
+  )
 }

@@ -11,11 +11,18 @@ import { UserRole } from '@/types'
 // 用户查询参数验证
 const getUsersQuerySchema = z.object({
   page: z.string().transform(Number).pipe(z.number().min(1)).optional(),
-  limit: z.string().transform(Number).pipe(z.number().min(1).max(100)).optional(),
+  limit: z
+    .string()
+    .transform(Number)
+    .pipe(z.number().min(1).max(100))
+    .optional(),
   role: z.enum(['STUDENT', 'PARENT', 'ADMIN']).optional(),
   familyId: z.string().cuid().optional(),
-  isActive: z.string().transform(v => v === 'true').optional(),
-  search: z.string().optional()
+  isActive: z
+    .string()
+    .transform(v => v === 'true')
+    .optional(),
+  search: z.string().optional(),
 })
 
 /**
@@ -26,7 +33,7 @@ export async function GET(request: NextRequest) {
   try {
     // 验证用户权限
     const { user: currentUser, error } = await extractUserFromRequest(request)
-    
+
     if (!currentUser) {
       return NextResponse.json(
         { success: false, message: error || '未授权访问' },
@@ -39,20 +46,27 @@ export async function GET(request: NextRequest) {
     // 解析查询参数
     const url = new URL(request.url)
     const queryParams = Object.fromEntries(url.searchParams.entries())
-    
+
     const validation = getUsersQuerySchema.safeParse(queryParams)
     if (!validation.success) {
       return NextResponse.json(
         {
           success: false,
           message: '查询参数格式错误',
-          errors: validation.error.errors
+          errors: validation.error.errors,
         },
         { status: 400 }
       )
     }
 
-    const { page = 1, limit = 20, role, familyId, isActive, search } = validation.data
+    const {
+      page = 1,
+      limit = 20,
+      role,
+      familyId,
+      isActive,
+      search,
+    } = validation.data
 
     // 构建查询条件
     const where: any = {}
@@ -84,7 +98,7 @@ export async function GET(request: NextRequest) {
       where.OR = [
         { username: { contains: search, mode: 'insensitive' } },
         { displayName: { contains: search, mode: 'insensitive' } },
-        { email: { contains: search, mode: 'insensitive' } }
+        { email: { contains: search, mode: 'insensitive' } },
       ]
     }
 
@@ -97,10 +111,7 @@ export async function GET(request: NextRequest) {
         where,
         skip,
         take: limit,
-        orderBy: [
-          { role: 'asc' },
-          { createdAt: 'desc' }
-        ],
+        orderBy: [{ role: 'asc' }, { createdAt: 'desc' }],
         select: {
           id: true,
           username: true,
@@ -118,12 +129,12 @@ export async function GET(request: NextRequest) {
           family: {
             select: {
               id: true,
-              name: true
-            }
-          }
-        }
+              name: true,
+            },
+          },
+        },
       }),
-      prisma.user.count({ where })
+      prisma.user.count({ where }),
     ])
 
     // 计算分页信息
@@ -141,17 +152,16 @@ export async function GET(request: NextRequest) {
           totalCount,
           totalPages,
           hasNext,
-          hasPrev
-        }
-      }
+          hasPrev,
+        },
+      },
     })
-
   } catch (error) {
     console.error('Get users error:', error)
     return NextResponse.json(
       {
         success: false,
-        message: '获取用户列表失败'
+        message: '获取用户列表失败',
       },
       { status: 500 }
     )

@@ -2,13 +2,13 @@ name: Continuous Integration
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [main, develop]
   pull_request:
-    branches: [ main, develop ]
+    branches: [main, develop]
 
 env:
   NODE_VERSION: '18'
-  
+
 jobs:
   lint-and-format:
     name: Lint and Format Check
@@ -240,7 +240,16 @@ jobs:
   deployment-ready:
     name: Deployment Ready
     runs-on: ubuntu-latest
-    needs: [lint-and-format, unit-tests, integration-tests, e2e-tests, accessibility-tests, security-scan, build-test]
+    needs:
+      [
+        lint-and-format,
+        unit-tests,
+        integration-tests,
+        e2e-tests,
+        accessibility-tests,
+        security-scan,
+        build-test,
+      ]
     if: github.ref == 'refs/heads/main'
     steps:
       - name: Deployment ready notification
@@ -253,7 +262,16 @@ jobs:
   notify-failure:
     name: Notify on Failure
     runs-on: ubuntu-latest
-    needs: [lint-and-format, unit-tests, integration-tests, e2e-tests, accessibility-tests, security-scan, build-test]
+    needs:
+      [
+        lint-and-format,
+        unit-tests,
+        integration-tests,
+        e2e-tests,
+        accessibility-tests,
+        security-scan,
+        build-test,
+      ]
     if: failure()
     steps:
       - name: Failure notification

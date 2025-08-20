@@ -18,7 +18,10 @@ interface ReadingExerciseProps {
 
 type ExerciseState = 'loading' | 'reading' | 'answering' | 'completed' | 'error'
 
-export function ReadingExercise({ exerciseId, onComplete }: ReadingExerciseProps) {
+export function ReadingExercise({
+  exerciseId,
+  onComplete,
+}: ReadingExerciseProps) {
   const { user, getAuthToken } = useAuth()
   const [state, setState] = useState<ExerciseState>('loading')
   const [exercise, setExercise] = useState<ReadingExercise | null>(null)
@@ -34,7 +37,9 @@ export function ReadingExercise({ exerciseId, onComplete }: ReadingExerciseProps
   useEffect(() => {
     if (startTime && state === 'answering') {
       const interval = setInterval(() => {
-        const elapsed = Math.floor((Date.now() - startTime.getTime()) / 1000 / 60) // minutes
+        const elapsed = Math.floor(
+          (Date.now() - startTime.getTime()) / 1000 / 60
+        ) // minutes
         setTimeElapsed(elapsed)
       }, 1000)
 
@@ -55,8 +60,8 @@ export function ReadingExercise({ exerciseId, onComplete }: ReadingExerciseProps
 
         const response = await fetch(`/api/exercises/english/${exerciseId}`, {
           headers: {
-            'Authorization': `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         })
 
         if (!response.ok) {
@@ -85,12 +90,15 @@ export function ReadingExercise({ exerciseId, onComplete }: ReadingExerciseProps
     setState('answering')
   }, [])
 
-  const handleAnswerChange = useCallback((questionId: string, answer: string | string[]) => {
-    setAnswers(prev => ({
-      ...prev,
-      [questionId]: answer
-    }))
-  }, [])
+  const handleAnswerChange = useCallback(
+    (questionId: string, answer: string | string[]) => {
+      setAnswers(prev => ({
+        ...prev,
+        [questionId]: answer,
+      }))
+    },
+    []
+  )
 
   const nextQuestion = useCallback(() => {
     if (exercise && currentQuestion < exercise.questions.length - 1) {
@@ -118,16 +126,16 @@ export function ReadingExercise({ exerciseId, onComplete }: ReadingExerciseProps
         exerciseId: exercise.id,
         answers,
         startedAt: startTime.toISOString(),
-        timeSpent: Math.floor((Date.now() - startTime.getTime()) / 1000 / 60)
+        timeSpent: Math.floor((Date.now() - startTime.getTime()) / 1000 / 60),
       }
 
       const response = await fetch('/api/exercises/english/submit', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(submissionData)
+        body: JSON.stringify(submissionData),
       })
 
       if (!response.ok) {
@@ -178,8 +186,8 @@ export function ReadingExercise({ exerciseId, onComplete }: ReadingExerciseProps
   if (state === 'completed' && submission && feedback) {
     return (
       <div className="w-full max-w-4xl mx-auto space-y-6">
-        <ResultsSummary 
-          submission={submission} 
+        <ResultsSummary
+          submission={submission}
           feedback={feedback}
           exercise={exercise}
         />
@@ -187,9 +195,10 @@ export function ReadingExercise({ exerciseId, onComplete }: ReadingExerciseProps
     )
   }
 
-  const progress = state === 'answering' 
-    ? ((currentQuestion + 1) / exercise.questions.length) * 100 
-    : 0
+  const progress =
+    state === 'answering'
+      ? ((currentQuestion + 1) / exercise.questions.length) * 100
+      : 0
 
   return (
     <div className="w-full max-w-6xl mx-auto space-y-6">
@@ -200,7 +209,9 @@ export function ReadingExercise({ exerciseId, onComplete }: ReadingExerciseProps
             <div>
               <CardTitle className="text-2xl">{exercise.title}</CardTitle>
               {exercise.description && (
-                <p className="text-muted-foreground mt-2">{exercise.description}</p>
+                <p className="text-muted-foreground mt-2">
+                  {exercise.description}
+                </p>
               )}
             </div>
             <div className="flex items-center space-x-4">
@@ -225,7 +236,7 @@ export function ReadingExercise({ exerciseId, onComplete }: ReadingExerciseProps
 
       {/* Progress Bar */}
       {state === 'answering' && (
-        <ProgressBar 
+        <ProgressBar
           progress={progress}
           currentQuestion={currentQuestion + 1}
           totalQuestions={exercise.questions.length}
@@ -238,16 +249,17 @@ export function ReadingExercise({ exerciseId, onComplete }: ReadingExerciseProps
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Article Display */}
         <div className="space-y-4">
-          <ArticleDisplay 
+          <ArticleDisplay
             article={exercise.article}
             showVocabulary={state === 'reading'}
           />
-          
+
           {state === 'reading' && (
             <Card>
               <CardContent className="p-4">
                 <p className="text-sm text-muted-foreground mb-4">
-                  Take your time to read and understand the article. When you're ready, click "Start Questions" to begin answering.
+                  Take your time to read and understand the article. When you're
+                  ready, click "Start Questions" to begin answering.
                 </p>
                 <Button onClick={startAnswering} className="w-full">
                   <BookOpen className="h-4 w-4 mr-2" />
@@ -266,7 +278,7 @@ export function ReadingExercise({ exerciseId, onComplete }: ReadingExerciseProps
               answer={answers[exercise.questions[currentQuestion].id]}
               onAnswerChange={handleAnswerChange}
             />
-            
+
             {/* Navigation */}
             <Card>
               <CardContent className="p-4">
@@ -278,13 +290,11 @@ export function ReadingExercise({ exerciseId, onComplete }: ReadingExerciseProps
                   >
                     Previous
                   </Button>
-                  
+
                   {currentQuestion < exercise.questions.length - 1 ? (
-                    <Button onClick={nextQuestion}>
-                      Next Question
-                    </Button>
+                    <Button onClick={nextQuestion}>Next Question</Button>
                   ) : (
-                    <Button 
+                    <Button
                       onClick={submitExercise}
                       className="bg-green-600 hover:bg-green-700"
                     >

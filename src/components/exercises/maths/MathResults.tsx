@@ -29,40 +29,50 @@ export const MathResults: React.FC<MathResultsProps> = ({
   onRetry,
   onContinue,
   onReviewAnswers,
-  className = ''
+  className = '',
 }) => {
-  const { score, maxScore, correctAnswers, totalQuestions, percentage, timeSpent, feedback } = submission
+  const {
+    score,
+    maxScore,
+    correctAnswers,
+    totalQuestions,
+    percentage,
+    timeSpent,
+    feedback,
+  } = submission
 
-  const getPerformanceLevel = (percentage: number): { level: string; color: string; message: string } => {
+  const getPerformanceLevel = (
+    percentage: number
+  ): { level: string; color: string; message: string } => {
     if (percentage >= 90) {
       return {
         level: 'Excellent',
         color: 'text-green-600 bg-green-100',
-        message: 'Outstanding work! You have mastered this concept.'
+        message: 'Outstanding work! You have mastered this concept.',
       }
     } else if (percentage >= 80) {
       return {
         level: 'Very Good',
         color: 'text-blue-600 bg-blue-100',
-        message: 'Great job! You have a strong understanding.'
+        message: 'Great job! You have a strong understanding.',
       }
     } else if (percentage >= 70) {
       return {
         level: 'Good',
         color: 'text-yellow-600 bg-yellow-100',
-        message: 'Good work! Keep practicing to improve further.'
+        message: 'Good work! Keep practicing to improve further.',
       }
     } else if (percentage >= 60) {
       return {
         level: 'Satisfactory',
         color: 'text-orange-600 bg-orange-100',
-        message: 'You\'re on the right track. More practice will help.'
+        message: "You're on the right track. More practice will help.",
       }
     } else {
       return {
         level: 'Needs Improvement',
         color: 'text-red-600 bg-red-100',
-        message: 'Don\'t worry! Review the concepts and try again.'
+        message: "Don't worry! Review the concepts and try again.",
       }
     }
   }
@@ -166,22 +176,21 @@ export const MathResults: React.FC<MathResultsProps> = ({
                 📊 Concept Mastery
               </h3>
               <div className="space-y-4">
-                {Object.entries(feedback.conceptMastery).map(([concept, mastery]) => (
-                  <div key={concept}>
-                    <div className="flex justify-between items-center mb-2">
-                      <span className="font-medium text-gray-700 capitalize">
-                        {concept.replace('-', ' ')}
-                      </span>
-                      <span className="text-sm font-semibold text-gray-600">
-                        {mastery}%
-                      </span>
+                {Object.entries(feedback.conceptMastery).map(
+                  ([concept, mastery]) => (
+                    <div key={concept}>
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="font-medium text-gray-700 capitalize">
+                          {concept.replace('-', ' ')}
+                        </span>
+                        <span className="text-sm font-semibold text-gray-600">
+                          {mastery}%
+                        </span>
+                      </div>
+                      <Progress value={mastery} className="h-2" />
                     </div>
-                    <Progress 
-                      value={mastery} 
-                      className="h-2"
-                    />
-                  </div>
-                ))}
+                  )
+                )}
               </div>
             </Card>
           )}
@@ -210,11 +219,16 @@ export const MathResults: React.FC<MathResultsProps> = ({
                 🚀 Ready for Next Level?
               </h3>
               <p className="text-purple-700 mb-4">
-                Based on your performance, you might be ready to try these topics:
+                Based on your performance, you might be ready to try these
+                topics:
               </p>
               <div className="flex flex-wrap gap-2">
                 {feedback.nextTopics.map((topic, index) => (
-                  <Badge key={index} variant="outline" className="text-purple-700 border-purple-300">
+                  <Badge
+                    key={index}
+                    variant="outline"
+                    className="text-purple-700 border-purple-300"
+                  >
                     {topic.replace('-', ' ').toUpperCase()}
                   </Badge>
                 ))}
@@ -223,43 +237,50 @@ export const MathResults: React.FC<MathResultsProps> = ({
           )}
 
           {/* Question Analysis Summary */}
-          {feedback.questionAnalysis && feedback.questionAnalysis.length > 0 && (
-            <Card className="p-6">
-              <h3 className="text-lg font-semibold text-gray-800 mb-4">
-                📝 Question Analysis Summary
-              </h3>
-              <div className="space-y-3">
-                {feedback.questionAnalysis.map((analysis, index) => (
-                  <div 
-                    key={analysis.questionId}
-                    className={`p-3 rounded-lg border ${
-                      analysis.isCorrect 
-                        ? 'bg-green-50 border-green-200' 
-                        : 'bg-red-50 border-red-200'
-                    }`}
-                  >
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="font-medium">
-                        Question {index + 1}
-                      </span>
-                      <Badge variant={analysis.isCorrect ? 'default' : 'destructive'}>
-                        {analysis.isCorrect ? '✓ Correct' : '✗ Incorrect'}
-                      </Badge>
-                    </div>
-                    <div className="text-sm text-gray-600">
-                      <div>Skill: {analysis.skillTested}</div>
-                      <div>Type: {analysis.questionType.replace('-', ' ')}</div>
-                      {analysis.explanation && (
-                        <div className="mt-2 text-gray-700">
-                          <strong>Explanation:</strong> {analysis.explanation}
+          {feedback.questionAnalysis &&
+            feedback.questionAnalysis.length > 0 && (
+              <Card className="p-6">
+                <h3 className="text-lg font-semibold text-gray-800 mb-4">
+                  📝 Question Analysis Summary
+                </h3>
+                <div className="space-y-3">
+                  {feedback.questionAnalysis.map((analysis, index) => (
+                    <div
+                      key={analysis.questionId}
+                      className={`p-3 rounded-lg border ${
+                        analysis.isCorrect
+                          ? 'bg-green-50 border-green-200'
+                          : 'bg-red-50 border-red-200'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="font-medium">
+                          Question {index + 1}
+                        </span>
+                        <Badge
+                          variant={
+                            analysis.isCorrect ? 'default' : 'destructive'
+                          }
+                        >
+                          {analysis.isCorrect ? '✓ Correct' : '✗ Incorrect'}
+                        </Badge>
+                      </div>
+                      <div className="text-sm text-gray-600">
+                        <div>Skill: {analysis.skillTested}</div>
+                        <div>
+                          Type: {analysis.questionType.replace('-', ' ')}
                         </div>
-                      )}
+                        {analysis.explanation && (
+                          <div className="mt-2 text-gray-700">
+                            <strong>Explanation:</strong> {analysis.explanation}
+                          </div>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                ))}
-              </div>
-            </Card>
-          )}
+                  ))}
+                </div>
+              </Card>
+            )}
         </>
       )}
 
@@ -271,17 +292,19 @@ export const MathResults: React.FC<MathResultsProps> = ({
               📋 Review Answers
             </Button>
           )}
-          
+
           {onRetry && percentage < 80 && (
             <Button variant="outline" onClick={onRetry}>
               🔄 Try Again
             </Button>
           )}
-          
+
           {onContinue && (
-            <Button 
+            <Button
               onClick={onContinue}
-              className={percentage >= 70 ? 'bg-green-600 hover:bg-green-700' : ''}
+              className={
+                percentage >= 70 ? 'bg-green-600 hover:bg-green-700' : ''
+              }
             >
               {percentage >= 70 ? '🚀 Continue Learning' : '📚 Keep Practicing'}
             </Button>
@@ -289,9 +312,13 @@ export const MathResults: React.FC<MathResultsProps> = ({
         </div>
 
         <div className="mt-4 text-center text-sm text-gray-600">
-          {percentage >= 90 && '🌟 Amazing work! You\'re ready for more challenges!'}
-          {percentage >= 70 && percentage < 90 && '🎯 Good progress! Keep building your skills!'}
-          {percentage < 70 && '💪 Every mistake is a learning opportunity. Keep trying!'}
+          {percentage >= 90 &&
+            "🌟 Amazing work! You're ready for more challenges!"}
+          {percentage >= 70 &&
+            percentage < 90 &&
+            '🎯 Good progress! Keep building your skills!'}
+          {percentage < 70 &&
+            '💪 Every mistake is a learning opportunity. Keep trying!'}
         </div>
       </Card>
 
@@ -302,13 +329,22 @@ export const MathResults: React.FC<MathResultsProps> = ({
         </h3>
         <div className="text-center text-gray-700">
           {percentage >= 90 && (
-            <p>Students who score 90% or higher typically remember 95% of what they learned!</p>
+            <p>
+              Students who score 90% or higher typically remember 95% of what
+              they learned!
+            </p>
           )}
           {percentage >= 70 && percentage < 90 && (
-            <p>Regular practice for just 15 minutes a day can improve math scores by 40%!</p>
+            <p>
+              Regular practice for just 15 minutes a day can improve math scores
+              by 40%!
+            </p>
           )}
           {percentage < 70 && (
-            <p>The brain grows stronger every time you make a mistake and learn from it!</p>
+            <p>
+              The brain grows stronger every time you make a mistake and learn
+              from it!
+            </p>
           )}
         </div>
       </Card>

@@ -15,7 +15,7 @@ export const Calculator: React.FC<CalculatorProps> = ({
   onCalculation,
   allowedOperations = ['add', 'subtract', 'multiply', 'divide', 'decimal'],
   maxDigits = 8,
-  className = ''
+  className = '',
 }) => {
   const [display, setDisplay] = useState('0')
   const [previousValue, setPreviousValue] = useState<number | null>(null)
@@ -25,7 +25,7 @@ export const Calculator: React.FC<CalculatorProps> = ({
 
   const inputNumber = (num: string) => {
     if (display.replace(/[^0-9]/g, '').length >= maxDigits) return
-    
+
     if (waitingForNew) {
       setDisplay(num)
       setWaitingForNew(false)
@@ -36,7 +36,7 @@ export const Calculator: React.FC<CalculatorProps> = ({
 
   const inputDecimal = () => {
     if (!allowedOperations.includes('decimal')) return
-    
+
     if (waitingForNew) {
       setDisplay('0.')
       setWaitingForNew(false)
@@ -60,13 +60,13 @@ export const Calculator: React.FC<CalculatorProps> = ({
     } else if (operation) {
       const currentValue = previousValue || 0
       const newValue = calculate(currentValue, inputValue, operation)
-      
+
       const calculationString = `${previousValue} ${operation} ${inputValue} = ${newValue}`
       setHistory(prev => [...prev.slice(-4), calculationString])
-      
+
       setDisplay(String(newValue))
       setPreviousValue(newValue)
-      
+
       if (onCalculation) {
         onCalculation(calculationString, newValue)
       }
@@ -76,7 +76,11 @@ export const Calculator: React.FC<CalculatorProps> = ({
     setOperation(nextOperation)
   }
 
-  const calculate = (firstValue: number, secondValue: number, operation: string): number => {
+  const calculate = (
+    firstValue: number,
+    secondValue: number,
+    operation: string
+  ): number => {
     switch (operation) {
       case '+':
         return firstValue + secondValue
@@ -93,18 +97,18 @@ export const Calculator: React.FC<CalculatorProps> = ({
 
   const performEquals = () => {
     const inputValue = parseFloat(display)
-    
+
     if (previousValue !== null && operation) {
       const newValue = calculate(previousValue, inputValue, operation)
       const calculationString = `${previousValue} ${operation} ${inputValue} = ${newValue}`
-      
+
       setHistory(prev => [...prev.slice(-4), calculationString])
       setDisplay(String(newValue))
-      
+
       if (onCalculation) {
         onCalculation(calculationString, newValue)
       }
-      
+
       setPreviousValue(null)
       setOperation(null)
       setWaitingForNew(true)
@@ -114,11 +118,13 @@ export const Calculator: React.FC<CalculatorProps> = ({
   const isOperationAllowed = (op: string): boolean => {
     const operationMap = {
       '+': 'add',
-      '-': 'subtract', 
+      '-': 'subtract',
       '*': 'multiply',
-      '/': 'divide'
+      '/': 'divide',
     }
-    return allowedOperations.includes(operationMap[op as keyof typeof operationMap] as any)
+    return allowedOperations.includes(
+      operationMap[op as keyof typeof operationMap] as any
+    )
   }
 
   return (
@@ -158,14 +164,14 @@ export const Calculator: React.FC<CalculatorProps> = ({
           <Button variant="destructive" onClick={clear} className="col-span-2">
             Clear
           </Button>
-          <Button 
-            variant="secondary" 
+          <Button
+            variant="secondary"
             onClick={() => setDisplay(display.slice(0, -1) || '0')}
           >
             ⌫
           </Button>
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             onClick={() => performOperation('/')}
             disabled={!isOperationAllowed('/')}
             className={!isOperationAllowed('/') ? 'opacity-50' : ''}
@@ -174,11 +180,17 @@ export const Calculator: React.FC<CalculatorProps> = ({
           </Button>
 
           {/* Row 2 */}
-          <Button variant="outline" onClick={() => inputNumber('7')}>7</Button>
-          <Button variant="outline" onClick={() => inputNumber('8')}>8</Button>
-          <Button variant="outline" onClick={() => inputNumber('9')}>9</Button>
-          <Button 
-            variant="outline" 
+          <Button variant="outline" onClick={() => inputNumber('7')}>
+            7
+          </Button>
+          <Button variant="outline" onClick={() => inputNumber('8')}>
+            8
+          </Button>
+          <Button variant="outline" onClick={() => inputNumber('9')}>
+            9
+          </Button>
+          <Button
+            variant="outline"
             onClick={() => performOperation('*')}
             disabled={!isOperationAllowed('*')}
             className={!isOperationAllowed('*') ? 'opacity-50' : ''}
@@ -187,11 +199,17 @@ export const Calculator: React.FC<CalculatorProps> = ({
           </Button>
 
           {/* Row 3 */}
-          <Button variant="outline" onClick={() => inputNumber('4')}>4</Button>
-          <Button variant="outline" onClick={() => inputNumber('5')}>5</Button>
-          <Button variant="outline" onClick={() => inputNumber('6')}>6</Button>
-          <Button 
-            variant="outline" 
+          <Button variant="outline" onClick={() => inputNumber('4')}>
+            4
+          </Button>
+          <Button variant="outline" onClick={() => inputNumber('5')}>
+            5
+          </Button>
+          <Button variant="outline" onClick={() => inputNumber('6')}>
+            6
+          </Button>
+          <Button
+            variant="outline"
             onClick={() => performOperation('-')}
             disabled={!isOperationAllowed('-')}
             className={!isOperationAllowed('-') ? 'opacity-50' : ''}
@@ -200,37 +218,51 @@ export const Calculator: React.FC<CalculatorProps> = ({
           </Button>
 
           {/* Row 4 */}
-          <Button variant="outline" onClick={() => inputNumber('1')}>1</Button>
-          <Button variant="outline" onClick={() => inputNumber('2')}>2</Button>
-          <Button variant="outline" onClick={() => inputNumber('3')}>3</Button>
-          <Button 
-            variant="outline" 
+          <Button variant="outline" onClick={() => inputNumber('1')}>
+            1
+          </Button>
+          <Button variant="outline" onClick={() => inputNumber('2')}>
+            2
+          </Button>
+          <Button variant="outline" onClick={() => inputNumber('3')}>
+            3
+          </Button>
+          <Button
+            variant="outline"
             onClick={() => performOperation('+')}
             disabled={!isOperationAllowed('+')}
-            className={!isOperationAllowed('+') ? 'opacity-50 row-span-2' : 'row-span-2'}
+            className={
+              !isOperationAllowed('+') ? 'opacity-50 row-span-2' : 'row-span-2'
+            }
           >
             +
           </Button>
 
           {/* Row 5 */}
-          <Button variant="outline" onClick={() => inputNumber('0')} className="col-span-2">
+          <Button
+            variant="outline"
+            onClick={() => inputNumber('0')}
+            className="col-span-2"
+          >
             0
           </Button>
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             onClick={inputDecimal}
             disabled={!allowedOperations.includes('decimal')}
-            className={!allowedOperations.includes('decimal') ? 'opacity-50' : ''}
+            className={
+              !allowedOperations.includes('decimal') ? 'opacity-50' : ''
+            }
           >
             .
           </Button>
-          
+
           {/* Equals button in the space next to + */}
         </div>
-        
+
         {/* Equals button full width */}
-        <Button 
-          variant="default" 
+        <Button
+          variant="default"
           onClick={performEquals}
           className="w-full bg-green-600 hover:bg-green-700"
         >

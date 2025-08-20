@@ -20,11 +20,13 @@ export const PlaceValueQuestion: React.FC<PlaceValueQuestionProps> = ({
   onAnswer,
   showFeedback = false,
   isCorrect = null,
-  className = ''
+  className = '',
 }) => {
   const [userAnswer, setUserAnswer] = useState<any>(null)
   const [showChart, setShowChart] = useState(false)
-  const [selectedDigits, setSelectedDigits] = useState<{ [place: string]: string }>({})
+  const [selectedDigits, setSelectedDigits] = useState<{
+    [place: string]: string
+  }>({})
 
   const problemData = question.problemData
 
@@ -45,11 +47,11 @@ export const PlaceValueQuestion: React.FC<PlaceValueQuestionProps> = ({
   const handlePlaceValueBuilder = (place: string, digit: string) => {
     const newSelectedDigits = { ...selectedDigits, [place]: digit }
     setSelectedDigits(newSelectedDigits)
-    
+
     // Check if all required places are filled
     const requiredPlaces = ['hundreds', 'tens', 'ones']
     const isComplete = requiredPlaces.every(place => newSelectedDigits[place])
-    
+
     if (isComplete) {
       setUserAnswer(newSelectedDigits)
     }
@@ -59,7 +61,7 @@ export const PlaceValueQuestion: React.FC<PlaceValueQuestionProps> = ({
     <div className="space-y-3">
       <div className="text-lg font-medium mb-4">{question.question}</div>
       <div className="text-sm text-gray-600 mb-4">{question.instructions}</div>
-      
+
       {problemData?.context && (
         <div className="p-3 bg-blue-50 rounded-lg mb-4">
           <div className="text-sm text-blue-800">
@@ -101,7 +103,7 @@ export const PlaceValueQuestion: React.FC<PlaceValueQuestionProps> = ({
     <div className="space-y-4">
       <div className="text-lg font-medium">{question.question}</div>
       <div className="text-sm text-gray-600">{question.instructions}</div>
-      
+
       {problemData?.context && (
         <div className="p-3 bg-blue-50 rounded-lg">
           <div className="text-sm text-blue-800">
@@ -113,10 +115,9 @@ export const PlaceValueQuestion: React.FC<PlaceValueQuestionProps> = ({
       {problemData?.expandedForm && (
         <div className="p-3 bg-gray-50 rounded-lg">
           <div className="text-center text-xl font-mono">
-            {Array.isArray(problemData.expandedForm) 
+            {Array.isArray(problemData.expandedForm)
               ? problemData.expandedForm.join(' + ')
-              : problemData.expandedForm
-            }
+              : problemData.expandedForm}
           </div>
         </div>
       )}
@@ -126,7 +127,7 @@ export const PlaceValueQuestion: React.FC<PlaceValueQuestionProps> = ({
         <Input
           type="text"
           value={userAnswer || ''}
-          onChange={(e) => handleInputAnswer(e.target.value)}
+          onChange={e => handleInputAnswer(e.target.value)}
           className={`
             text-lg font-mono
             ${showFeedback && isCorrect === true ? 'border-green-500 bg-green-50' : ''}
@@ -156,7 +157,7 @@ export const PlaceValueQuestion: React.FC<PlaceValueQuestionProps> = ({
     <div className="space-y-4">
       <div className="text-lg font-medium">{question.question}</div>
       <div className="text-sm text-gray-600">{question.instructions}</div>
-      
+
       {problemData?.context && (
         <div className="p-3 bg-blue-50 rounded-lg">
           <div className="text-sm text-blue-800">
@@ -193,7 +194,7 @@ export const PlaceValueQuestion: React.FC<PlaceValueQuestionProps> = ({
       {/* Place Value Grid */}
       <div className="space-y-4">
         <div className="grid grid-cols-3 gap-4 max-w-md mx-auto">
-          {['hundreds', 'tens', 'ones'].map((place) => (
+          {['hundreds', 'tens', 'ones'].map(place => (
             <div key={place} className="text-center">
               <div className="text-sm font-medium text-gray-600 mb-2 capitalize">
                 {place}
@@ -225,7 +226,9 @@ export const PlaceValueQuestion: React.FC<PlaceValueQuestionProps> = ({
         <div className="text-center">
           <div className="text-sm text-gray-600">Current Number:</div>
           <div className="text-3xl font-bold font-mono">
-            {selectedDigits.hundreds || '0'}{selectedDigits.tens || '0'}{selectedDigits.ones || '0'}
+            {selectedDigits.hundreds || '0'}
+            {selectedDigits.tens || '0'}
+            {selectedDigits.ones || '0'}
           </div>
         </div>
       </div>
@@ -244,7 +247,7 @@ export const PlaceValueQuestion: React.FC<PlaceValueQuestionProps> = ({
     <div className="space-y-4">
       <div className="text-lg font-medium">{question.question}</div>
       <div className="text-sm text-gray-600">{question.instructions}</div>
-      
+
       {problemData?.context && (
         <div className="p-3 bg-blue-50 rounded-lg">
           <div className="text-sm text-blue-800">
@@ -255,7 +258,9 @@ export const PlaceValueQuestion: React.FC<PlaceValueQuestionProps> = ({
 
       {problemData?.number && (
         <div className="p-4 bg-gray-50 rounded-lg text-center">
-          <div className="text-2xl font-bold font-mono">{problemData.number}</div>
+          <div className="text-2xl font-bold font-mono">
+            {problemData.number}
+          </div>
           {problemData?.statement && (
             <div className="text-lg mt-2 text-gray-700">
               "{problemData.statement}"
@@ -317,10 +322,7 @@ export const PlaceValueQuestion: React.FC<PlaceValueQuestionProps> = ({
         {/* Interactive Tools */}
         <div className="space-y-4">
           <div className="flex justify-center">
-            <Button
-              variant="outline"
-              onClick={() => setShowChart(!showChart)}
-            >
+            <Button variant="outline" onClick={() => setShowChart(!showChart)}>
               {showChart ? 'Hide' : 'Show'} Place Value Chart
             </Button>
           </div>
@@ -328,7 +330,9 @@ export const PlaceValueQuestion: React.FC<PlaceValueQuestionProps> = ({
           {showChart && (
             <PlaceValueChart
               initialNumber={problemData?.number?.toString() || '2457'}
-              highlightPlaces={problemData?.targetPlace ? [problemData.targetPlace] : []}
+              highlightPlaces={
+                problemData?.targetPlace ? [problemData.targetPlace] : []
+              }
               allowInteraction={true}
               onPlaceValueSelect={(place, digit, value) => {
                 console.log('Place value selected:', { place, digit, value })
@@ -348,7 +352,10 @@ export const PlaceValueQuestion: React.FC<PlaceValueQuestionProps> = ({
             </summary>
             <div className="mt-2 space-y-2">
               {question.hints.map((hint, index) => (
-                <div key={index} className="p-3 bg-yellow-50 border border-yellow-200 rounded text-sm">
+                <div
+                  key={index}
+                  className="p-3 bg-yellow-50 border border-yellow-200 rounded text-sm"
+                >
                   <strong>Hint {index + 1}:</strong> {hint}
                 </div>
               ))}

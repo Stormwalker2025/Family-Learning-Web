@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Textarea } from '@/components/ui/textarea'
-import { 
+import {
   Calendar,
   Clock,
   Bell,
@@ -15,23 +15,32 @@ import {
   AlertTriangle,
   CheckCircle,
   Plus,
-  Trash2
+  Trash2,
 } from 'lucide-react'
-import { HomeworkAssignmentConfig, NotificationConfig, NotificationType } from '@/types'
+import {
+  HomeworkAssignmentConfig,
+  NotificationConfig,
+  NotificationType,
+} from '@/types'
 
 interface TimeSettingsProps {
   assignment: Partial<HomeworkAssignmentConfig>
   onUpdate: (updates: Partial<HomeworkAssignmentConfig>) => void
 }
 
-export default function TimeSettings({ assignment, onUpdate }: TimeSettingsProps) {
+export default function TimeSettings({
+  assignment,
+  onUpdate,
+}: TimeSettingsProps) {
   const [showNotificationModal, setShowNotificationModal] = useState(false)
-  const [newNotification, setNewNotification] = useState<Partial<NotificationConfig>>({
+  const [newNotification, setNewNotification] = useState<
+    Partial<NotificationConfig>
+  >({
     type: 'homework-assigned',
     enabled: true,
     timing: 24,
     recipients: ['STUDENT'],
-    message: ''
+    message: '',
   })
 
   // 格式化日期时间输入
@@ -57,7 +66,7 @@ export default function TimeSettings({ assignment, onUpdate }: TimeSettingsProps
       enabled: newNotification.enabled || true,
       timing: newNotification.timing,
       recipients: newNotification.recipients || ['STUDENT'],
-      message: newNotification.message
+      message: newNotification.message,
     })
 
     onUpdate({ notifications })
@@ -66,7 +75,7 @@ export default function TimeSettings({ assignment, onUpdate }: TimeSettingsProps
       enabled: true,
       timing: 24,
       recipients: ['STUDENT'],
-      message: ''
+      message: '',
     })
     setShowNotificationModal(false)
   }
@@ -79,7 +88,10 @@ export default function TimeSettings({ assignment, onUpdate }: TimeSettingsProps
   }
 
   // 更新通知配置
-  const updateNotification = (index: number, updates: Partial<NotificationConfig>) => {
+  const updateNotification = (
+    index: number,
+    updates: Partial<NotificationConfig>
+  ) => {
     const notifications = [...(assignment.notifications || [])]
     notifications[index] = { ...notifications[index], ...updates }
     onUpdate({ notifications })
@@ -88,24 +100,36 @@ export default function TimeSettings({ assignment, onUpdate }: TimeSettingsProps
   // 获取通知类型的显示名称
   const getNotificationTypeName = (type: NotificationType): string => {
     switch (type) {
-      case 'homework-assigned': return '作业分配通知'
-      case 'homework-due': return '截止日期提醒'
-      case 'homework-completed': return '完成通知'
-      case 'homework-graded': return '批改完成通知'
-      case 'reminder': return '自定义提醒'
-      default: return type
+      case 'homework-assigned':
+        return '作业分配通知'
+      case 'homework-due':
+        return '截止日期提醒'
+      case 'homework-completed':
+        return '完成通知'
+      case 'homework-graded':
+        return '批改完成通知'
+      case 'reminder':
+        return '自定义提醒'
+      default:
+        return type
     }
   }
 
   // 获取通知类型的图标
   const getNotificationTypeIcon = (type: NotificationType) => {
     switch (type) {
-      case 'homework-assigned': return <Bell size={16} />
-      case 'homework-due': return <AlertTriangle size={16} />
-      case 'homework-completed': return <CheckCircle size={16} />
-      case 'homework-graded': return <CheckCircle size={16} />
-      case 'reminder': return <Clock size={16} />
-      default: return <Bell size={16} />
+      case 'homework-assigned':
+        return <Bell size={16} />
+      case 'homework-due':
+        return <AlertTriangle size={16} />
+      case 'homework-completed':
+        return <CheckCircle size={16} />
+      case 'homework-graded':
+        return <CheckCircle size={16} />
+      case 'reminder':
+        return <Clock size={16} />
+      default:
+        return <Bell size={16} />
     }
   }
 
@@ -127,14 +151,14 @@ export default function TimeSettings({ assignment, onUpdate }: TimeSettingsProps
               id="dueDate"
               type="datetime-local"
               value={formatDateTimeLocal(assignment.dueDate)}
-              onChange={(e) => onUpdate({ 
-                dueDate: parseDateTimeLocal(e.target.value) 
-              })}
+              onChange={e =>
+                onUpdate({
+                  dueDate: parseDateTimeLocal(e.target.value),
+                })
+              }
               className="mt-2"
             />
-            <p className="text-sm text-gray-500 mt-1">
-              留空表示无截止时间限制
-            </p>
+            <p className="text-sm text-gray-500 mt-1">留空表示无截止时间限制</p>
           </div>
 
           <div>
@@ -145,14 +169,14 @@ export default function TimeSettings({ assignment, onUpdate }: TimeSettingsProps
               id="releaseDate"
               type="datetime-local"
               value={formatDateTimeLocal(assignment.releaseDate)}
-              onChange={(e) => onUpdate({ 
-                releaseDate: parseDateTimeLocal(e.target.value) 
-              })}
+              onChange={e =>
+                onUpdate({
+                  releaseDate: parseDateTimeLocal(e.target.value),
+                })
+              }
               className="mt-2"
             />
-            <p className="text-sm text-gray-500 mt-1">
-              留空表示立即发布
-            </p>
+            <p className="text-sm text-gray-500 mt-1">留空表示立即发布</p>
           </div>
 
           <div>
@@ -165,9 +189,13 @@ export default function TimeSettings({ assignment, onUpdate }: TimeSettingsProps
               min="1"
               max="600"
               value={assignment.estimatedTime || ''}
-              onChange={(e) => onUpdate({ 
-                estimatedTime: e.target.value ? parseInt(e.target.value) : undefined 
-              })}
+              onChange={e =>
+                onUpdate({
+                  estimatedTime: e.target.value
+                    ? parseInt(e.target.value)
+                    : undefined,
+                })
+              }
               placeholder="60"
               className="mt-2"
             />
@@ -183,9 +211,11 @@ export default function TimeSettings({ assignment, onUpdate }: TimeSettingsProps
               min="0"
               max={assignment.totalPoints || 100}
               value={assignment.passingScore || ''}
-              onChange={(e) => onUpdate({ 
-                passingScore: e.target.value ? parseInt(e.target.value) : 70 
-              })}
+              onChange={e =>
+                onUpdate({
+                  passingScore: e.target.value ? parseInt(e.target.value) : 70,
+                })
+              }
               placeholder="70"
               className="mt-2"
             />
@@ -206,7 +236,7 @@ export default function TimeSettings({ assignment, onUpdate }: TimeSettingsProps
               type="checkbox"
               id="autoRelease"
               checked={assignment.autoRelease ?? true}
-              onChange={(e) => onUpdate({ autoRelease: e.target.checked })}
+              onChange={e => onUpdate({ autoRelease: e.target.checked })}
               className="rounded"
             />
             <Label htmlFor="autoRelease" className="text-base">
@@ -219,7 +249,9 @@ export default function TimeSettings({ assignment, onUpdate }: TimeSettingsProps
               type="checkbox"
               id="allowMultipleAttempts"
               checked={assignment.allowMultipleAttempts ?? true}
-              onChange={(e) => onUpdate({ allowMultipleAttempts: e.target.checked })}
+              onChange={e =>
+                onUpdate({ allowMultipleAttempts: e.target.checked })
+              }
               className="rounded"
             />
             <Label htmlFor="allowMultipleAttempts" className="text-base">
@@ -238,9 +270,13 @@ export default function TimeSettings({ assignment, onUpdate }: TimeSettingsProps
                 min="1"
                 max="10"
                 value={assignment.maxAttempts || ''}
-                onChange={(e) => onUpdate({ 
-                  maxAttempts: e.target.value ? parseInt(e.target.value) : undefined 
-                })}
+                onChange={e =>
+                  onUpdate({
+                    maxAttempts: e.target.value
+                      ? parseInt(e.target.value)
+                      : undefined,
+                  })
+                }
                 placeholder="无限制"
                 className="mt-1 w-48"
               />
@@ -252,7 +288,9 @@ export default function TimeSettings({ assignment, onUpdate }: TimeSettingsProps
               type="checkbox"
               id="lateSubmissionAllowed"
               checked={assignment.lateSubmissionAllowed ?? true}
-              onChange={(e) => onUpdate({ lateSubmissionAllowed: e.target.checked })}
+              onChange={e =>
+                onUpdate({ lateSubmissionAllowed: e.target.checked })
+              }
               className="rounded"
             />
             <Label htmlFor="lateSubmissionAllowed" className="text-base">
@@ -271,9 +309,13 @@ export default function TimeSettings({ assignment, onUpdate }: TimeSettingsProps
                 min="0"
                 max="100"
                 value={assignment.latePenalty || ''}
-                onChange={(e) => onUpdate({ 
-                  latePenalty: e.target.value ? parseInt(e.target.value) : undefined 
-                })}
+                onChange={e =>
+                  onUpdate({
+                    latePenalty: e.target.value
+                      ? parseInt(e.target.value)
+                      : undefined,
+                  })
+                }
                 placeholder="0"
                 className="mt-1 w-48"
               />
@@ -310,18 +352,18 @@ export default function TimeSettings({ assignment, onUpdate }: TimeSettingsProps
                       <span className="font-medium">
                         {getNotificationTypeName(notification.type)}
                       </span>
-                      <Badge variant={notification.enabled ? 'default' : 'secondary'}>
+                      <Badge
+                        variant={notification.enabled ? 'default' : 'secondary'}
+                      >
                         {notification.enabled ? '启用' : '禁用'}
                       </Badge>
                     </div>
-                    
+
                     <div className="text-sm text-gray-600 space-y-1">
                       {notification.timing && (
                         <div>提前 {notification.timing} 小时通知</div>
                       )}
-                      <div>
-                        通知对象: {notification.recipients.join(', ')}
-                      </div>
+                      <div>通知对象: {notification.recipients.join(', ')}</div>
                       {notification.message && (
                         <div>自定义消息: {notification.message}</div>
                       )}
@@ -332,9 +374,11 @@ export default function TimeSettings({ assignment, onUpdate }: TimeSettingsProps
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => updateNotification(index, { 
-                        enabled: !notification.enabled 
-                      })}
+                      onClick={() =>
+                        updateNotification(index, {
+                          enabled: !notification.enabled,
+                        })
+                      }
                     >
                       {notification.enabled ? '禁用' : '启用'}
                     </Button>
@@ -370,10 +414,12 @@ export default function TimeSettings({ assignment, onUpdate }: TimeSettingsProps
                 <Label className="text-sm font-medium">通知类型</Label>
                 <select
                   value={newNotification.type}
-                  onChange={(e) => setNewNotification(prev => ({ 
-                    ...prev, 
-                    type: e.target.value as NotificationType 
-                  }))}
+                  onChange={e =>
+                    setNewNotification(prev => ({
+                      ...prev,
+                      type: e.target.value as NotificationType,
+                    }))
+                  }
                   className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md"
                 >
                   <option value="homework-assigned">作业分配通知</option>
@@ -384,18 +430,23 @@ export default function TimeSettings({ assignment, onUpdate }: TimeSettingsProps
                 </select>
               </div>
 
-              {(newNotification.type === 'homework-due' || newNotification.type === 'reminder') && (
+              {(newNotification.type === 'homework-due' ||
+                newNotification.type === 'reminder') && (
                 <div>
-                  <Label className="text-sm font-medium">提前通知时间 (小时)</Label>
+                  <Label className="text-sm font-medium">
+                    提前通知时间 (小时)
+                  </Label>
                   <Input
                     type="number"
                     min="1"
                     max="168"
                     value={newNotification.timing || ''}
-                    onChange={(e) => setNewNotification(prev => ({ 
-                      ...prev, 
-                      timing: parseInt(e.target.value) || undefined 
-                    }))}
+                    onChange={e =>
+                      setNewNotification(prev => ({
+                        ...prev,
+                        timing: parseInt(e.target.value) || undefined,
+                      }))
+                    }
                     placeholder="24"
                     className="mt-1"
                   />
@@ -409,9 +460,13 @@ export default function TimeSettings({ assignment, onUpdate }: TimeSettingsProps
                     <label key={role} className="flex items-center gap-2">
                       <input
                         type="checkbox"
-                        checked={newNotification.recipients?.includes(role) || false}
-                        onChange={(e) => {
-                          const recipients = [...(newNotification.recipients || [])]
+                        checked={
+                          newNotification.recipients?.includes(role) || false
+                        }
+                        onChange={e => {
+                          const recipients = [
+                            ...(newNotification.recipients || []),
+                          ]
                           if (e.target.checked) {
                             recipients.push(role)
                           } else {
@@ -431,10 +486,12 @@ export default function TimeSettings({ assignment, onUpdate }: TimeSettingsProps
                 <Label className="text-sm font-medium">自定义消息 (可选)</Label>
                 <Textarea
                   value={newNotification.message || ''}
-                  onChange={(e) => setNewNotification(prev => ({ 
-                    ...prev, 
-                    message: e.target.value 
-                  }))}
+                  onChange={e =>
+                    setNewNotification(prev => ({
+                      ...prev,
+                      message: e.target.value,
+                    }))
+                  }
                   placeholder="输入自定义通知消息..."
                   rows={3}
                   className="mt-1"
@@ -452,7 +509,9 @@ export default function TimeSettings({ assignment, onUpdate }: TimeSettingsProps
               </Button>
               <Button
                 onClick={addNotification}
-                disabled={!newNotification.type || !newNotification.recipients?.length}
+                disabled={
+                  !newNotification.type || !newNotification.recipients?.length
+                }
                 className="flex-1"
               >
                 添加

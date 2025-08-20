@@ -14,7 +14,9 @@ export interface UserFactory {
   updatedAt: Date
 }
 
-export const createUser = (overrides: Partial<UserFactory> = {}): UserFactory => ({
+export const createUser = (
+  overrides: Partial<UserFactory> = {}
+): UserFactory => ({
   id: faker.string.uuid(),
   username: faker.internet.username(),
   email: faker.internet.email(),
@@ -29,7 +31,9 @@ export const createUser = (overrides: Partial<UserFactory> = {}): UserFactory =>
   ...overrides,
 })
 
-export const createStudent = (overrides: Partial<UserFactory> = {}): UserFactory =>
+export const createStudent = (
+  overrides: Partial<UserFactory> = {}
+): UserFactory =>
   createUser({
     role: 'STUDENT',
     yearLevel: faker.number.int({ min: 1, max: 12 }),
@@ -37,7 +41,9 @@ export const createStudent = (overrides: Partial<UserFactory> = {}): UserFactory
     ...overrides,
   })
 
-export const createParent = (overrides: Partial<UserFactory> = {}): UserFactory =>
+export const createParent = (
+  overrides: Partial<UserFactory> = {}
+): UserFactory =>
   createUser({
     role: 'PARENT',
     yearLevel: undefined,
@@ -45,7 +51,9 @@ export const createParent = (overrides: Partial<UserFactory> = {}): UserFactory 
     ...overrides,
   })
 
-export const createAdmin = (overrides: Partial<UserFactory> = {}): UserFactory =>
+export const createAdmin = (
+  overrides: Partial<UserFactory> = {}
+): UserFactory =>
   createUser({
     role: 'ADMIN',
     yearLevel: undefined,

@@ -26,7 +26,9 @@ export interface IpadUnlockRecordFactory {
   triggeredBy: string
 }
 
-export const createIpadUnlockConfiguration = (overrides: Partial<IpadUnlockConfigurationFactory> = {}): IpadUnlockConfigurationFactory => ({
+export const createIpadUnlockConfiguration = (
+  overrides: Partial<IpadUnlockConfigurationFactory> = {}
+): IpadUnlockConfigurationFactory => ({
   id: faker.string.uuid(),
   name: faker.lorem.words({ min: 2, max: 4 }),
   description: faker.lorem.sentence(),
@@ -44,10 +46,12 @@ export const createIpadUnlockConfiguration = (overrides: Partial<IpadUnlockConfi
   ...overrides,
 })
 
-export const createIpadUnlockRecord = (overrides: Partial<IpadUnlockRecordFactory> = {}): IpadUnlockRecordFactory => {
+export const createIpadUnlockRecord = (
+  overrides: Partial<IpadUnlockRecordFactory> = {}
+): IpadUnlockRecordFactory => {
   const unlockedAt = faker.date.recent()
   const expiresAt = new Date(unlockedAt.getTime() + 24 * 60 * 60 * 1000) // 24 hours later
-  
+
   return {
     id: faker.string.uuid(),
     userId: faker.string.uuid(),
@@ -63,7 +67,9 @@ export const createIpadUnlockRecord = (overrides: Partial<IpadUnlockRecordFactor
     unlockedAt,
     expiresAt,
     used: faker.datatype.boolean(),
-    usedAt: faker.datatype.boolean() ? faker.date.between({ from: unlockedAt, to: new Date() }) : undefined,
+    usedAt: faker.datatype.boolean()
+      ? faker.date.between({ from: unlockedAt, to: new Date() })
+      : undefined,
     triggeredBy: faker.string.uuid(),
     ...overrides,
   }
@@ -84,7 +90,10 @@ export const createStandardUnlockConfig = (): IpadUnlockConfigurationFactory =>
     }),
   })
 
-export const createHighAchievementRecord = (userId: string, configId: string): IpadUnlockRecordFactory =>
+export const createHighAchievementRecord = (
+  userId: string,
+  configId: string
+): IpadUnlockRecordFactory =>
   createIpadUnlockRecord({
     userId,
     configurationId: configId,
@@ -99,10 +108,13 @@ export const createHighAchievementRecord = (userId: string, configId: string): I
     triggeredBy: 'homework_' + faker.string.uuid(),
   })
 
-export const createUsedUnlockRecord = (userId: string, configId: string): IpadUnlockRecordFactory => {
+export const createUsedUnlockRecord = (
+  userId: string,
+  configId: string
+): IpadUnlockRecordFactory => {
   const unlockedAt = faker.date.past({ days: 1 })
   const usedAt = faker.date.between({ from: unlockedAt, to: new Date() })
-  
+
   return createIpadUnlockRecord({
     userId,
     configurationId: configId,

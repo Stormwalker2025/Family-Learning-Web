@@ -4,10 +4,10 @@ import React from 'react'
 import { AuthGuard } from '@/components/auth/AuthGuard'
 import HomeworkViewer from '@/components/homework/Submission/HomeworkViewer'
 
-export default function HomeworkDetailPage({ 
-  params 
-}: { 
-  params: { id: string } 
+export default function HomeworkDetailPage({
+  params,
+}: {
+  params: { id: string }
 }) {
   const handleSubmit = (submission: any) => {
     // 提交成功后跳转到结果页
@@ -22,7 +22,7 @@ export default function HomeworkDetailPage({
   return (
     <AuthGuard requiredRoles={['STUDENT', 'PARENT', 'ADMIN']}>
       <div className="container mx-auto px-4 py-8">
-        <HomeworkViewer 
+        <HomeworkViewer
           homeworkId={params.id}
           onSubmit={handleSubmit}
           onSave={handleSave}

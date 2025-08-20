@@ -1,12 +1,22 @@
 'use client'
 
 import React, { useState, useEffect, useRef } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import { Clock, BookOpen, Target, Users, Lightbulb } from 'lucide-react'
-import { HassExercise as HassExerciseType, HassSubmission, HassAnswer } from '@/types'
+import {
+  HassExercise as HassExerciseType,
+  HassSubmission,
+  HassAnswer,
+} from '@/types'
 
 // Import HASS components
 import { ArticleDisplay } from './ArticleReader/ArticleDisplay'
@@ -30,7 +40,11 @@ interface HassExerciseProps {
 
 type ExercisePhase = 'overview' | 'reading' | 'questions' | 'review' | 'results'
 
-export function HassExercise({ exercise, onSubmit, userId }: HassExerciseProps) {
+export function HassExercise({
+  exercise,
+  onSubmit,
+  userId,
+}: HassExerciseProps) {
   const [currentPhase, setCurrentPhase] = useState<ExercisePhase>('overview')
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
   const [answers, setAnswers] = useState<Record<string, HassAnswer>>({})
@@ -39,11 +53,13 @@ export function HassExercise({ exercise, onSubmit, userId }: HassExerciseProps) 
   const [timeSpent, setTimeSpent] = useState(0)
   const [questionStartTime, setQuestionStartTime] = useState(0)
   const [readingTime, setReadingTime] = useState(0)
-  const [mediaInteractions, setMediaInteractions] = useState<Record<string, number>>({})
+  const [mediaInteractions, setMediaInteractions] = useState<
+    Record<string, number>
+  >({})
   const [showVocabularyHelper, setShowVocabularyHelper] = useState(false)
   const [showBackgroundInfo, setShowBackgroundInfo] = useState(false)
   const [showDiscussion, setShowDiscussion] = useState(false)
-  
+
   const startTimeRef = useRef<number>(Date.now())
   const phaseStartTimeRef = useRef<number>(Date.now())
 
@@ -64,44 +80,51 @@ export function HassExercise({ exercise, onSubmit, userId }: HassExerciseProps) 
 
   const handlePhaseChange = (phase: ExercisePhase) => {
     if (currentPhase === 'reading') {
-      const readingDuration = Math.floor((Date.now() - phaseStartTimeRef.current) / 1000 / 60)
+      const readingDuration = Math.floor(
+        (Date.now() - phaseStartTimeRef.current) / 1000 / 60
+      )
       setReadingTime(prev => prev + readingDuration)
     }
     setCurrentPhase(phase)
   }
 
-  const handleAnswerChange = (questionId: string, answer: Partial<HassAnswer>) => {
+  const handleAnswerChange = (
+    questionId: string,
+    answer: Partial<HassAnswer>
+  ) => {
     setAnswers(prev => ({
       ...prev,
       [questionId]: {
         ...prev[questionId],
         ...answer,
-        timeSpent: prev[questionId]?.timeSpent || 0
-      }
+        timeSpent: prev[questionId]?.timeSpent || 0,
+      },
     }))
   }
 
   const handleQuestionComplete = (questionId: string) => {
-    const timeSpentOnQuestion = Math.floor((Date.now() - questionStartTime) / 1000 / 60)
+    const timeSpentOnQuestion = Math.floor(
+      (Date.now() - questionStartTime) / 1000 / 60
+    )
     setAnswers(prev => ({
       ...prev,
       [questionId]: {
         ...prev[questionId],
-        timeSpent: timeSpentOnQuestion
-      }
+        timeSpent: timeSpentOnQuestion,
+      },
     }))
   }
 
   const handleNoteChange = (sectionId: string, note: string) => {
     setNotes(prev => ({
       ...prev,
-      [sectionId]: note
+      [sectionId]: note,
     }))
   }
 
   const handleBookmark = (sectionId: string) => {
-    setBookmarks(prev => 
-      prev.includes(sectionId) 
+    setBookmarks(prev =>
+      prev.includes(sectionId)
         ? prev.filter(id => id !== sectionId)
         : [...prev, sectionId]
     )
@@ -110,13 +133,15 @@ export function HassExercise({ exercise, onSubmit, userId }: HassExerciseProps) 
   const handleMediaInteraction = (mediaId: string) => {
     setMediaInteractions(prev => ({
       ...prev,
-      [mediaId]: (prev[mediaId] || 0) + 1
+      [mediaId]: (prev[mediaId] || 0) + 1,
     }))
   }
 
   const handleSubmit = () => {
-    const totalTimeSpent = Math.floor((Date.now() - startTimeRef.current) / 1000 / 60)
-    
+    const totalTimeSpent = Math.floor(
+      (Date.now() - startTimeRef.current) / 1000 / 60
+    )
+
     const submission: HassSubmission = {
       id: `submission-${Date.now()}`,
       userId,
@@ -133,7 +158,7 @@ export function HassExercise({ exercise, onSubmit, userId }: HassExerciseProps) 
       ),
       mediaInteractions,
       startedAt: new Date(startTimeRef.current),
-      submittedAt: new Date()
+      submittedAt: new Date(),
     }
 
     onSubmit(submission)
@@ -145,9 +170,10 @@ export function HassExercise({ exercise, onSubmit, userId }: HassExerciseProps) 
     const phaseProgress = {
       overview: 0,
       reading: 25,
-      questions: 25 + (50 * (currentQuestionIndex + 1) / exercise.questions.length),
+      questions:
+        25 + (50 * (currentQuestionIndex + 1)) / exercise.questions.length,
       review: 75,
-      results: 100
+      results: 100,
     }
     return phaseProgress[currentPhase]
   }
@@ -158,8 +184,9 @@ export function HassExercise({ exercise, onSubmit, userId }: HassExerciseProps) 
     const baseProps = {
       question,
       answer: answers[question.id],
-      onAnswerChange: (answer: Partial<HassAnswer>) => handleAnswerChange(question.id, answer),
-      onComplete: () => handleQuestionComplete(question.id)
+      onAnswerChange: (answer: Partial<HassAnswer>) =>
+        handleAnswerChange(question.id, answer),
+      onComplete: () => handleQuestionComplete(question.id),
     }
 
     switch (question.type) {
@@ -201,7 +228,7 @@ export function HassExercise({ exercise, onSubmit, userId }: HassExerciseProps) 
               <Badge variant="outline">{exercise.difficulty}</Badge>
             </div>
           </div>
-          
+
           {/* Progress bar */}
           <div className="mt-4">
             <div className="flex items-center justify-between mb-2">
@@ -249,25 +276,41 @@ export function HassExercise({ exercise, onSubmit, userId }: HassExerciseProps) 
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-primary">{exercise.article.readingTime}m</div>
-                    <div className="text-sm text-muted-foreground">Reading Time</div>
+                    <div className="text-2xl font-bold text-primary">
+                      {exercise.article.readingTime}m
+                    </div>
+                    <div className="text-sm text-muted-foreground">
+                      Reading Time
+                    </div>
                   </div>
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-primary">{exercise.questions.length}</div>
-                    <div className="text-sm text-muted-foreground">Questions</div>
+                    <div className="text-2xl font-bold text-primary">
+                      {exercise.questions.length}
+                    </div>
+                    <div className="text-sm text-muted-foreground">
+                      Questions
+                    </div>
                   </div>
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-primary">{exercise.totalPoints}</div>
-                    <div className="text-sm text-muted-foreground">Total Points</div>
+                    <div className="text-2xl font-bold text-primary">
+                      {exercise.totalPoints}
+                    </div>
+                    <div className="text-sm text-muted-foreground">
+                      Total Points
+                    </div>
                   </div>
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-primary">{exercise.estimatedDuration}m</div>
-                    <div className="text-sm text-muted-foreground">Est. Duration</div>
+                    <div className="text-2xl font-bold text-primary">
+                      {exercise.estimatedDuration}m
+                    </div>
+                    <div className="text-sm text-muted-foreground">
+                      Est. Duration
+                    </div>
                   </div>
                 </div>
-                
+
                 <div className="pt-4">
-                  <Button 
+                  <Button
                     onClick={() => handlePhaseChange('reading')}
                     className="w-full"
                     size="lg"
@@ -289,11 +332,13 @@ export function HassExercise({ exercise, onSubmit, userId }: HassExerciseProps) 
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
-                  {exercise.article.discussionPrompts.slice(0, 3).map((prompt, index) => (
-                    <div key={index} className="p-3 bg-muted rounded-lg">
-                      <p className="text-sm">{prompt}</p>
-                    </div>
-                  ))}
+                  {exercise.article.discussionPrompts
+                    .slice(0, 3)
+                    .map((prompt, index) => (
+                      <div key={index} className="p-3 bg-muted rounded-lg">
+                        <p className="text-sm">{prompt}</p>
+                      </div>
+                    ))}
                 </div>
                 <Button
                   variant="outline"
@@ -315,8 +360,11 @@ export function HassExercise({ exercise, onSubmit, userId }: HassExerciseProps) 
               </CardHeader>
               <CardContent>
                 <div className="space-y-2">
-                  {exercise.article.keyVocabulary.slice(0, 4).map((vocab) => (
-                    <div key={vocab.id} className="flex justify-between items-center">
+                  {exercise.article.keyVocabulary.slice(0, 4).map(vocab => (
+                    <div
+                      key={vocab.id}
+                      className="flex justify-between items-center"
+                    >
                       <span className="font-medium">{vocab.term}</span>
                       <Badge variant="outline" className="text-xs">
                         Level {vocab.difficulty}
@@ -341,7 +389,7 @@ export function HassExercise({ exercise, onSubmit, userId }: HassExerciseProps) 
       {currentPhase === 'reading' && (
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           <div className="lg:col-span-3">
-            <ArticleDisplay 
+            <ArticleDisplay
               article={exercise.article}
               notes={notes}
               bookmarks={bookmarks}
@@ -349,9 +397,12 @@ export function HassExercise({ exercise, onSubmit, userId }: HassExerciseProps) 
               onBookmark={handleBookmark}
               onMediaInteraction={handleMediaInteraction}
             />
-            
+
             <div className="mt-6 flex justify-between">
-              <Button variant="outline" onClick={() => handlePhaseChange('overview')}>
+              <Button
+                variant="outline"
+                onClick={() => handlePhaseChange('overview')}
+              >
                 Back to Overview
               </Button>
               <Button onClick={() => handlePhaseChange('questions')}>
@@ -359,12 +410,9 @@ export function HassExercise({ exercise, onSubmit, userId }: HassExerciseProps) 
               </Button>
             </div>
           </div>
-          
+
           <div className="space-y-4">
-            <NoteTaking 
-              notes={notes}
-              onNoteChange={handleNoteChange}
-            />
+            <NoteTaking notes={notes} onNoteChange={handleNoteChange} />
             <Glossary vocabulary={exercise.article.keyVocabulary} />
           </div>
         </div>
@@ -376,25 +424,28 @@ export function HassExercise({ exercise, onSubmit, userId }: HassExerciseProps) 
             <CardHeader>
               <div className="flex items-center justify-between">
                 <CardTitle>
-                  Question {currentQuestionIndex + 1} of {exercise.questions.length}
+                  Question {currentQuestionIndex + 1} of{' '}
+                  {exercise.questions.length}
                 </CardTitle>
                 <div className="flex items-center gap-2">
                   <Badge variant="outline">{currentQuestion.type}</Badge>
-                  <Badge variant="secondary">{currentQuestion.points} points</Badge>
+                  <Badge variant="secondary">
+                    {currentQuestion.points} points
+                  </Badge>
                 </div>
               </div>
-              <Progress 
-                value={(currentQuestionIndex + 1) / exercise.questions.length * 100} 
-                className="mt-2" 
+              <Progress
+                value={
+                  ((currentQuestionIndex + 1) / exercise.questions.length) * 100
+                }
+                className="mt-2"
               />
             </CardHeader>
-            <CardContent>
-              {renderQuestion(currentQuestion)}
-            </CardContent>
+            <CardContent>{renderQuestion(currentQuestion)}</CardContent>
           </Card>
 
           <div className="flex justify-between">
-            <Button 
+            <Button
               variant="outline"
               onClick={() => {
                 if (currentQuestionIndex > 0) {
@@ -404,10 +455,12 @@ export function HassExercise({ exercise, onSubmit, userId }: HassExerciseProps) 
                 }
               }}
             >
-              {currentQuestionIndex > 0 ? 'Previous Question' : 'Back to Reading'}
+              {currentQuestionIndex > 0
+                ? 'Previous Question'
+                : 'Back to Reading'}
             </Button>
-            
-            <Button 
+
+            <Button
               onClick={() => {
                 handleQuestionComplete(currentQuestion.id)
                 if (currentQuestionIndex < exercise.questions.length - 1) {
@@ -418,7 +471,9 @@ export function HassExercise({ exercise, onSubmit, userId }: HassExerciseProps) 
               }}
               disabled={!answers[currentQuestion.id]?.content}
             >
-              {currentQuestionIndex < exercise.questions.length - 1 ? 'Next Question' : 'Review Answers'}
+              {currentQuestionIndex < exercise.questions.length - 1
+                ? 'Next Question'
+                : 'Review Answers'}
             </Button>
           </div>
         </div>
@@ -430,7 +485,8 @@ export function HassExercise({ exercise, onSubmit, userId }: HassExerciseProps) 
             <CardHeader>
               <CardTitle>Review Your Answers</CardTitle>
               <CardDescription>
-                Review your responses before submitting. You can go back to make changes.
+                Review your responses before submitting. You can go back to make
+                changes.
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -457,27 +513,33 @@ export function HassExercise({ exercise, onSubmit, userId }: HassExerciseProps) 
                         </Button>
                       </div>
                     </div>
-                    <p className="text-sm text-muted-foreground mb-2">{question.question}</p>
+                    <p className="text-sm text-muted-foreground mb-2">
+                      {question.question}
+                    </p>
                     {answers[question.id]?.content && (
                       <div className="bg-muted p-3 rounded">
-                        <p className="text-sm">{answers[question.id].content}</p>
+                        <p className="text-sm">
+                          {answers[question.id].content}
+                        </p>
                       </div>
                     )}
                   </div>
                 ))}
               </div>
-              
+
               <div className="flex justify-between mt-6">
-                <Button 
+                <Button
                   variant="outline"
                   onClick={() => handlePhaseChange('questions')}
                 >
                   Back to Questions
                 </Button>
-                
-                <Button 
+
+                <Button
                   onClick={handleSubmit}
-                  disabled={exercise.questions.some(q => !answers[q.id]?.content)}
+                  disabled={exercise.questions.some(
+                    q => !answers[q.id]?.content
+                  )}
                 >
                   Submit Exercise
                 </Button>
@@ -494,7 +556,7 @@ export function HassExercise({ exercise, onSubmit, userId }: HassExerciseProps) 
           onClose={() => setShowVocabularyHelper(false)}
         />
       )}
-      
+
       {showBackgroundInfo && (
         <BackgroundInfo
           info={exercise.article.backgroundInfo}
@@ -502,7 +564,7 @@ export function HassExercise({ exercise, onSubmit, userId }: HassExerciseProps) 
           onClose={() => setShowBackgroundInfo(false)}
         />
       )}
-      
+
       {showDiscussion && (
         <DiscussionGuide
           prompts={exercise.article.discussionPrompts}

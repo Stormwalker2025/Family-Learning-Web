@@ -6,16 +6,16 @@ import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
-import { 
-  StickyNote, 
-  Search, 
-  Tag, 
+import {
+  StickyNote,
+  Search,
+  Tag,
   Calendar,
   Download,
   Trash2,
   Edit3,
   BookOpen,
-  Lightbulb
+  Lightbulb,
 } from 'lucide-react'
 
 interface Note {
@@ -35,7 +35,9 @@ interface NoteTakingProps {
 export function NoteTaking({ notes, onNoteChange }: NoteTakingProps) {
   const [expandedNotes, setExpandedNotes] = useState<Record<string, Note>>({})
   const [searchTerm, setSearchTerm] = useState('')
-  const [selectedNoteType, setSelectedNoteType] = useState<Note['type'] | 'all'>('all')
+  const [selectedNoteType, setSelectedNoteType] = useState<
+    Note['type'] | 'all'
+  >('all')
   const [newNoteTag, setNewNoteTag] = useState('')
 
   // Convert simple notes to expanded note format
@@ -49,7 +51,7 @@ export function NoteTaking({ notes, onNoteChange }: NoteTakingProps) {
           content,
           tags: [],
           timestamp: new Date(),
-          type: 'note'
+          type: 'note',
         }
       }
     })
@@ -57,16 +59,43 @@ export function NoteTaking({ notes, onNoteChange }: NoteTakingProps) {
   }, [notes])
 
   const noteTypes = [
-    { type: 'note' as const, label: 'Note', icon: StickyNote, color: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200' },
-    { type: 'highlight' as const, label: 'Highlight', icon: Edit3, color: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200' },
-    { type: 'question' as const, label: 'Question', icon: BookOpen, color: 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200' },
-    { type: 'idea' as const, label: 'Idea', icon: Lightbulb, color: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' }
+    {
+      type: 'note' as const,
+      label: 'Note',
+      icon: StickyNote,
+      color: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
+    },
+    {
+      type: 'highlight' as const,
+      label: 'Highlight',
+      icon: Edit3,
+      color:
+        'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
+    },
+    {
+      type: 'question' as const,
+      label: 'Question',
+      icon: BookOpen,
+      color:
+        'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200',
+    },
+    {
+      type: 'idea' as const,
+      label: 'Idea',
+      icon: Lightbulb,
+      color:
+        'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
+    },
   ]
 
   const filteredNotes = Object.values(expandedNotes).filter(note => {
-    const matchesSearch = note.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         note.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()))
-    const matchesType = selectedNoteType === 'all' || note.type === selectedNoteType
+    const matchesSearch =
+      note.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      note.tags.some(tag =>
+        tag.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    const matchesType =
+      selectedNoteType === 'all' || note.type === selectedNoteType
     return matchesSearch && matchesType
   })
 
@@ -76,10 +105,10 @@ export function NoteTaking({ notes, onNoteChange }: NoteTakingProps) {
       [sectionId]: {
         ...prev[sectionId],
         ...updates,
-        timestamp: new Date()
-      }
+        timestamp: new Date(),
+      },
     }))
-    
+
     if (updates.content !== undefined) {
       onNoteChange(sectionId, updates.content)
     }
@@ -95,23 +124,26 @@ export function NoteTaking({ notes, onNoteChange }: NoteTakingProps) {
   const addTag = (sectionId: string, tag: string) => {
     if (tag && !expandedNotes[sectionId]?.tags.includes(tag)) {
       updateNote(sectionId, {
-        tags: [...(expandedNotes[sectionId]?.tags || []), tag]
+        tags: [...(expandedNotes[sectionId]?.tags || []), tag],
       })
     }
   }
 
   const removeTag = (sectionId: string, tagToRemove: string) => {
     updateNote(sectionId, {
-      tags: expandedNotes[sectionId]?.tags.filter(tag => tag !== tagToRemove) || []
+      tags:
+        expandedNotes[sectionId]?.tags.filter(tag => tag !== tagToRemove) || [],
     })
   }
 
   const exportNotes = () => {
     const notesText = Object.values(expandedNotes)
-      .map(note => `[${note.type.toUpperCase()}] ${note.timestamp.toLocaleDateString()}
+      .map(
+        note => `[${note.type.toUpperCase()}] ${note.timestamp.toLocaleDateString()}
 Tags: ${note.tags.join(', ')}
 ${note.content}
-${'='.repeat(50)}`)
+${'='.repeat(50)}`
+      )
       .join('\n\n')
 
     const blob = new Blob([notesText], { type: 'text/plain' })
@@ -134,7 +166,7 @@ ${'='.repeat(50)}`)
           <StickyNote className="h-5 w-5" />
           My Notes ({filteredNotes.length})
         </CardTitle>
-        
+
         {/* Search and Filter */}
         <div className="space-y-3">
           <div className="relative">
@@ -142,11 +174,11 @@ ${'='.repeat(50)}`)
             <Input
               placeholder="Search notes and tags..."
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={e => setSearchTerm(e.target.value)}
               className="pl-9"
             />
           </div>
-          
+
           <div className="flex flex-wrap gap-2">
             <Button
               size="sm"
@@ -176,17 +208,16 @@ ${'='.repeat(50)}`)
           <div className="text-center py-8 text-muted-foreground">
             <StickyNote className="h-12 w-12 mx-auto mb-3 opacity-50" />
             <p className="text-sm">
-              {searchTerm || selectedNoteType !== 'all' 
-                ? 'No notes match your search criteria.' 
-                : 'No notes yet. Start taking notes while reading!'
-              }
+              {searchTerm || selectedNoteType !== 'all'
+                ? 'No notes match your search criteria.'
+                : 'No notes yet. Start taking notes while reading!'}
             </p>
           </div>
         ) : (
-          filteredNotes.map((note) => {
+          filteredNotes.map(note => {
             const typeInfo = getNoteTypeInfo(note.type)
             const Icon = typeInfo.icon
-            
+
             return (
               <div
                 key={note.id}
@@ -201,13 +232,13 @@ ${'='.repeat(50)}`)
                     </Badge>
                     <span className="text-xs text-muted-foreground flex items-center gap-1">
                       <Calendar className="h-3 w-3" />
-                      {note.timestamp.toLocaleTimeString([], { 
-                        hour: '2-digit', 
-                        minute: '2-digit' 
+                      {note.timestamp.toLocaleTimeString([], {
+                        hour: '2-digit',
+                        minute: '2-digit',
                       })}
                     </span>
                   </div>
-                  
+
                   <Button
                     size="sm"
                     variant="ghost"
@@ -221,7 +252,9 @@ ${'='.repeat(50)}`)
                 {/* Note Content */}
                 <Textarea
                   value={note.content}
-                  onChange={(e) => updateNote(note.sectionId, { content: e.target.value })}
+                  onChange={e =>
+                    updateNote(note.sectionId, { content: e.target.value })
+                  }
                   className="min-h-20 resize-none text-sm"
                   placeholder="Add your note here..."
                 />
@@ -230,7 +263,7 @@ ${'='.repeat(50)}`)
                 <div className="space-y-2">
                   {note.tags.length > 0 && (
                     <div className="flex flex-wrap gap-1">
-                      {note.tags.map((tag) => (
+                      {note.tags.map(tag => (
                         <Badge
                           key={tag}
                           variant="outline"
@@ -243,15 +276,15 @@ ${'='.repeat(50)}`)
                       ))}
                     </div>
                   )}
-                  
+
                   {/* Add Tag */}
                   <div className="flex gap-1">
                     <Input
                       placeholder="Add tag..."
                       value={newNoteTag}
-                      onChange={(e) => setNewNoteTag(e.target.value)}
+                      onChange={e => setNewNoteTag(e.target.value)}
                       className="text-xs h-7"
-                      onKeyPress={(e) => {
+                      onKeyPress={e => {
                         if (e.key === 'Enter' && newNoteTag.trim()) {
                           addTag(note.sectionId, newNoteTag.trim())
                           setNewNoteTag('')

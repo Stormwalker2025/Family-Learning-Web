@@ -20,7 +20,7 @@ export function MultipleChoiceQuestion({
   question,
   answer,
   onAnswerChange,
-  onComplete
+  onComplete,
 }: MultipleChoiceQuestionProps) {
   const [selectedOption, setSelectedOption] = useState(answer?.content || '')
   const [confidence, setConfidence] = useState(answer?.confidence || 3)
@@ -30,7 +30,7 @@ export function MultipleChoiceQuestion({
     onAnswerChange({
       content: value,
       confidence,
-      timeSpent: answer?.timeSpent || 0
+      timeSpent: answer?.timeSpent || 0,
     })
   }
 
@@ -39,7 +39,7 @@ export function MultipleChoiceQuestion({
     onAnswerChange({
       content: selectedOption,
       confidence: value,
-      timeSpent: answer?.timeSpent || 0
+      timeSpent: answer?.timeSpent || 0,
     })
   }
 
@@ -63,18 +63,20 @@ export function MultipleChoiceQuestion({
               </div>
             </div>
             <div className="text-right">
-              <div className="text-lg font-semibold">{question.points} points</div>
+              <div className="text-lg font-semibold">
+                {question.points} points
+              </div>
               <div className="text-sm text-muted-foreground">
                 ~{question.estimatedTime} min
               </div>
             </div>
           </div>
         </CardHeader>
-        
+
         <CardContent>
           <div className="prose prose-sm max-w-none">
             <p className="text-base leading-relaxed">{question.question}</p>
-            
+
             {question.instructions && (
               <div className="mt-4 p-3 bg-muted/50 rounded-lg">
                 <p className="text-sm font-medium mb-1">Instructions:</p>
@@ -90,15 +92,18 @@ export function MultipleChoiceQuestion({
         <CardHeader>
           <CardTitle className="text-lg">Choose the best answer:</CardTitle>
         </CardHeader>
-        
+
         <CardContent>
           <RadioGroup value={selectedOption} onValueChange={handleOptionChange}>
             <div className="space-y-3">
               {question.options?.map((option, index) => (
-                <div key={index} className="flex items-center space-x-3 p-3 rounded-lg border hover:bg-muted/30 transition-colors">
+                <div
+                  key={index}
+                  className="flex items-center space-x-3 p-3 rounded-lg border hover:bg-muted/30 transition-colors"
+                >
                   <RadioGroupItem value={option} id={`option-${index}`} />
-                  <Label 
-                    htmlFor={`option-${index}`} 
+                  <Label
+                    htmlFor={`option-${index}`}
                     className="flex-1 cursor-pointer font-medium text-sm leading-relaxed"
                   >
                     {option}
@@ -113,19 +118,23 @@ export function MultipleChoiceQuestion({
       {/* Confidence Level */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">How confident are you in your answer?</CardTitle>
+          <CardTitle className="text-lg">
+            How confident are you in your answer?
+          </CardTitle>
         </CardHeader>
-        
+
         <CardContent>
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <span className="text-sm">Not confident</span>
-              <span className="text-sm font-medium">Confidence Level: {confidence}/5</span>
+              <span className="text-sm font-medium">
+                Confidence Level: {confidence}/5
+              </span>
               <span className="text-sm">Very confident</span>
             </div>
-            
+
             <div className="flex gap-2">
-              {[1, 2, 3, 4, 5].map((level) => (
+              {[1, 2, 3, 4, 5].map(level => (
                 <Button
                   key={level}
                   variant={confidence >= level ? 'default' : 'outline'}
@@ -171,12 +180,8 @@ export function MultipleChoiceQuestion({
             {hasAnswer ? 'Answer selected' : 'Please select an answer'}
           </span>
         </div>
-        
-        <Button
-          onClick={onComplete}
-          disabled={!hasAnswer}
-          className="min-w-24"
-        >
+
+        <Button onClick={onComplete} disabled={!hasAnswer} className="min-w-24">
           Complete Question
         </Button>
       </div>

@@ -20,9 +20,15 @@ Wombats are another unique Australian animal. They are excellent diggers and liv
       yearLevel: 3,
       difficulty: 'easy',
       topic: 'animals',
-      vocabulary: ['marsupials', 'unique', 'eucalyptus', 'territory', 'burrows'],
+      vocabulary: [
+        'marsupials',
+        'unique',
+        'eucalyptus',
+        'territory',
+        'burrows',
+      ],
       createdAt: new Date(),
-      updatedAt: new Date()
+      updatedAt: new Date(),
     },
     questions: [
       {
@@ -32,10 +38,11 @@ Wombats are another unique Australian animal. They are excellent diggers and liv
         question: 'How fast can kangaroos hop?',
         options: ['40 km/h', '50 km/h', '60 km/h', '70 km/h'],
         correctAnswer: '60 km/h',
-        explanation: 'The text states that kangaroos can hop at speeds of up to 60 kilometres per hour.',
+        explanation:
+          'The text states that kangaroos can hop at speeds of up to 60 kilometres per hour.',
         points: 1,
         order: 1,
-        difficulty: 'easy'
+        difficulty: 'easy',
       },
       {
         id: 'q2-year3-1',
@@ -43,10 +50,11 @@ Wombats are another unique Australian animal. They are excellent diggers and liv
         type: 'true-false',
         question: 'Koalas are a type of bear.',
         correctAnswer: 'false',
-        explanation: 'The text clearly states that koalas are not bears, they are marsupials.',
+        explanation:
+          'The text clearly states that koalas are not bears, they are marsupials.',
         points: 1,
         order: 2,
-        difficulty: 'easy'
+        difficulty: 'easy',
       },
       {
         id: 'q3-year3-1',
@@ -54,31 +62,34 @@ Wombats are another unique Australian animal. They are excellent diggers and liv
         type: 'short-answer',
         question: 'What do koalas eat?',
         correctAnswer: 'eucalyptus leaves',
-        explanation: 'According to the text, koalas eat only eucalyptus leaves.',
+        explanation:
+          'According to the text, koalas eat only eucalyptus leaves.',
         points: 1,
         order: 3,
-        difficulty: 'easy'
+        difficulty: 'easy',
       },
       {
         id: 'q4-year3-1',
         articleId: 'article-year3-1',
         type: 'sentence-completion',
-        question: 'The platypus has a bill like a _____, a tail like a _____, and it _____ eggs.',
+        question:
+          'The platypus has a bill like a _____, a tail like a _____, and it _____ eggs.',
         correctAnswer: 'duck, beaver, lays',
-        explanation: 'These are the three characteristics mentioned in the text about the platypus.',
+        explanation:
+          'These are the three characteristics mentioned in the text about the platypus.',
         points: 2,
         order: 4,
-        difficulty: 'medium'
-      }
+        difficulty: 'medium',
+      },
     ],
     yearLevel: 3,
     totalPoints: 5,
     timeLimit: 15,
     tags: ['animals', 'australia', 'nature'],
     createdAt: new Date(),
-    updatedAt: new Date()
+    updatedAt: new Date(),
   },
-  
+
   {
     id: 'year3-family-2',
     title: 'My Australian Family',
@@ -98,9 +109,15 @@ On Sundays, our family often goes to the beach at the Gold Coast. It takes about
       yearLevel: 3,
       difficulty: 'easy',
       topic: 'family',
-      vocabulary: ['barbecues', 'primary school', 'national parks', 'wildlife', 'sandcastles'],
+      vocabulary: [
+        'barbecues',
+        'primary school',
+        'national parks',
+        'wildlife',
+        'sandcastles',
+      ],
       createdAt: new Date(),
-      updatedAt: new Date()
+      updatedAt: new Date(),
     },
     questions: [
       {
@@ -110,21 +127,23 @@ On Sundays, our family often goes to the beach at the Gold Coast. It takes about
         question: 'Where does Emma live?',
         options: ['Sydney', 'Melbourne', 'Brisbane', 'Perth'],
         correctAnswer: 'Brisbane',
-        explanation: 'Emma clearly states that she lives in Brisbane with her family.',
+        explanation:
+          'Emma clearly states that she lives in Brisbane with her family.',
         points: 1,
         order: 1,
-        difficulty: 'easy'
+        difficulty: 'easy',
       },
       {
         id: 'q2-year3-2',
         articleId: 'article-year3-2',
         type: 'short-answer',
-        question: 'What is Emma\'s mum\'s job?',
+        question: "What is Emma's mum's job?",
         correctAnswer: 'teacher',
-        explanation: 'The text states that Emma\'s mum works as a teacher at the local primary school.',
+        explanation:
+          "The text states that Emma's mum works as a teacher at the local primary school.",
         points: 1,
         order: 2,
-        difficulty: 'easy'
+        difficulty: 'easy',
       },
       {
         id: 'q3-year3-2',
@@ -132,30 +151,33 @@ On Sundays, our family often goes to the beach at the Gold Coast. It takes about
         type: 'true-false',
         question: 'Jack is older than Emma.',
         correctAnswer: 'false',
-        explanation: 'The text says Jack is Emma\'s younger brother, so he is not older than Emma.',
+        explanation:
+          "The text says Jack is Emma's younger brother, so he is not older than Emma.",
         points: 1,
         order: 3,
-        difficulty: 'easy'
+        difficulty: 'easy',
       },
       {
         id: 'q4-year3-2',
         articleId: 'article-year3-2',
         type: 'multiple-choice',
-        question: 'How long does it take to drive from Brisbane to the Gold Coast?',
+        question:
+          'How long does it take to drive from Brisbane to the Gold Coast?',
         options: ['30 minutes', '45 minutes', '1 hour', '2 hours'],
         correctAnswer: '1 hour',
-        explanation: 'The text mentions it takes about an hour to drive to the Gold Coast from Brisbane.',
+        explanation:
+          'The text mentions it takes about an hour to drive to the Gold Coast from Brisbane.',
         points: 1,
         order: 4,
-        difficulty: 'easy'
-      }
+        difficulty: 'easy',
+      },
     ],
     yearLevel: 3,
     totalPoints: 4,
     timeLimit: 12,
     tags: ['family', 'australia', 'brisbane', 'daily-life'],
     createdAt: new Date(),
-    updatedAt: new Date()
+    updatedAt: new Date(),
   },
 
   {
@@ -179,33 +201,41 @@ The best part of my day is when my mum picks me up from school. She always asks 
       yearLevel: 3,
       difficulty: 'easy',
       topic: 'school',
-      vocabulary: ['literacy', 'monkey bars', 'Physical Education', 'planted', 'activities'],
+      vocabulary: [
+        'literacy',
+        'monkey bars',
+        'Physical Education',
+        'planted',
+        'activities',
+      ],
       createdAt: new Date(),
-      updatedAt: new Date()
+      updatedAt: new Date(),
     },
     questions: [
       {
         id: 'q1-year3-3',
         articleId: 'article-year3-3',
         type: 'multiple-choice',
-        question: 'What time does Tom\'s school day start?',
+        question: "What time does Tom's school day start?",
         options: ['8:30 AM', '9:00 AM', '9:30 AM', '10:00 AM'],
         correctAnswer: '9:00 AM',
-        explanation: 'The text clearly states that the school day starts at 9:00 AM.',
+        explanation:
+          'The text clearly states that the school day starts at 9:00 AM.',
         points: 1,
         order: 1,
-        difficulty: 'easy'
+        difficulty: 'easy',
       },
       {
         id: 'q2-year3-3',
         articleId: 'article-year3-3',
         type: 'short-answer',
-        question: 'What is Tom\'s favourite subject?',
+        question: "What is Tom's favourite subject?",
         correctAnswer: 'maths',
-        explanation: 'Tom states that his favourite subject is maths because he loves solving number problems.',
+        explanation:
+          'Tom states that his favourite subject is maths because he loves solving number problems.',
         points: 1,
         order: 2,
-        difficulty: 'easy'
+        difficulty: 'easy',
       },
       {
         id: 'q3-year3-3',
@@ -213,28 +243,31 @@ The best part of my day is when my mum picks me up from school. She always asks 
         type: 'true-false',
         question: 'Tom walks to school every day.',
         correctAnswer: 'false',
-        explanation: 'The text says Tom takes the school bus because his house is too far to walk.',
+        explanation:
+          'The text says Tom takes the school bus because his house is too far to walk.',
         points: 1,
         order: 3,
-        difficulty: 'easy'
+        difficulty: 'easy',
       },
       {
         id: 'q4-year3-3',
         articleId: 'article-year3-3',
         type: 'sentence-completion',
-        question: 'In science class, the students planted _____ in little _____ and water them every day.',
+        question:
+          'In science class, the students planted _____ in little _____ and water them every day.',
         correctAnswer: 'seeds, pots',
-        explanation: 'The text mentions they planted seeds in little pots and water them every day.',
+        explanation:
+          'The text mentions they planted seeds in little pots and water them every day.',
         points: 2,
         order: 4,
-        difficulty: 'medium'
-      }
+        difficulty: 'medium',
+      },
     ],
     yearLevel: 3,
     totalPoints: 5,
     timeLimit: 15,
     tags: ['school', 'education', 'daily-life', 'melbourne'],
     createdAt: new Date(),
-    updatedAt: new Date()
-  }
+    updatedAt: new Date(),
+  },
 ]

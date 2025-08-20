@@ -7,7 +7,7 @@ import { year6ReadingExercises } from '@/data/reading-exercises/year6-examples'
 // Combined mock data for demonstration - in production this would come from database
 const mockReadingExercises: ReadingExercise[] = [
   ...year3ReadingExercises,
-  ...year6ReadingExercises
+  ...year6ReadingExercises,
 ]
 
 // GET /api/exercises/english - Get all reading exercises
@@ -46,17 +46,16 @@ export async function GET(request: NextRequest) {
     }
 
     if (topic) {
-      filteredExercises = filteredExercises.filter(
-        exercise => exercise.tags.includes(topic.toLowerCase())
+      filteredExercises = filteredExercises.filter(exercise =>
+        exercise.tags.includes(topic.toLowerCase())
       )
     }
 
     return NextResponse.json({
       success: true,
       exercises: filteredExercises,
-      total: filteredExercises.length
+      total: filteredExercises.length,
     })
-
   } catch (error) {
     console.error('Error fetching reading exercises:', error)
     return NextResponse.json(
@@ -77,11 +76,14 @@ export async function POST(request: NextRequest) {
 
     const decoded = await verifyToken(token)
     if (!decoded || decoded.role !== 'ADMIN') {
-      return NextResponse.json({ error: 'Admin access required' }, { status: 403 })
+      return NextResponse.json(
+        { error: 'Admin access required' },
+        { status: 403 }
+      )
     }
 
     const body = await request.json()
-    
+
     // Validate required fields
     if (!body.title || !body.article || !body.questions) {
       return NextResponse.json(
@@ -95,7 +97,7 @@ export async function POST(request: NextRequest) {
       id: `reading-${Date.now()}`,
       ...body,
       createdAt: new Date(),
-      updatedAt: new Date()
+      updatedAt: new Date(),
     }
 
     // Add to mock data for now
@@ -103,9 +105,8 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      exercise: newExercise
+      exercise: newExercise,
     })
-
   } catch (error) {
     console.error('Error creating reading exercise:', error)
     return NextResponse.json(

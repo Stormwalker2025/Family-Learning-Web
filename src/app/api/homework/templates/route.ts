@@ -11,15 +11,19 @@ const createTemplateSchema = z.object({
   description: z.string().optional(),
   type: z.enum(['quick-assignment', 'weekly-plan', 'exam-prep', 'custom']),
   yearLevels: z.array(z.number()).min(1, '必须指定适用年级'),
-  subjects: z.array(z.enum(['ENGLISH', 'MATHS', 'HASS', 'VOCABULARY'])).min(1, '必须指定适用学科'),
-  exerciseSelectionRules: z.array(z.object({
-    subject: z.enum(['ENGLISH', 'MATHS', 'HASS', 'VOCABULARY']),
-    minCount: z.number().min(1),
-    maxCount: z.number().min(1),
-    difficultyDistribution: z.record(z.number()).optional(),
-    topicCoverage: z.array(z.string()).optional(),
-    adaptToStudentLevel: z.boolean().default(true)
-  })),
+  subjects: z
+    .array(z.enum(['ENGLISH', 'MATHS', 'HASS', 'VOCABULARY']))
+    .min(1, '必须指定适用学科'),
+  exerciseSelectionRules: z.array(
+    z.object({
+      subject: z.enum(['ENGLISH', 'MATHS', 'HASS', 'VOCABULARY']),
+      minCount: z.number().min(1),
+      maxCount: z.number().min(1),
+      difficultyDistribution: z.record(z.number()).optional(),
+      topicCoverage: z.array(z.string()).optional(),
+      adaptToStudentLevel: z.boolean().default(true),
+    })
+  ),
   defaultSettings: z.object({
     estimatedTime: z.number().optional(),
     priority: z.enum(['LOW', 'MEDIUM', 'HIGH', 'URGENT']).default('MEDIUM'),
@@ -27,12 +31,12 @@ const createTemplateSchema = z.object({
     passingScore: z.number().default(70),
     allowMultipleAttempts: z.boolean().default(true),
     autoRelease: z.boolean().default(true),
-    lateSubmissionAllowed: z.boolean().default(true)
+    lateSubmissionAllowed: z.boolean().default(true),
   }),
   estimatedTime: z.number().default(60),
   adaptiveDifficulty: z.boolean().default(false),
   personalizedContent: z.boolean().default(false),
-  isActive: z.boolean().default(true)
+  isActive: z.boolean().default(true),
 })
 
 // GET - 获取作业模板列表
@@ -65,13 +69,13 @@ export async function GET(request: NextRequest) {
 
     if (yearLevel) {
       where.yearLevels = {
-        has: parseInt(yearLevel)
+        has: parseInt(yearLevel),
       }
     }
 
     if (subject) {
       where.subjects = {
-        has: subject.toUpperCase()
+        has: subject.toUpperCase(),
       }
     }
 
@@ -91,17 +95,14 @@ export async function GET(request: NextRequest) {
         where,
         include: {
           creator: {
-            select: { id: true, displayName: true, username: true }
-          }
+            select: { id: true, displayName: true, username: true },
+          },
         },
-        orderBy: [
-          { usageCount: 'desc' },
-          { createdAt: 'desc' }
-        ],
+        orderBy: [{ usageCount: 'desc' }, { createdAt: 'desc' }],
         skip,
-        take: limit
+        take: limit,
       }) || [],
-      prisma.homeworkTemplate?.count({ where }) || 0
+      prisma.homeworkTemplate?.count({ where }) || 0,
     ])
 
     return NextResponse.json({
@@ -111,16 +112,12 @@ export async function GET(request: NextRequest) {
         page,
         limit,
         total,
-        totalPages: Math.ceil(total / limit)
-      }
+        totalPages: Math.ceil(total / limit),
+      },
     })
-
   } catch (error) {
     console.error('获取作业模板失败:', error)
-    return NextResponse.json(
-      { error: '获取作业模板失败' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: '获取作业模板失败' }, { status: 500 })
   }
 }
 
@@ -139,16 +136,23 @@ export async function POST(request: NextRequest) {
 
     // 权限检查：只有管理员和家长可以创建模板
     if (payload.role === 'STUDENT') {
-      return NextResponse.json({ error: '学生无权创建作业模板' }, { status: 403 })
+      return NextResponse.json(
+        { error: '学生无权创建作业模板' },
+        { status: 403 }
+      )
     }
 
     const body = await request.json()
     const validatedData = createTemplateSchema.parse(body)
 
     // 验证练习选择规则的一致性
-    const ruleSubjects = validatedData.exerciseSelectionRules.map(rule => rule.subject)
-    const hasInvalidSubjects = ruleSubjects.some(subject => !validatedData.subjects.includes(subject))
-    
+    const ruleSubjects = validatedData.exerciseSelectionRules.map(
+      rule => rule.subject
+    )
+    const hasInvalidSubjects = ruleSubjects.some(
+      subject => !validatedData.subjects.includes(subject)
+    )
+
     if (hasInvalidSubjects) {
       return NextResponse.json(
         { error: '练习选择规则中的学科必须在模板适用学科范围内' },
@@ -164,28 +168,29 @@ export async function POST(request: NextRequest) {
         type: validatedData.type.toUpperCase().replace('-', '_'),
         yearLevels: validatedData.yearLevels,
         subjects: validatedData.subjects,
-        exerciseSelectionRules: JSON.stringify(validatedData.exerciseSelectionRules),
+        exerciseSelectionRules: JSON.stringify(
+          validatedData.exerciseSelectionRules
+        ),
         defaultSettings: JSON.stringify(validatedData.defaultSettings),
         estimatedTime: validatedData.estimatedTime,
         adaptiveDifficulty: validatedData.adaptiveDifficulty,
         personalizedContent: validatedData.personalizedContent,
         usageCount: 0,
         isActive: validatedData.isActive,
-        createdBy: payload.userId
+        createdBy: payload.userId,
       },
       include: {
         creator: {
-          select: { id: true, displayName: true, username: true }
-        }
-      }
+          select: { id: true, displayName: true, username: true },
+        },
+      },
     })
 
     return NextResponse.json({
       success: true,
       data: template,
-      message: '作业模板创建成功'
+      message: '作业模板创建成功',
     })
-
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
@@ -195,10 +200,7 @@ export async function POST(request: NextRequest) {
     }
 
     console.error('创建作业模板失败:', error)
-    return NextResponse.json(
-      { error: '创建作业模板失败' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: '创建作业模板失败' }, { status: 500 })
   }
 }
 
@@ -217,7 +219,10 @@ export async function POST_USE_TEMPLATE(request: NextRequest) {
 
     // 权限检查
     if (payload.role === 'STUDENT') {
-      return NextResponse.json({ error: '学生无权使用模板创建作业' }, { status: 403 })
+      return NextResponse.json(
+        { error: '学生无权使用模板创建作业' },
+        { status: 403 }
+      )
     }
 
     const body = await request.json()
@@ -229,7 +234,7 @@ export async function POST_USE_TEMPLATE(request: NextRequest) {
 
     // 获取模板
     const template = await prisma.homeworkTemplate?.findUnique({
-      where: { id: templateId }
+      where: { id: templateId },
     })
 
     if (!template) {
@@ -241,13 +246,15 @@ export async function POST_USE_TEMPLATE(request: NextRequest) {
     }
 
     // 解析模板设置
-    const exerciseSelectionRules = JSON.parse(template.exerciseSelectionRules as string)
+    const exerciseSelectionRules = JSON.parse(
+      template.exerciseSelectionRules as string
+    )
     const defaultSettings = JSON.parse(template.defaultSettings as string)
 
     // 应用自定义设置
     const finalSettings = {
       ...defaultSettings,
-      ...customization?.settings
+      ...customization?.settings,
     }
 
     // 根据模板规则选择练习
@@ -272,7 +279,9 @@ export async function POST_USE_TEMPLATE(request: NextRequest) {
       instructions: customization?.instructions,
       assignedBy: payload.userId,
       assignedTo: customization?.targetStudents || [],
-      dueDate: customization?.dueDate ? new Date(customization.dueDate) : undefined,
+      dueDate: customization?.dueDate
+        ? new Date(customization.dueDate)
+        : undefined,
       estimatedTime: finalSettings.estimatedTime || template.estimatedTime,
       priority: finalSettings.priority || 'MEDIUM',
       totalPoints: finalSettings.totalPoints || 100,
@@ -284,8 +293,8 @@ export async function POST_USE_TEMPLATE(request: NextRequest) {
         exerciseId: exercise.id,
         order: index + 1,
         isRequired: exercise.isRequired ?? true,
-        weight: exercise.weight || 1
-      }))
+        weight: exercise.weight || 1,
+      })),
     }
 
     // 创建作业（调用作业创建逻辑）
@@ -294,21 +303,17 @@ export async function POST_USE_TEMPLATE(request: NextRequest) {
     // 更新模板使用次数
     await prisma.homeworkTemplate?.update({
       where: { id: templateId },
-      data: { usageCount: { increment: 1 } }
+      data: { usageCount: { increment: 1 } },
     })
 
     return NextResponse.json({
       success: true,
       data: assignment,
-      message: '基于模板的作业创建成功'
+      message: '基于模板的作业创建成功',
     })
-
   } catch (error) {
     console.error('使用模板创建作业失败:', error)
-    return NextResponse.json(
-      { error: '使用模板创建作业失败' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: '使用模板创建作业失败' }, { status: 500 })
   }
 }
 
@@ -326,7 +331,7 @@ async function selectExercisesByRules(
     const where: any = {
       subject: rule.subject,
       yearLevel: { in: yearLevels },
-      isActive: true
+      isActive: true,
     }
 
     // 如果启用自适应难度，根据学生水平调整
@@ -346,13 +351,16 @@ async function selectExercisesByRules(
     const exercises = await prisma.exercise.findMany({
       where,
       orderBy: { createdAt: 'desc' },
-      take: rule.maxCount
+      take: rule.maxCount,
     })
 
     // 应用难度分布（如果指定）
     let filteredExercises = exercises
     if (rule.difficultyDistribution) {
-      filteredExercises = applyDifficultyDistribution(exercises, rule.difficultyDistribution)
+      filteredExercises = applyDifficultyDistribution(
+        exercises,
+        rule.difficultyDistribution
+      )
     }
 
     // 确保满足最小数量要求
@@ -361,11 +369,13 @@ async function selectExercisesByRules(
       rule.maxCount
     )
 
-    const selected = filteredExercises.slice(0, countToSelect).map(exercise => ({
-      ...exercise,
-      isRequired: true,
-      weight: 1
-    }))
+    const selected = filteredExercises
+      .slice(0, countToSelect)
+      .map(exercise => ({
+        ...exercise,
+        isRequired: true,
+        weight: 1,
+      }))
 
     selectedExercises.push(...selected)
   }
@@ -379,28 +389,35 @@ async function getStudentLevels(studentIds: string[], subject: string) {
     where: {
       userId: { in: studentIds },
       subject: subject,
-      status: { in: ['COMPLETED', 'MASTERED'] }
+      status: { in: ['COMPLETED', 'MASTERED'] },
     },
     select: {
       userId: true,
       masteryLevel: true,
-      bestPercentage: true
-    }
+      bestPercentage: true,
+    },
   })
 
-  return progress.reduce((acc, p) => {
-    acc[p.userId] = {
-      masteryLevel: p.masteryLevel,
-      percentage: p.bestPercentage || 0
-    }
-    return acc
-  }, {} as Record<string, any>)
+  return progress.reduce(
+    (acc, p) => {
+      acc[p.userId] = {
+        masteryLevel: p.masteryLevel,
+        percentage: p.bestPercentage || 0,
+      }
+      return acc
+    },
+    {} as Record<string, any>
+  )
 }
 
 // 计算平均水平
 function calculateAverageLevel(studentLevels: Record<string, any>): number {
-  const levels = Object.values(studentLevels).map((level: any) => level.masteryLevel || 0)
-  return levels.length > 0 ? levels.reduce((sum, level) => sum + level, 0) / levels.length : 50
+  const levels = Object.values(studentLevels).map(
+    (level: any) => level.masteryLevel || 0
+  )
+  return levels.length > 0
+    ? levels.reduce((sum, level) => sum + level, 0) / levels.length
+    : 50
 }
 
 // 根据水平确定难度
@@ -412,13 +429,19 @@ function getDifficultyForLevel(level: number): string {
 }
 
 // 应用难度分布
-function applyDifficultyDistribution(exercises: any[], distribution: Record<string, number>) {
-  const grouped = exercises.reduce((acc, exercise) => {
-    const difficulty = exercise.difficulty
-    if (!acc[difficulty]) acc[difficulty] = []
-    acc[difficulty].push(exercise)
-    return acc
-  }, {} as Record<string, any[]>)
+function applyDifficultyDistribution(
+  exercises: any[],
+  distribution: Record<string, number>
+) {
+  const grouped = exercises.reduce(
+    (acc, exercise) => {
+      const difficulty = exercise.difficulty
+      if (!acc[difficulty]) acc[difficulty] = []
+      acc[difficulty].push(exercise)
+      return acc
+    },
+    {} as Record<string, any[]>
+  )
 
   const result = []
   const totalExercises = exercises.length
@@ -438,9 +461,9 @@ async function createHomeworkFromTemplate(assignmentData: any) {
   const students = await prisma.user.findMany({
     where: {
       id: { in: assignmentData.assignedTo },
-      role: 'STUDENT'
+      role: 'STUDENT',
     },
-    select: { id: true, displayName: true }
+    select: { id: true, displayName: true },
   })
 
   if (students.length !== assignmentData.assignedTo.length) {
@@ -451,7 +474,7 @@ async function createHomeworkFromTemplate(assignmentData: any) {
   const exerciseIds = assignmentData.exercises.map((e: any) => e.exerciseId)
   const exercises = await prisma.exercise.findMany({
     where: { id: { in: exerciseIds } },
-    select: { id: true, title: true }
+    select: { id: true, title: true },
   })
 
   if (exercises.length !== exerciseIds.length) {
@@ -474,31 +497,31 @@ async function createHomeworkFromTemplate(assignmentData: any) {
       passingScore: assignmentData.passingScore,
       allowMultipleAttempts: assignmentData.allowMultipleAttempts,
       assignedTo: {
-        connect: assignmentData.assignedTo.map((id: string) => ({ id }))
+        connect: assignmentData.assignedTo.map((id: string) => ({ id })),
       },
       exercises: {
         create: assignmentData.exercises.map((exercise: any) => ({
           exerciseId: exercise.exerciseId,
           order: exercise.order,
-          isRequired: exercise.isRequired
-        }))
-      }
+          isRequired: exercise.isRequired,
+        })),
+      },
     },
     include: {
       assignedByUser: {
-        select: { id: true, displayName: true }
+        select: { id: true, displayName: true },
       },
       assignedTo: {
-        select: { id: true, displayName: true, yearLevel: true }
+        select: { id: true, displayName: true, yearLevel: true },
       },
       exercises: {
         include: {
           exercise: {
-            select: { id: true, title: true, subject: true }
-          }
-        }
-      }
-    }
+            select: { id: true, title: true, subject: true },
+          },
+        },
+      },
+    },
   })
 
   // 为每个学生创建提交记录
@@ -510,8 +533,8 @@ async function createHomeworkFromTemplate(assignmentData: any) {
           userId: studentId,
           status: 'NOT_STARTED',
           totalExercises: assignmentData.exercises.length,
-          maxPossibleScore: assignmentData.totalPoints
-        }
+          maxPossibleScore: assignmentData.totalPoints,
+        },
       })
     )
   )

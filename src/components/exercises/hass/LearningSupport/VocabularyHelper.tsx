@@ -12,7 +12,10 @@ interface VocabularyHelperProps {
   onClose: () => void
 }
 
-export function VocabularyHelper({ vocabulary, onClose }: VocabularyHelperProps) {
+export function VocabularyHelper({
+  vocabulary,
+  onClose,
+}: VocabularyHelperProps) {
   const playPronunciation = (term: string) => {
     if ('speechSynthesis' in window) {
       const utterance = new SpeechSynthesisUtterance(term)
@@ -21,7 +24,13 @@ export function VocabularyHelper({ vocabulary, onClose }: VocabularyHelperProps)
   }
 
   const getDifficultyColor = (level: number) => {
-    const colors = ['text-green-600', 'text-blue-600', 'text-yellow-600', 'text-orange-600', 'text-red-600']
+    const colors = [
+      'text-green-600',
+      'text-blue-600',
+      'text-yellow-600',
+      'text-orange-600',
+      'text-red-600',
+    ]
     return colors[level - 1] || 'text-gray-600'
   }
 
@@ -39,15 +48,18 @@ export function VocabularyHelper({ vocabulary, onClose }: VocabularyHelperProps)
             </Button>
           </div>
         </CardHeader>
-        
+
         <CardContent>
           <div className="space-y-4">
-            {vocabulary.map((vocab) => (
+            {vocabulary.map(vocab => (
               <div key={vocab.id} className="border rounded-lg p-4">
                 <div className="flex items-start justify-between mb-2">
                   <div className="flex items-center gap-2">
                     <h4 className="font-semibold text-lg">{vocab.term}</h4>
-                    <Badge variant="outline" className={getDifficultyColor(vocab.difficulty)}>
+                    <Badge
+                      variant="outline"
+                      className={getDifficultyColor(vocab.difficulty)}
+                    >
                       Level {vocab.difficulty}
                     </Badge>
                     <Button
@@ -59,13 +71,13 @@ export function VocabularyHelper({ vocabulary, onClose }: VocabularyHelperProps)
                     </Button>
                   </div>
                 </div>
-                
+
                 <p className="text-muted-foreground mb-3">{vocab.definition}</p>
-                
+
                 <div className="text-sm text-muted-foreground mb-2">
                   <strong>Context:</strong> {vocab.context}
                 </div>
-                
+
                 {vocab.examples.length > 0 && (
                   <div className="text-sm">
                     <strong>Example:</strong>

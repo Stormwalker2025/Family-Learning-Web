@@ -20,7 +20,7 @@ export function ComprehensionQuestion({
   question,
   answer,
   onAnswerChange,
-  onComplete
+  onComplete,
 }: ComprehensionQuestionProps) {
   const [currentAnswer, setCurrentAnswer] = useState(answer?.content || '')
   const [reasoning, setReasoning] = useState(answer?.reasoning || '')
@@ -34,7 +34,7 @@ export function ComprehensionQuestion({
       content: value,
       reasoning,
       confidence,
-      timeSpent: answer?.timeSpent || 0
+      timeSpent: answer?.timeSpent || 0,
     })
   }
 
@@ -44,7 +44,7 @@ export function ComprehensionQuestion({
       content: currentAnswer,
       reasoning: value,
       confidence,
-      timeSpent: answer?.timeSpent || 0
+      timeSpent: answer?.timeSpent || 0,
     })
   }
 
@@ -54,7 +54,7 @@ export function ComprehensionQuestion({
       content: currentAnswer,
       reasoning,
       confidence: value,
-      timeSpent: answer?.timeSpent || 0
+      timeSpent: answer?.timeSpent || 0,
     })
   }
 
@@ -63,15 +63,37 @@ export function ComprehensionQuestion({
   }
 
   const getWordCount = (text: string) => {
-    return text.trim().split(/\s+/).filter(word => word.length > 0).length
+    return text
+      .trim()
+      .split(/\s+/)
+      .filter(word => word.length > 0).length
   }
 
   const getAnswerQuality = () => {
     const wordCount = getWordCount(currentAnswer)
-    if (wordCount < 10) return { level: 'needs-work', color: 'text-red-600', message: 'Answer needs more detail' }
-    if (wordCount < 30) return { level: 'developing', color: 'text-yellow-600', message: 'Good start, could use more explanation' }
-    if (wordCount < 60) return { level: 'proficient', color: 'text-blue-600', message: 'Well-developed answer' }
-    return { level: 'advanced', color: 'text-green-600', message: 'Comprehensive answer' }
+    if (wordCount < 10)
+      return {
+        level: 'needs-work',
+        color: 'text-red-600',
+        message: 'Answer needs more detail',
+      }
+    if (wordCount < 30)
+      return {
+        level: 'developing',
+        color: 'text-yellow-600',
+        message: 'Good start, could use more explanation',
+      }
+    if (wordCount < 60)
+      return {
+        level: 'proficient',
+        color: 'text-blue-600',
+        message: 'Well-developed answer',
+      }
+    return {
+      level: 'advanced',
+      color: 'text-green-600',
+      message: 'Comprehensive answer',
+    }
   }
 
   const quality = getAnswerQuality()
@@ -96,18 +118,20 @@ export function ComprehensionQuestion({
               </div>
             </div>
             <div className="text-right">
-              <div className="text-lg font-semibold">{question.points} points</div>
+              <div className="text-lg font-semibold">
+                {question.points} points
+              </div>
               <div className="text-sm text-muted-foreground">
                 ~{question.estimatedTime} min
               </div>
             </div>
           </div>
         </CardHeader>
-        
+
         <CardContent>
           <div className="prose prose-sm max-w-none">
             <p className="text-base leading-relaxed">{question.question}</p>
-            
+
             {question.instructions && (
               <div className="mt-4 p-3 bg-muted/50 rounded-lg">
                 <p className="text-sm font-medium mb-1">Instructions:</p>
@@ -118,7 +142,9 @@ export function ComprehensionQuestion({
             {question.context && (
               <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-950/20 rounded-lg border border-blue-200 dark:border-blue-800">
                 <p className="text-sm font-medium mb-1">Context:</p>
-                <p className="text-sm text-blue-800 dark:text-blue-200">{question.context}</p>
+                <p className="text-sm text-blue-800 dark:text-blue-200">
+                  {question.context}
+                </p>
               </div>
             )}
           </div>
@@ -138,23 +164,25 @@ export function ComprehensionQuestion({
                 {quality.message}
               </span>
             </div>
-            
+
             {/* Progress indicator */}
             <div className="flex items-center gap-2">
-              <Progress 
-                value={Math.min(100, (wordCount / 60) * 100)} 
+              <Progress
+                value={Math.min(100, (wordCount / 60) * 100)}
                 className="w-20 h-2"
               />
-              {hasMinimumAnswer && <CheckCircle className="h-4 w-4 text-green-600" />}
+              {hasMinimumAnswer && (
+                <CheckCircle className="h-4 w-4 text-green-600" />
+              )}
             </div>
           </div>
         </CardHeader>
-        
+
         <CardContent className="space-y-4">
           <Textarea
             placeholder="Write your answer here. Explain your thinking and provide evidence from the text where possible..."
             value={currentAnswer}
-            onChange={(e) => handleAnswerChange(e.target.value)}
+            onChange={e => handleAnswerChange(e.target.value)}
             className="min-h-32 resize-none"
           />
 
@@ -177,17 +205,20 @@ export function ComprehensionQuestion({
       {/* Reasoning (Optional) */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">Explain Your Thinking (Optional)</CardTitle>
+          <CardTitle className="text-lg">
+            Explain Your Thinking (Optional)
+          </CardTitle>
           <p className="text-sm text-muted-foreground">
-            Show how you arrived at your answer. This helps demonstrate your understanding.
+            Show how you arrived at your answer. This helps demonstrate your
+            understanding.
           </p>
         </CardHeader>
-        
+
         <CardContent>
           <Textarea
             placeholder="Explain how you came to this conclusion. What evidence did you use? What connections did you make?"
             value={reasoning}
-            onChange={(e) => handleReasoningChange(e.target.value)}
+            onChange={e => handleReasoningChange(e.target.value)}
             className="min-h-20 resize-none"
           />
         </CardContent>
@@ -196,19 +227,23 @@ export function ComprehensionQuestion({
       {/* Confidence Level */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">How confident are you in your answer?</CardTitle>
+          <CardTitle className="text-lg">
+            How confident are you in your answer?
+          </CardTitle>
         </CardHeader>
-        
+
         <CardContent>
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <span className="text-sm">Not confident</span>
-              <span className="text-sm font-medium">Confidence Level: {confidence}/5</span>
+              <span className="text-sm font-medium">
+                Confidence Level: {confidence}/5
+              </span>
               <span className="text-sm">Very confident</span>
             </div>
-            
+
             <div className="flex gap-2">
-              {[1, 2, 3, 4, 5].map((level) => (
+              {[1, 2, 3, 4, 5].map(level => (
                 <Button
                   key={level}
                   variant={confidence >= level ? 'default' : 'outline'}
@@ -220,13 +255,14 @@ export function ComprehensionQuestion({
                 </Button>
               ))}
             </div>
-            
+
             <div className="text-xs text-muted-foreground text-center">
               {confidence === 1 && "I'm just guessing"}
               {confidence === 2 && "I think I understand but I'm not sure"}
-              {confidence === 3 && "I understand the main ideas"}
-              {confidence === 4 && "I understand well and can explain it"}
-              {confidence === 5 && "I understand completely and could teach others"}
+              {confidence === 3 && 'I understand the main ideas'}
+              {confidence === 4 && 'I understand well and can explain it'}
+              {confidence === 5 &&
+                'I understand completely and could teach others'}
             </div>
           </div>
         </CardContent>
@@ -250,7 +286,7 @@ export function ComprehensionQuestion({
               </Button>
             </div>
           </CardHeader>
-          
+
           {showHints && (
             <CardContent>
               <div className="space-y-3">
@@ -258,16 +294,20 @@ export function ComprehensionQuestion({
                   <div
                     key={index}
                     className={`p-3 rounded-lg border ${
-                      usedHints.has(index) 
-                        ? 'bg-yellow-50 dark:bg-yellow-950/20 border-yellow-200 dark:border-yellow-800' 
+                      usedHints.has(index)
+                        ? 'bg-yellow-50 dark:bg-yellow-950/20 border-yellow-200 dark:border-yellow-800'
                         : 'bg-muted/30 border-muted'
                     }`}
                   >
                     {usedHints.has(index) ? (
-                      <p className="text-sm text-yellow-800 dark:text-yellow-200">{hint}</p>
+                      <p className="text-sm text-yellow-800 dark:text-yellow-200">
+                        {hint}
+                      </p>
                     ) : (
                       <div className="flex items-center justify-between">
-                        <span className="text-sm font-medium">Hint {index + 1}</span>
+                        <span className="text-sm font-medium">
+                          Hint {index + 1}
+                        </span>
                         <Button
                           variant="outline"
                           size="sm"
@@ -279,10 +319,11 @@ export function ComprehensionQuestion({
                     )}
                   </div>
                 ))}
-                
+
                 {usedHints.size > 0 && (
                   <div className="text-xs text-muted-foreground text-center pt-2 border-t">
-                    Using hints may slightly reduce your score but helps with learning
+                    Using hints may slightly reduce your score but helps with
+                    learning
                   </div>
                 )}
               </div>
@@ -318,12 +359,12 @@ export function ComprehensionQuestion({
             <AlertCircle className="h-5 w-5 text-yellow-600" />
           )}
           <span className="text-sm font-medium">
-            {hasMinimumAnswer 
-              ? 'Answer ready for submission' 
+            {hasMinimumAnswer
+              ? 'Answer ready for submission'
               : 'Answer needs more detail (minimum 10 words)'}
           </span>
         </div>
-        
+
         <Button
           onClick={onComplete}
           disabled={!hasMinimumAnswer}

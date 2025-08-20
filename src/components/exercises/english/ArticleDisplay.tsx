@@ -12,9 +12,14 @@ interface ArticleDisplayProps {
   showVocabulary?: boolean
 }
 
-export function ArticleDisplay({ article, showVocabulary = true }: ArticleDisplayProps) {
+export function ArticleDisplay({
+  article,
+  showVocabulary = true,
+}: ArticleDisplayProps) {
   const [showVocabHelp, setShowVocabHelp] = useState(false)
-  const [highlightedWords, setHighlightedWords] = useState<Set<string>>(new Set())
+  const [highlightedWords, setHighlightedWords] = useState<Set<string>>(
+    new Set()
+  )
 
   // Function to highlight vocabulary words in the text
   const highlightVocabulary = (text: string) => {
@@ -23,11 +28,11 @@ export function ArticleDisplay({ article, showVocabulary = true }: ArticleDispla
     }
 
     let highlightedText = text
-    
+
     article.vocabulary.forEach(word => {
       const regex = new RegExp(`\\b${word}\\b`, 'gi')
       highlightedText = highlightedText.replace(
-        regex, 
+        regex,
         `<mark class="bg-yellow-200 px-1 rounded cursor-help" title="Vocabulary word: ${word}">$&</mark>`
       )
     })
@@ -54,7 +59,7 @@ export function ArticleDisplay({ article, showVocabulary = true }: ArticleDispla
               </Badge>
             </div>
           </div>
-          
+
           {/* Article Metadata */}
           <div className="flex items-center space-x-4 text-sm text-muted-foreground">
             <div className="flex items-center space-x-1">
@@ -97,12 +102,12 @@ export function ArticleDisplay({ article, showVocabulary = true }: ArticleDispla
                 )}
               </Button>
             </div>
-            
+
             <div className="flex flex-wrap gap-2">
               {article.vocabulary.map((word, index) => (
-                <Badge 
-                  key={index} 
-                  variant="secondary" 
+                <Badge
+                  key={index}
+                  variant="secondary"
                   className="text-xs cursor-help"
                   title={`Key vocabulary word: ${word}`}
                 >
@@ -110,10 +115,11 @@ export function ArticleDisplay({ article, showVocabulary = true }: ArticleDispla
                 </Badge>
               ))}
             </div>
-            
+
             {showVocabHelp && (
               <p className="text-xs text-muted-foreground mt-2">
-                Key vocabulary words are highlighted in yellow in the text below.
+                Key vocabulary words are highlighted in yellow in the text
+                below.
               </p>
             )}
           </CardContent>
@@ -125,11 +131,11 @@ export function ArticleDisplay({ article, showVocabulary = true }: ArticleDispla
         <CardContent className="p-6">
           <div className="prose prose-sm max-w-none">
             {paragraphs.map((paragraph, index) => (
-              <p 
-                key={index} 
+              <p
+                key={index}
                 className="mb-4 last:mb-0 leading-relaxed text-gray-800"
-                dangerouslySetInnerHTML={{ 
-                  __html: highlightVocabulary(paragraph) 
+                dangerouslySetInnerHTML={{
+                  __html: highlightVocabulary(paragraph),
                 }}
               />
             ))}

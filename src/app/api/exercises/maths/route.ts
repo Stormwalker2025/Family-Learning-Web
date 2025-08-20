@@ -7,7 +7,7 @@ import { year6MathExercises } from '@/data/math-exercises/year6-examples'
 // Combined mock data for demonstration - in production this would come from database
 const mockMathExercises: MathExercise[] = [
   ...year3MathExercises,
-  ...year6MathExercises
+  ...year6MathExercises,
 ]
 
 // GET /api/exercises/maths - Get all math exercises
@@ -47,16 +47,17 @@ export async function GET(request: NextRequest) {
 
     if (topic) {
       filteredExercises = filteredExercises.filter(
-        exercise => exercise.topic === topic || exercise.tags.includes(topic.toLowerCase())
+        exercise =>
+          exercise.topic === topic ||
+          exercise.tags.includes(topic.toLowerCase())
       )
     }
 
     return NextResponse.json({
       success: true,
       exercises: filteredExercises,
-      total: filteredExercises.length
+      total: filteredExercises.length,
     })
-
   } catch (error) {
     console.error('Error fetching math exercises:', error)
     return NextResponse.json(
@@ -77,15 +78,21 @@ export async function POST(request: NextRequest) {
 
     const decoded = await verifyToken(token)
     if (!decoded || decoded.role !== 'ADMIN') {
-      return NextResponse.json({ error: 'Admin access required' }, { status: 403 })
+      return NextResponse.json(
+        { error: 'Admin access required' },
+        { status: 403 }
+      )
     }
 
     const body = await request.json()
-    
+
     // Validate required fields
     if (!body.title || !body.topic || !body.conceptIntro || !body.questions) {
       return NextResponse.json(
-        { error: 'Missing required fields: title, topic, conceptIntro, questions' },
+        {
+          error:
+            'Missing required fields: title, topic, conceptIntro, questions',
+        },
         { status: 400 }
       )
     }
@@ -95,7 +102,7 @@ export async function POST(request: NextRequest) {
       id: `math-${Date.now()}`,
       ...body,
       createdAt: new Date(),
-      updatedAt: new Date()
+      updatedAt: new Date(),
     }
 
     // Add to mock data for now
@@ -103,9 +110,8 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      exercise: newExercise
+      exercise: newExercise,
     })
-
   } catch (error) {
     console.error('Error creating math exercise:', error)
     return NextResponse.json(

@@ -22,57 +22,79 @@ Today, Aboriginal and Torres Strait Islander peoples continue to maintain their 
       yearLevel: 6,
       difficulty: 'medium',
       topic: 'history',
-      vocabulary: ['inhabitants', 'sophisticated', 'ancestral', 'ochres', 'pigments', 'conservation'],
+      vocabulary: [
+        'inhabitants',
+        'sophisticated',
+        'ancestral',
+        'ochres',
+        'pigments',
+        'conservation',
+      ],
       source: 'Adapted from Australian Curriculum resources',
       createdAt: new Date(),
-      updatedAt: new Date()
+      updatedAt: new Date(),
     },
     questions: [
       {
         id: 'q1-year6-1',
         articleId: 'article-year6-1',
         type: 'multiple-choice',
-        question: 'How long have Aboriginal and Torres Strait Islander peoples lived in Australia?',
-        options: ['Over 40,000 years', 'Over 50,000 years', 'Over 65,000 years', 'Over 70,000 years'],
+        question:
+          'How long have Aboriginal and Torres Strait Islander peoples lived in Australia?',
+        options: [
+          'Over 40,000 years',
+          'Over 50,000 years',
+          'Over 65,000 years',
+          'Over 70,000 years',
+        ],
         correctAnswer: 'Over 65,000 years',
-        explanation: 'The text states that Aboriginal and Torres Strait Islander peoples have lived on this continent for over 65,000 years.',
+        explanation:
+          'The text states that Aboriginal and Torres Strait Islander peoples have lived on this continent for over 65,000 years.',
         points: 1,
         order: 1,
-        difficulty: 'easy'
+        difficulty: 'easy',
       },
       {
         id: 'q2-year6-1',
         articleId: 'article-year6-1',
         type: 'true-false',
-        question: 'All Aboriginal groups had the same language and customs before European settlement.',
+        question:
+          'All Aboriginal groups had the same language and customs before European settlement.',
         correctAnswer: 'false',
-        explanation: 'The text clearly states there were hundreds of different Aboriginal groups, each with their own languages, customs, and territories.',
+        explanation:
+          'The text clearly states there were hundreds of different Aboriginal groups, each with their own languages, customs, and territories.',
         points: 1,
         order: 2,
-        difficulty: 'medium'
+        difficulty: 'medium',
       },
       {
         id: 'q3-year6-1',
         articleId: 'article-year6-1',
         type: 'short-answer',
-        question: 'What is the Dreamtime and why is it important to Aboriginal culture?',
-        instructions: 'Write 2-3 sentences explaining the Dreamtime and its significance.',
-        correctAnswer: 'The Dreamtime refers to the time when ancestral spirits travelled across the land, creating natural features. It is central to Aboriginal spirituality and helps explain the natural world and moral codes through stories passed down through generations.',
-        explanation: 'A good answer should mention both what the Dreamtime is (ancestral spirits creating the land) and its cultural importance (spirituality, explaining the world, moral guidance).',
+        question:
+          'What is the Dreamtime and why is it important to Aboriginal culture?',
+        instructions:
+          'Write 2-3 sentences explaining the Dreamtime and its significance.',
+        correctAnswer:
+          'The Dreamtime refers to the time when ancestral spirits travelled across the land, creating natural features. It is central to Aboriginal spirituality and helps explain the natural world and moral codes through stories passed down through generations.',
+        explanation:
+          'A good answer should mention both what the Dreamtime is (ancestral spirits creating the land) and its cultural importance (spirituality, explaining the world, moral guidance).',
         points: 3,
         order: 3,
-        difficulty: 'hard'
+        difficulty: 'hard',
       },
       {
         id: 'q4-year6-1',
         articleId: 'article-year6-1',
         type: 'sentence-completion',
-        question: 'Traditional Aboriginal art includes _____ paintings, some of which are over _____ years old, using natural _____ and _____.',
+        question:
+          'Traditional Aboriginal art includes _____ paintings, some of which are over _____ years old, using natural _____ and _____.',
         correctAnswer: 'rock, 40,000, ochres, pigments',
-        explanation: 'The text mentions rock paintings over 40,000 years old, created using natural ochres and pigments.',
+        explanation:
+          'The text mentions rock paintings over 40,000 years old, created using natural ochres and pigments.',
         points: 2,
         order: 4,
-        difficulty: 'medium'
+        difficulty: 'medium',
       },
       {
         id: 'q5-year6-1',
@@ -83,53 +105,62 @@ Today, Aboriginal and Torres Strait Islander peoples continue to maintain their 
           {
             id: 'statement1',
             content: 'Controlled burning practices',
-            type: 'statement'
+            type: 'statement',
           },
           {
             id: 'statement2',
             content: 'Torres Strait Islander peoples',
-            type: 'statement'
+            type: 'statement',
           },
           {
             id: 'statement3',
             content: 'Natural ochres and pigments',
-            type: 'statement'
+            type: 'statement',
           },
           {
             id: 'option1',
             content: 'Used to create traditional Aboriginal art',
-            type: 'option'
+            type: 'option',
           },
           {
             id: 'option2',
             content: 'Lived on islands between Australia and Papua New Guinea',
-            type: 'option'
+            type: 'option',
           },
           {
             id: 'option3',
             content: 'Helped prevent bushfires as part of land management',
-            type: 'option'
-          }
+            type: 'option',
+          },
         ],
-        correctAnswer: '{"statement1":"option3","statement2":"option2","statement3":"option1"}',
-        explanation: 'Each statement matches with its corresponding description based on the information in the text.',
+        correctAnswer:
+          '{"statement1":"option3","statement2":"option2","statement3":"option1"}',
+        explanation:
+          'Each statement matches with its corresponding description based on the information in the text.',
         points: 3,
         order: 5,
-        difficulty: 'medium'
-      }
+        difficulty: 'medium',
+      },
     ],
     yearLevel: 6,
     totalPoints: 10,
     timeLimit: 25,
-    tags: ['history', 'aboriginal', 'torres-strait-islander', 'culture', 'australia'],
+    tags: [
+      'history',
+      'aboriginal',
+      'torres-strait-islander',
+      'culture',
+      'australia',
+    ],
     createdAt: new Date(),
-    updatedAt: new Date()
+    updatedAt: new Date(),
   },
 
   {
     id: 'year6-environment-2',
     title: 'Protecting the Great Barrier Reef',
-    description: 'Learn about Australia\'s most famous coral reef and conservation efforts',
+    description:
+      "Learn about Australia's most famous coral reef and conservation efforts",
     article: {
       id: 'article-year6-2',
       title: 'Protecting the Great Barrier Reef',
@@ -147,10 +178,17 @@ Tourism also plays a crucial role in conservation. Many tour operators follow st
       yearLevel: 6,
       difficulty: 'medium',
       topic: 'environment',
-      vocabulary: ['biodiversity', 'calcium carbonate', 'coral bleaching', 'resilience', 'agricultural runoff', 'eco-tourism'],
+      vocabulary: [
+        'biodiversity',
+        'calcium carbonate',
+        'coral bleaching',
+        'resilience',
+        'agricultural runoff',
+        'eco-tourism',
+      ],
       source: 'Great Barrier Reef Marine Park Authority',
       createdAt: new Date(),
-      updatedAt: new Date()
+      updatedAt: new Date(),
     },
     questions: [
       {
@@ -158,65 +196,86 @@ Tourism also plays a crucial role in conservation. Many tour operators follow st
         articleId: 'article-year6-2',
         type: 'multiple-choice',
         question: 'How long is the Great Barrier Reef?',
-        options: ['Over 1,300 kilometres', 'Over 2,300 kilometres', 'Over 3,300 kilometres', 'Over 4,300 kilometres'],
+        options: [
+          'Over 1,300 kilometres',
+          'Over 2,300 kilometres',
+          'Over 3,300 kilometres',
+          'Over 4,300 kilometres',
+        ],
         correctAnswer: 'Over 2,300 kilometres',
-        explanation: 'The text states that the reef stretches over 2,300 kilometres.',
+        explanation:
+          'The text states that the reef stretches over 2,300 kilometres.',
         points: 1,
         order: 1,
-        difficulty: 'easy'
+        difficulty: 'easy',
       },
       {
         id: 'q2-year6-2',
         articleId: 'article-year6-2',
         type: 'true-false',
-        question: 'The Great Barrier Reef was formed quickly over just a few thousand years.',
+        question:
+          'The Great Barrier Reef was formed quickly over just a few thousand years.',
         correctAnswer: 'false',
-        explanation: 'The text states that the reef was formed over millions of years, not just a few thousand.',
+        explanation:
+          'The text states that the reef was formed over millions of years, not just a few thousand.',
         points: 1,
         order: 2,
-        difficulty: 'easy'
+        difficulty: 'easy',
       },
       {
         id: 'q3-year6-2',
         articleId: 'article-year6-2',
         type: 'short-answer',
-        question: 'List three major threats to the Great Barrier Reef mentioned in the article.',
+        question:
+          'List three major threats to the Great Barrier Reef mentioned in the article.',
         instructions: 'Identify three specific threats discussed in the text.',
-        correctAnswer: 'Climate change/coral bleaching, water pollution/agricultural runoff, crown-of-thorns starfish',
-        explanation: 'The three main threats mentioned are climate change causing coral bleaching, water pollution from agricultural runoff, and crown-of-thorns starfish outbreaks.',
+        correctAnswer:
+          'Climate change/coral bleaching, water pollution/agricultural runoff, crown-of-thorns starfish',
+        explanation:
+          'The three main threats mentioned are climate change causing coral bleaching, water pollution from agricultural runoff, and crown-of-thorns starfish outbreaks.',
         points: 3,
         order: 3,
-        difficulty: 'medium'
+        difficulty: 'medium',
       },
       {
         id: 'q4-year6-2',
         articleId: 'article-year6-2',
         type: 'true-false',
-        question: 'Tourism always has a negative impact on the Great Barrier Reef.',
+        question:
+          'Tourism always has a negative impact on the Great Barrier Reef.',
         correctAnswer: 'false',
-        explanation: 'The text explains that tourism can play a crucial role in conservation through eco-tourism, environmental guidelines, and funding conservation programs.',
+        explanation:
+          'The text explains that tourism can play a crucial role in conservation through eco-tourism, environmental guidelines, and funding conservation programs.',
         points: 1,
         order: 4,
-        difficulty: 'medium'
+        difficulty: 'medium',
       },
       {
         id: 'q5-year6-2',
         articleId: 'article-year6-2',
         type: 'sentence-completion',
-        question: 'The reef is formed by tiny _____ that build _____ skeletons over millions of years.',
+        question:
+          'The reef is formed by tiny _____ that build _____ skeletons over millions of years.',
         correctAnswer: 'coral polyps, calcium carbonate',
-        explanation: 'The text explains that coral polyps build calcium carbonate skeletons that form the reef structures.',
+        explanation:
+          'The text explains that coral polyps build calcium carbonate skeletons that form the reef structures.',
         points: 2,
         order: 5,
-        difficulty: 'medium'
-      }
+        difficulty: 'medium',
+      },
     ],
     yearLevel: 6,
     totalPoints: 8,
     timeLimit: 20,
-    tags: ['environment', 'conservation', 'great-barrier-reef', 'queensland', 'marine-life'],
+    tags: [
+      'environment',
+      'conservation',
+      'great-barrier-reef',
+      'queensland',
+      'marine-life',
+    ],
     createdAt: new Date(),
-    updatedAt: new Date()
+    updatedAt: new Date(),
   },
 
   {
@@ -242,23 +301,37 @@ The transition to renewable energy creates numerous job opportunities in manufac
       yearLevel: 6,
       difficulty: 'hard',
       topic: 'science',
-      vocabulary: ['photovoltaic', 'turbines', 'hydroelectric', 'geothermal', 'fossil fuels', 'greenhouse gas emissions'],
+      vocabulary: [
+        'photovoltaic',
+        'turbines',
+        'hydroelectric',
+        'geothermal',
+        'fossil fuels',
+        'greenhouse gas emissions',
+      ],
       source: 'Australian Renewable Energy Agency',
       createdAt: new Date(),
-      updatedAt: new Date()
+      updatedAt: new Date(),
     },
     questions: [
       {
         id: 'q1-year6-3',
         articleId: 'article-year6-3',
         type: 'multiple-choice',
-        question: 'How many sunny days per year do many regions of Australia receive?',
-        options: ['Over 200 days', 'Over 250 days', 'Over 300 days', 'Over 350 days'],
+        question:
+          'How many sunny days per year do many regions of Australia receive?',
+        options: [
+          'Over 200 days',
+          'Over 250 days',
+          'Over 300 days',
+          'Over 350 days',
+        ],
         correctAnswer: 'Over 300 days',
-        explanation: 'The text states that many regions of Australia have over 300 sunny days per year.',
+        explanation:
+          'The text states that many regions of Australia have over 300 sunny days per year.',
         points: 1,
         order: 1,
-        difficulty: 'easy'
+        difficulty: 'easy',
       },
       {
         id: 'q2-year6-3',
@@ -269,90 +342,105 @@ The transition to renewable energy creates numerous job opportunities in manufac
           {
             id: 'statement1',
             content: 'Solar power',
-            type: 'statement'
+            type: 'statement',
           },
           {
             id: 'statement2',
             content: 'Wind energy',
-            type: 'statement'
+            type: 'statement',
           },
           {
             id: 'statement3',
             content: 'Hydroelectric power',
-            type: 'statement'
+            type: 'statement',
           },
           {
             id: 'statement4',
             content: 'Geothermal energy',
-            type: 'statement'
+            type: 'statement',
           },
           {
             id: 'option1',
             content: 'Uses photovoltaic panels to convert sunlight',
-            type: 'option'
+            type: 'option',
           },
           {
             id: 'option2',
             content: 'Harnesses the force of flowing water',
-            type: 'option'
+            type: 'option',
           },
           {
             id: 'option3',
-            content: 'Taps into Earth\'s natural underground heat',
-            type: 'option'
+            content: "Taps into Earth's natural underground heat",
+            type: 'option',
           },
           {
             id: 'option4',
             content: 'Uses turbines in areas with consistent wind patterns',
-            type: 'option'
-          }
+            type: 'option',
+          },
         ],
-        correctAnswer: '{"statement1":"option1","statement2":"option4","statement3":"option2","statement4":"option3"}',
-        explanation: 'Each energy source is matched with its correct method of generation as described in the text.',
+        correctAnswer:
+          '{"statement1":"option1","statement2":"option4","statement3":"option2","statement4":"option3"}',
+        explanation:
+          'Each energy source is matched with its correct method of generation as described in the text.',
         points: 4,
         order: 2,
-        difficulty: 'medium'
+        difficulty: 'medium',
       },
       {
         id: 'q3-year6-3',
         articleId: 'article-year6-3',
         type: 'short-answer',
-        question: 'What was the Snowy Mountains Scheme and when was it completed?',
+        question:
+          'What was the Snowy Mountains Scheme and when was it completed?',
         instructions: 'Provide details about this renewable energy project.',
-        correctAnswer: 'The Snowy Mountains Scheme was one of Australia\'s largest renewable energy projects that uses flowing water to generate electricity and provide irrigation water. It was completed in the 1970s.',
-        explanation: 'A complete answer should mention both what the scheme does (hydroelectric power and irrigation) and when it was finished.',
+        correctAnswer:
+          "The Snowy Mountains Scheme was one of Australia's largest renewable energy projects that uses flowing water to generate electricity and provide irrigation water. It was completed in the 1970s.",
+        explanation:
+          'A complete answer should mention both what the scheme does (hydroelectric power and irrigation) and when it was finished.',
         points: 2,
         order: 3,
-        difficulty: 'medium'
+        difficulty: 'medium',
       },
       {
         id: 'q4-year6-3',
         articleId: 'article-year6-3',
         type: 'true-false',
-        question: 'Wave energy and geothermal energy are well-established renewable energy sources in Australia.',
+        question:
+          'Wave energy and geothermal energy are well-established renewable energy sources in Australia.',
         correctAnswer: 'false',
-        explanation: 'The text describes these as "emerging technologies" that are "being explored", indicating they are not yet well-established.',
+        explanation:
+          'The text describes these as "emerging technologies" that are "being explored", indicating they are not yet well-established.',
         points: 1,
         order: 4,
-        difficulty: 'medium'
+        difficulty: 'medium',
       },
       {
         id: 'q5-year6-3',
         articleId: 'article-year6-3',
         type: 'sentence-completion',
-        question: 'The transition to renewable energy creates job opportunities in _____, _____, and _____ of renewable energy systems.',
+        question:
+          'The transition to renewable energy creates job opportunities in _____, _____, and _____ of renewable energy systems.',
         correctAnswer: 'manufacturing, installation, maintenance',
-        explanation: 'The text lists these three areas where renewable energy creates job opportunities.',
+        explanation:
+          'The text lists these three areas where renewable energy creates job opportunities.',
         points: 3,
         order: 5,
-        difficulty: 'easy'
-      }
+        difficulty: 'easy',
+      },
     ],
     yearLevel: 6,
     totalPoints: 11,
     timeLimit: 25,
-    tags: ['science', 'renewable-energy', 'environment', 'technology', 'australia'],
+    tags: [
+      'science',
+      'renewable-energy',
+      'environment',
+      'technology',
+      'australia',
+    ],
     createdAt: new Date(),
-    updatedAt: new Date()
-  }
+    updatedAt: new Date(),
+  },
 ]

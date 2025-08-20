@@ -16,7 +16,9 @@ interface AuthState {
 }
 
 interface AuthActions {
-  login: (credentials: LoginRequest) => Promise<{ success: boolean; message?: string }>
+  login: (
+    credentials: LoginRequest
+  ) => Promise<{ success: boolean; message?: string }>
   logout: () => Promise<void>
   refreshUser: () => Promise<void>
   clearError: () => void
@@ -28,12 +30,12 @@ interface UseAuthReturn extends AuthState, AuthActions {
 
 export function useAuth(): UseAuthReturn {
   const router = useRouter()
-  
+
   const [state, setState] = useState<AuthState>({
     user: null,
     loading: true,
     error: null,
-    isAuthenticated: false
+    isAuthenticated: false,
   })
 
   // 权限检查器
@@ -43,9 +45,9 @@ export function useAuth(): UseAuthReturn {
   const refreshUser = useCallback(async () => {
     try {
       setState(prev => ({ ...prev, loading: true, error: null }))
-      
+
       const response = await fetch('/api/auth/me')
-      
+
       if (response.ok) {
         const data = await response.json()
         if (data.success) {
@@ -54,7 +56,7 @@ export function useAuth(): UseAuthReturn {
             user: data.data.user,
             isAuthenticated: true,
             loading: false,
-            error: null
+            error: null,
           }))
         } else {
           setState(prev => ({
@@ -62,7 +64,7 @@ export function useAuth(): UseAuthReturn {
             user: null,
             isAuthenticated: false,
             loading: false,
-            error: data.message || '获取用户信息失败'
+            error: data.message || '获取用户信息失败',
           }))
         }
       } else if (response.status === 401) {
@@ -72,7 +74,7 @@ export function useAuth(): UseAuthReturn {
           user: null,
           isAuthenticated: false,
           loading: false,
-          error: null
+          error: null,
         }))
       } else {
         setState(prev => ({
@@ -80,7 +82,7 @@ export function useAuth(): UseAuthReturn {
           user: null,
           isAuthenticated: false,
           loading: false,
-          error: '认证服务异常'
+          error: '认证服务异常',
         }))
       }
     } catch (error) {
@@ -90,7 +92,7 @@ export function useAuth(): UseAuthReturn {
         user: null,
         isAuthenticated: false,
         loading: false,
-        error: '网络连接异常'
+        error: '网络连接异常',
       }))
     }
   }, [])
@@ -99,13 +101,13 @@ export function useAuth(): UseAuthReturn {
   const login = useCallback(async (credentials: LoginRequest) => {
     try {
       setState(prev => ({ ...prev, loading: true, error: null }))
-      
+
       const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify(credentials)
+        body: JSON.stringify(credentials),
       })
 
       const data: LoginResponse = await response.json()
@@ -116,9 +118,9 @@ export function useAuth(): UseAuthReturn {
           user: data.user!,
           isAuthenticated: true,
           loading: false,
-          error: null
+          error: null,
         }))
-        
+
         return { success: true, message: data.message }
       } else {
         setState(prev => ({
@@ -126,23 +128,23 @@ export function useAuth(): UseAuthReturn {
           user: null,
           isAuthenticated: false,
           loading: false,
-          error: data.message || '登录失败'
+          error: data.message || '登录失败',
         }))
-        
+
         return { success: false, message: data.message || '登录失败' }
       }
     } catch (error) {
       console.error('Login error:', error)
       const errorMessage = '网络错误，请稍后重试'
-      
+
       setState(prev => ({
         ...prev,
         user: null,
         isAuthenticated: false,
         loading: false,
-        error: errorMessage
+        error: errorMessage,
       }))
-      
+
       return { success: false, message: errorMessage }
     }
   }, [])
@@ -151,18 +153,18 @@ export function useAuth(): UseAuthReturn {
   const logout = useCallback(async () => {
     try {
       setState(prev => ({ ...prev, loading: true }))
-      
+
       await fetch('/api/auth/logout', {
-        method: 'POST'
+        method: 'POST',
       })
-      
+
       setState({
         user: null,
         isAuthenticated: false,
         loading: false,
-        error: null
+        error: null,
       })
-      
+
       // 重定向到登录页
       router.push('/auth/login')
     } catch (error) {
@@ -172,9 +174,9 @@ export function useAuth(): UseAuthReturn {
         user: null,
         isAuthenticated: false,
         loading: false,
-        error: null
+        error: null,
       })
-      
+
       router.push('/auth/login')
     }
   }, [router])
@@ -197,7 +199,7 @@ export function useAuth(): UseAuthReturn {
           user: null,
           isAuthenticated: false,
           loading: false,
-          error: null
+          error: null,
         })
       }
     }
@@ -210,9 +212,12 @@ export function useAuth(): UseAuthReturn {
   useEffect(() => {
     if (!state.isAuthenticated) return
 
-    const interval = setInterval(() => {
-      refreshUser()
-    }, 5 * 60 * 1000) // 每5分钟检查一次
+    const interval = setInterval(
+      () => {
+        refreshUser()
+      },
+      5 * 60 * 1000
+    ) // 每5分钟检查一次
 
     return () => clearInterval(interval)
   }, [state.isAuthenticated, refreshUser])
@@ -223,7 +228,7 @@ export function useAuth(): UseAuthReturn {
     login,
     logout,
     refreshUser,
-    clearError
+    clearError,
   }
 }
 
@@ -278,5 +283,10 @@ export function useRequireRole(requiredRole: 'ADMIN' | 'PARENT' | 'STUDENT') {
     }
   }, [loading, isAuthenticated, user, requiredRole, router])
 
-  return { user, loading, isAuthenticated, hasRole: user?.role === requiredRole }
+  return {
+    user,
+    loading,
+    isAuthenticated,
+    hasRole: user?.role === requiredRole,
+  }
 }

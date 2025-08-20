@@ -3,20 +3,23 @@
 ## 1. Testing Strategy Overview
 
 ### 1.1 Testing Pyramid
+
 ```
          /\
         /  \     E2E Tests (30 scenarios)
-       /    \    
-      /______\   Integration Tests (80 scenarios) 
-     /        \  
+       /    \
+      /______\   Integration Tests (80 scenarios)
+     /        \
     /_________\ Unit Tests (200+ scenarios)
 ```
 
 ### 1.2 Testing Scope
+
 - **In Scope**: All user-facing functionality, API endpoints, security features, iPad unlock system, educational content management
 - **Out of Scope**: Third-party integrations (until implemented), performance testing beyond basic load, mobile app testing
 
 ### 1.3 Quality Gates
+
 - Unit Test Coverage: ≥ 80%
 - Integration Test Coverage: ≥ 70%
 - E2E Test Success Rate: 100%
@@ -26,20 +29,21 @@
 
 ## 2. Test Coverage Matrix
 
-| Feature Area | Unit Tests | Integration Tests | E2E Tests | Security Tests | A11y Tests |
-|--------------|------------|------------------|-----------|---------------|------------|
-| **Authentication** | ✅ Password validation<br>✅ JWT handling<br>✅ Session management | ✅ Login flow<br>✅ Logout flow<br>✅ Token refresh | ✅ User login journey<br>✅ Role-based access | ✅ Auth bypass attempts<br>✅ Session hijacking | ✅ Login form accessibility |
-| **User Management** | ✅ User CRUD operations<br>✅ Role assignments<br>✅ Parent-child links | ✅ User creation API<br>✅ Profile updates<br>✅ Family relationships | ✅ Parent account setup<br>✅ Student registration | ✅ Privilege escalation<br>✅ Data access controls | ✅ Form navigation<br>✅ Screen reader support |
-| **Exercise System** | ✅ Question types<br>✅ Grading engine<br>✅ Score calculations | ✅ Exercise creation<br>✅ Answer submission<br>✅ Results processing | ✅ Student exercise flow<br>✅ Question type interactions | ✅ Answer manipulation<br>✅ Grade tampering | ✅ Question accessibility<br>✅ Keyboard navigation |
-| **Homework Management** | ✅ Assignment CRUD<br>✅ Due date handling<br>✅ Template system | ✅ Assignment API<br>✅ Submission workflow<br>✅ Grading pipeline | ✅ Teacher assignment creation<br>✅ Student homework submission | ✅ Unauthorized access<br>✅ Data integrity | ✅ Assignment interface<br>✅ Time management tools |
-| **iPad Unlock System** | ✅ Rule evaluation<br>✅ Time calculations<br>✅ Achievement logic | ✅ Rule engine API<br>✅ Unlock processing<br>✅ Parent controls | ✅ Rule configuration<br>✅ Unlock triggering<br>✅ Parent approval flow | ✅ Rule bypass attempts<br>✅ Time manipulation | ✅ Rule interface<br>✅ Notification accessibility |
-| **Mistake Book** | ✅ Error categorization<br>✅ Review scheduling<br>✅ Progress tracking | ✅ Mistake logging API<br>✅ Review workflow<br>✅ Progress updates | ✅ Mistake review journey<br>✅ Progress tracking | ✅ Data access controls<br>✅ Cross-user access | ✅ Review interface<br>✅ Progress visualization |
-| **Content Management** | ✅ CSV parsing<br>✅ Data validation<br>✅ Content storage | ✅ Import API<br>✅ Content validation<br>✅ Bulk operations | ✅ Admin CSV upload<br>✅ Content management | ✅ File upload security<br>✅ Malicious content | ✅ Upload interface<br>✅ Progress indicators |
-| **Analytics & Reporting** | ✅ Data aggregation<br>✅ Report generation<br>✅ Export functions | ✅ Analytics API<br>✅ Report endpoints<br>✅ Data filtering | ✅ Parent progress view<br>✅ Teacher analytics | ✅ Data privacy<br>✅ Report access controls | ✅ Chart accessibility<br>✅ Data table navigation |
+| Feature Area              | Unit Tests                                                              | Integration Tests                                                     | E2E Tests                                                                | Security Tests                                     | A11y Tests                                          |
+| ------------------------- | ----------------------------------------------------------------------- | --------------------------------------------------------------------- | ------------------------------------------------------------------------ | -------------------------------------------------- | --------------------------------------------------- |
+| **Authentication**        | ✅ Password validation<br>✅ JWT handling<br>✅ Session management      | ✅ Login flow<br>✅ Logout flow<br>✅ Token refresh                   | ✅ User login journey<br>✅ Role-based access                            | ✅ Auth bypass attempts<br>✅ Session hijacking    | ✅ Login form accessibility                         |
+| **User Management**       | ✅ User CRUD operations<br>✅ Role assignments<br>✅ Parent-child links | ✅ User creation API<br>✅ Profile updates<br>✅ Family relationships | ✅ Parent account setup<br>✅ Student registration                       | ✅ Privilege escalation<br>✅ Data access controls | ✅ Form navigation<br>✅ Screen reader support      |
+| **Exercise System**       | ✅ Question types<br>✅ Grading engine<br>✅ Score calculations         | ✅ Exercise creation<br>✅ Answer submission<br>✅ Results processing | ✅ Student exercise flow<br>✅ Question type interactions                | ✅ Answer manipulation<br>✅ Grade tampering       | ✅ Question accessibility<br>✅ Keyboard navigation |
+| **Homework Management**   | ✅ Assignment CRUD<br>✅ Due date handling<br>✅ Template system        | ✅ Assignment API<br>✅ Submission workflow<br>✅ Grading pipeline    | ✅ Teacher assignment creation<br>✅ Student homework submission         | ✅ Unauthorized access<br>✅ Data integrity        | ✅ Assignment interface<br>✅ Time management tools |
+| **iPad Unlock System**    | ✅ Rule evaluation<br>✅ Time calculations<br>✅ Achievement logic      | ✅ Rule engine API<br>✅ Unlock processing<br>✅ Parent controls      | ✅ Rule configuration<br>✅ Unlock triggering<br>✅ Parent approval flow | ✅ Rule bypass attempts<br>✅ Time manipulation    | ✅ Rule interface<br>✅ Notification accessibility  |
+| **Mistake Book**          | ✅ Error categorization<br>✅ Review scheduling<br>✅ Progress tracking | ✅ Mistake logging API<br>✅ Review workflow<br>✅ Progress updates   | ✅ Mistake review journey<br>✅ Progress tracking                        | ✅ Data access controls<br>✅ Cross-user access    | ✅ Review interface<br>✅ Progress visualization    |
+| **Content Management**    | ✅ CSV parsing<br>✅ Data validation<br>✅ Content storage              | ✅ Import API<br>✅ Content validation<br>✅ Bulk operations          | ✅ Admin CSV upload<br>✅ Content management                             | ✅ File upload security<br>✅ Malicious content    | ✅ Upload interface<br>✅ Progress indicators       |
+| **Analytics & Reporting** | ✅ Data aggregation<br>✅ Report generation<br>✅ Export functions      | ✅ Analytics API<br>✅ Report endpoints<br>✅ Data filtering          | ✅ Parent progress view<br>✅ Teacher analytics                          | ✅ Data privacy<br>✅ Report access controls       | ✅ Chart accessibility<br>✅ Data table navigation  |
 
 ## 3. End-to-End Test Scenarios (30 Critical Paths)
 
 ### 3.1 Student User Journey (10 scenarios)
+
 1. **Student Registration and First Login**
    - Register new student account
    - Complete profile setup
@@ -110,6 +114,7 @@
     - Set personal goals
 
 ### 3.2 Parent User Journey (10 scenarios)
+
 11. **Parent Account Setup**
     - Register parent account
     - Link to children's accounts
@@ -181,6 +186,7 @@
     - Review audit logs
 
 ### 3.3 Admin/Teacher Journey (10 scenarios)
+
 21. **Admin System Setup**
     - Login with admin credentials
     - Access system dashboard
@@ -256,6 +262,7 @@
 ### 4.1 WCAG 2.1 AA Compliance Testing
 
 #### Perceivable
+
 - [ ] **Text Alternatives**: All images have appropriate alt text
 - [ ] **Captions and Transcripts**: Media content is accessible
 - [ ] **Color and Contrast**: 4.5:1 contrast ratio for normal text, 3:1 for large text
@@ -263,6 +270,7 @@
 - [ ] **Images of Text**: Minimal use, alternatives provided
 
 #### Operable
+
 - [ ] **Keyboard Access**: All functionality available via keyboard
 - [ ] **No Seizures**: No content flashes more than 3 times per second
 - [ ] **Timing**: Users can extend time limits or turn them off
@@ -270,20 +278,24 @@
 - [ ] **Focus Management**: Visible focus indicators, logical tab order
 
 #### Understandable
+
 - [ ] **Language**: Page language identified, changes marked
 - [ ] **Predictable**: Consistent navigation and functionality
 - [ ] **Input Assistance**: Labels, instructions, error messages provided
 - [ ] **Error Prevention**: Important actions are reversible/confirmable
 
 #### Robust
+
 - [ ] **Compatible**: Content works with assistive technologies
 - [ ] **Valid Code**: HTML validates and uses semantic markup
 - [ ] **Future-Proof**: Content accessible as technologies advance
 
 ### 4.2 Screen Reader Testing
+
 **Tools**: NVDA (Windows), JAWS (Windows), VoiceOver (macOS)
 
 **Test Scenarios**:
+
 1. Complete homework assignment using only screen reader
 2. Navigate iPad unlock settings with screen reader
 3. Review mistake book content with audio feedback
@@ -291,7 +303,9 @@
 5. Admin content upload with screen reader navigation
 
 ### 4.3 Keyboard Navigation Testing
+
 **Test Scenarios**:
+
 1. Tab through entire application without mouse
 2. Complete exercise using only keyboard
 3. Navigate complex forms with keyboard only
@@ -299,7 +313,9 @@
 5. Use keyboard shortcuts for common actions
 
 ### 4.4 Motor Accessibility Testing
+
 **Test Scenarios**:
+
 1. Use application with limited motor control simulation
 2. Test with assistive devices (switch navigation)
 3. Verify sufficient click target sizes (44x44px minimum)
@@ -309,6 +325,7 @@
 ## 5. Performance Testing
 
 ### 5.1 Load Testing Scenarios
+
 1. **Concurrent User Load**
    - 100 simultaneous users completing exercises
    - 50 parents accessing progress reports simultaneously
@@ -325,6 +342,7 @@
    - Bulk data import performance
 
 ### 5.2 Performance Benchmarks
+
 - **Page Load Time**: < 2 seconds
 - **Time to Interactive**: < 3 seconds
 - **Largest Contentful Paint**: < 1.5 seconds
@@ -334,6 +352,7 @@
 ## 6. Security Testing Plan
 
 ### 6.1 Automated Security Testing
+
 - [ ] **SAST (Static Analysis)**: ESLint security rules, CodeQL analysis
 - [ ] **DAST (Dynamic Analysis)**: OWASP ZAP, Burp Suite scanning
 - [ ] **Dependency Scanning**: npm audit, Snyk vulnerability detection
@@ -341,6 +360,7 @@
 - [ ] **Infrastructure Scanning**: Terraform security analysis
 
 ### 6.2 Manual Security Testing
+
 - [ ] **Authentication Testing**: Credential stuffing, password policy
 - [ ] **Authorization Testing**: Privilege escalation, role bypass
 - [ ] **Input Validation**: SQL injection, XSS, command injection
@@ -348,6 +368,7 @@
 - [ ] **Data Protection**: Encryption verification, data leakage
 
 ### 6.3 Privacy Testing
+
 - [ ] **Data Minimization**: Only necessary data collected
 - [ ] **Consent Management**: Proper consent collection and storage
 - [ ] **Data Retention**: Automatic deletion after retention period
@@ -357,21 +378,24 @@
 ## 7. Browser and Device Compatibility
 
 ### 7.1 Supported Browsers
-| Browser | Version | Priority | Test Coverage |
-|---------|---------|----------|---------------|
-| Chrome | Latest 2 versions | High | Full E2E suite |
-| Firefox | Latest 2 versions | High | Full E2E suite |
-| Safari | Latest 2 versions | High | Full E2E suite |
-| Edge | Latest 2 versions | Medium | Smoke tests |
-| Mobile Safari | iOS 14+ | High | Touch interactions |
-| Mobile Chrome | Android 9+ | High | Touch interactions |
+
+| Browser       | Version           | Priority | Test Coverage      |
+| ------------- | ----------------- | -------- | ------------------ |
+| Chrome        | Latest 2 versions | High     | Full E2E suite     |
+| Firefox       | Latest 2 versions | High     | Full E2E suite     |
+| Safari        | Latest 2 versions | High     | Full E2E suite     |
+| Edge          | Latest 2 versions | Medium   | Smoke tests        |
+| Mobile Safari | iOS 14+           | High     | Touch interactions |
+| Mobile Chrome | Android 9+        | High     | Touch interactions |
 
 ### 7.2 Device Testing
+
 - **Desktop**: 1920x1080, 1366x768, 1440x900
 - **Tablet**: iPad Air (1024x768), Android tablets (various sizes)
 - **Mobile**: iPhone SE (375x667), iPhone 12 (390x844), Pixel 5 (393x851)
 
 ### 7.3 Responsive Design Testing
+
 - [ ] Navigation adapts to screen size
 - [ ] Exercise interface works on touch devices
 - [ ] Progress charts render correctly on small screens
@@ -381,12 +405,14 @@
 ## 8. Test Data Management
 
 ### 8.1 Test Data Categories
+
 - **Synthetic User Data**: Generated profiles for different user types
 - **Educational Content**: Sample questions across all subjects and grades
 - **Performance Data**: Historical scores and progress records
 - **Configuration Data**: iPad unlock rules and system settings
 
 ### 8.2 Data Privacy in Testing
+
 - [ ] No production data used in testing environments
 - [ ] Personal information anonymized in test datasets
 - [ ] Test data regularly refreshed and cleaned
@@ -394,6 +420,7 @@
 - [ ] Compliance with data protection regulations
 
 ### 8.3 Test Environment Management
+
 - **Development**: Latest code, synthetic data, full debugging
 - **Staging**: Production-like environment, realistic data volumes
 - **QA**: Isolated testing environment, controlled test data
@@ -402,14 +429,16 @@
 ## 9. Defect Management
 
 ### 9.1 Bug Priority Classification
-| Priority | Definition | Examples | Response Time |
-|----------|------------|----------|---------------|
-| **P0 - Critical** | System unusable, data loss, security breach | Authentication failure, data corruption | < 2 hours |
-| **P1 - High** | Major feature broken, significant user impact | Exercise submission fails, grade calculation error | < 24 hours |
-| **P2 - Medium** | Minor feature issues, workaround available | UI glitches, slow performance | < 1 week |
-| **P3 - Low** | Cosmetic issues, feature enhancements | Text alignment, color adjustments | Next release |
+
+| Priority          | Definition                                    | Examples                                           | Response Time |
+| ----------------- | --------------------------------------------- | -------------------------------------------------- | ------------- |
+| **P0 - Critical** | System unusable, data loss, security breach   | Authentication failure, data corruption            | < 2 hours     |
+| **P1 - High**     | Major feature broken, significant user impact | Exercise submission fails, grade calculation error | < 24 hours    |
+| **P2 - Medium**   | Minor feature issues, workaround available    | UI glitches, slow performance                      | < 1 week      |
+| **P3 - Low**      | Cosmetic issues, feature enhancements         | Text alignment, color adjustments                  | Next release  |
 
 ### 9.2 Bug Lifecycle
+
 1. **Discovery**: Tester/User identifies issue
 2. **Triage**: Priority assignment and initial assessment
 3. **Assignment**: Developer assigned based on expertise
@@ -418,6 +447,7 @@
 6. **Closure**: Issue marked as resolved and documented
 
 ### 9.3 Quality Metrics
+
 - **Defect Detection Rate**: Bugs found per feature/sprint
 - **Defect Resolution Time**: Average time to fix by priority
 - **Test Coverage**: Percentage of code/features tested
@@ -427,6 +457,7 @@
 ## 10. Test Automation Strategy
 
 ### 10.1 Automation Framework Stack
+
 - **Unit Testing**: Vitest, React Testing Library
 - **Integration Testing**: Supertest, MSW (Mock Service Worker)
 - **E2E Testing**: Playwright
@@ -434,6 +465,7 @@
 - **Performance Testing**: Lighthouse CI, WebPageTest API
 
 ### 10.2 CI/CD Integration
+
 ```yaml
 # Automated test execution pipeline
 on_pull_request:
@@ -441,14 +473,14 @@ on_pull_request:
   - unit_tests (parallel)
   - integration_tests (parallel)
   - build_validation
-  
+
 on_merge_to_main:
   - full_test_suite
   - e2e_tests (parallel)
   - performance_tests
   - security_scans
   - accessibility_tests
-  
+
 nightly:
   - extended_e2e_suite
   - load_testing
@@ -457,6 +489,7 @@ nightly:
 ```
 
 ### 10.3 Test Reporting and Analytics
+
 - **Real-time Dashboards**: Test execution status and trends
 - **Coverage Reports**: Code coverage trends and gaps
 - **Performance Metrics**: Page speed and resource usage trends
@@ -466,18 +499,21 @@ nightly:
 ## 11. Manual Testing Procedures
 
 ### 11.1 Exploratory Testing Sessions
+
 - **Session Duration**: 90-120 minutes focused exploration
 - **Test Charters**: Specific areas/features to explore
 - **Note Taking**: Detailed observations and potential issues
 - **Follow-up**: Convert findings into formal test cases
 
 ### 11.2 Usability Testing
+
 - **Participant Profiles**: Representative users (students, parents, teachers)
 - **Task Scenarios**: Real-world usage scenarios
 - **Observation Methods**: Screen recording, think-aloud protocol
 - **Metrics**: Task completion rate, time to complete, error rate
 
 ### 11.3 Acceptance Testing
+
 - **Feature Acceptance**: Product owner validates new features
 - **Business Rule Validation**: Complex business logic verification
 - **End-to-End Workflow**: Complete user journey validation
@@ -486,28 +522,32 @@ nightly:
 ## 12. Test Documentation Standards
 
 ### 12.1 Test Case Documentation
+
 ```markdown
 **Test Case ID**: TC001
 **Test Title**: Student Login with Valid Credentials
 **Priority**: High
 **Preconditions**: User has valid account credentials
 **Test Steps**:
+
 1. Navigate to login page
 2. Enter valid email and password
 3. Click login button
-**Expected Result**: User successfully logged in and redirected to dashboard
-**Actual Result**: [To be filled during execution]
-**Status**: [Pass/Fail/Blocked]
-**Notes**: [Additional observations]
+   **Expected Result**: User successfully logged in and redirected to dashboard
+   **Actual Result**: [To be filled during execution]
+   **Status**: [Pass/Fail/Blocked]
+   **Notes**: [Additional observations]
 ```
 
 ### 12.2 Test Execution Reports
+
 - **Test Run Summary**: Total tests, pass/fail rates, coverage
 - **Defect Summary**: New bugs found, resolved issues
 - **Performance Metrics**: Response times, resource usage
 - **Recommendations**: Next steps and improvement suggestions
 
 ### 12.3 Release Testing Checklist
+
 - [ ] All P0 and P1 defects resolved
 - [ ] Regression testing completed
 - [ ] Performance benchmarks met

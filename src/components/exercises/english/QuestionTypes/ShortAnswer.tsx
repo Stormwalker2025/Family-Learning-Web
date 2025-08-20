@@ -17,9 +17,12 @@ export function ShortAnswer({ answer, onAnswerChange }: ShortAnswerProps) {
 
   const handleInputChange = (value: string) => {
     onAnswerChange(value)
-    
+
     // Calculate word count
-    const words = value.trim().split(/\s+/).filter(word => word.length > 0)
+    const words = value
+      .trim()
+      .split(/\s+/)
+      .filter(word => word.length > 0)
     setWordCount(words.length)
   }
 
@@ -33,8 +36,9 @@ export function ShortAnswer({ answer, onAnswerChange }: ShortAnswerProps) {
       {/* Instructions */}
       <div className="p-3 bg-blue-50 border border-blue-200 rounded-md">
         <p className="text-sm text-blue-800">
-          <strong>Instructions:</strong> Write your answer in the text box below. 
-          Keep your answer concise and based on the information in the text.
+          <strong>Instructions:</strong> Write your answer in the text box
+          below. Keep your answer concise and based on the information in the
+          text.
         </p>
       </div>
 
@@ -64,15 +68,15 @@ export function ShortAnswer({ answer, onAnswerChange }: ShortAnswerProps) {
                 )}
               </div>
             </div>
-            
+
             <Textarea
               value={currentAnswer}
-              onChange={(e) => handleInputChange(e.target.value)}
+              onChange={e => handleInputChange(e.target.value)}
               placeholder="Type your answer here..."
               className="min-h-[100px] resize-none"
               maxLength={500}
             />
-            
+
             <div className="flex justify-between items-center text-xs text-muted-foreground">
               <span>Maximum 500 characters</span>
               <span>{currentAnswer.length}/500</span>
@@ -98,7 +102,9 @@ export function ShortAnswer({ answer, onAnswerChange }: ShortAnswerProps) {
           <strong>Tips:</strong>
         </p>
         <ul className="text-xs text-yellow-700 mt-1 space-y-1">
-          <li>• Look for keywords in the question to find the answer in the text</li>
+          <li>
+            • Look for keywords in the question to find the answer in the text
+          </li>
           <li>• Use the exact words from the text when possible</li>
           <li>• Keep your answer brief but complete</li>
           <li>• Check spelling and grammar</li>

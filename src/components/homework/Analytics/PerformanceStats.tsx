@@ -4,9 +4,9 @@ import React, { useState, useEffect } from 'react'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
-import { 
-  BarChart3, 
-  TrendingUp, 
+import {
+  BarChart3,
+  TrendingUp,
   TrendingDown,
   Target,
   Clock,
@@ -14,7 +14,7 @@ import {
   Users,
   BookOpen,
   AlertTriangle,
-  CheckCircle
+  CheckCircle,
 } from 'lucide-react'
 
 interface PerformanceStatsProps {
@@ -52,10 +52,10 @@ interface StatsData {
   recommendations: string[]
 }
 
-export default function PerformanceStats({ 
-  type, 
-  targetId, 
-  dateRange 
+export default function PerformanceStats({
+  type,
+  targetId,
+  dateRange,
 }: PerformanceStatsProps) {
   const [stats, setStats] = useState<StatsData | null>(null)
   const [loading, setLoading] = useState(true)
@@ -71,13 +71,13 @@ export default function PerformanceStats({
       const queryParams = new URLSearchParams({
         type,
         period: selectedPeriod,
-        ...(targetId && { [`${type}Id`]: targetId })
+        ...(targetId && { [`${type}Id`]: targetId }),
       })
 
       const response = await fetch(`/api/homework/analytics?${queryParams}`, {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
       })
 
       if (response.ok) {
@@ -95,9 +95,10 @@ export default function PerformanceStats({
     if (!stats) return null
 
     const { overview } = stats
-    const completionRate = overview.totalAssignments > 0 
-      ? (overview.completedAssignments / overview.totalAssignments) * 100 
-      : 0
+    const completionRate =
+      overview.totalAssignments > 0
+        ? (overview.completedAssignments / overview.totalAssignments) * 100
+        : 0
 
     return (
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
@@ -107,7 +108,13 @@ export default function PerformanceStats({
             <div className="p-3 bg-blue-100 rounded-lg">
               <CheckCircle className="h-6 w-6 text-blue-600" />
             </div>
-            <Badge className={completionRate >= 80 ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}>
+            <Badge
+              className={
+                completionRate >= 80
+                  ? 'bg-green-100 text-green-800'
+                  : 'bg-yellow-100 text-yellow-800'
+              }
+            >
               {completionRate >= 80 ? '优秀' : '良好'}
             </Badge>
           </div>
@@ -134,11 +141,17 @@ export default function PerformanceStats({
               ) : overview.improvementTrend < 0 ? (
                 <TrendingDown size={16} className="text-red-600" />
               ) : null}
-              <span className={`text-xs ${
-                overview.improvementTrend > 0 ? 'text-green-600' :
-                overview.improvementTrend < 0 ? 'text-red-600' : 'text-gray-600'
-              }`}>
-                {overview.improvementTrend > 0 ? '+' : ''}{overview.improvementTrend.toFixed(1)}%
+              <span
+                className={`text-xs ${
+                  overview.improvementTrend > 0
+                    ? 'text-green-600'
+                    : overview.improvementTrend < 0
+                      ? 'text-red-600'
+                      : 'text-gray-600'
+                }`}
+              >
+                {overview.improvementTrend > 0 ? '+' : ''}
+                {overview.improvementTrend.toFixed(1)}%
               </span>
             </div>
           </div>
@@ -163,7 +176,11 @@ export default function PerformanceStats({
             </p>
             <p className="text-sm text-gray-600">总用时 (分钟)</p>
             <p className="text-xs text-gray-500 mt-1">
-              平均 {Math.round(overview.totalTimeSpent / overview.completedAssignments / 60)} 分钟/作业
+              平均{' '}
+              {Math.round(
+                overview.totalTimeSpent / overview.completedAssignments / 60
+              )}{' '}
+              分钟/作业
             </p>
           </div>
         </Card>
@@ -195,7 +212,7 @@ export default function PerformanceStats({
           <BarChart3 size={20} />
           学科表现分析
         </h3>
-        
+
         <div className="space-y-4">
           {stats.subjects.map((subject, index) => (
             <div key={index} className="space-y-2">
@@ -217,19 +234,19 @@ export default function PerformanceStats({
                       ) : (
                         <TrendingDown size={14} className="text-red-600" />
                       )}
-                      <span className={`text-xs ${subject.trend > 0 ? 'text-green-600' : 'text-red-600'}`}>
-                        {subject.trend > 0 ? '+' : ''}{subject.trend.toFixed(1)}%
+                      <span
+                        className={`text-xs ${subject.trend > 0 ? 'text-green-600' : 'text-red-600'}`}
+                      >
+                        {subject.trend > 0 ? '+' : ''}
+                        {subject.trend.toFixed(1)}%
                       </span>
                     </div>
                   )}
                 </div>
               </div>
-              
-              <Progress 
-                value={subject.averageScore} 
-                className="h-2"
-              />
-              
+
+              <Progress value={subject.averageScore} className="h-2" />
+
               <div className="flex justify-between text-xs text-gray-500">
                 <span>用时: {Math.round(subject.timeSpent / 60)} 分钟</span>
                 <span>{subject.averageScore}/100</span>
@@ -247,37 +264,53 @@ export default function PerformanceStats({
     return (
       <Card className="p-6">
         <h3 className="text-lg font-semibold mb-4">最近表现</h3>
-        
+
         <div className="space-y-3">
           {stats.recentPerformance.slice(0, 5).map((performance, index) => (
-            <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+            <div
+              key={index}
+              className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+            >
               <div className="flex-1">
-                <p className="font-medium text-gray-900">{performance.assignment}</p>
+                <p className="font-medium text-gray-900">
+                  {performance.assignment}
+                </p>
                 <p className="text-sm text-gray-600">{performance.date}</p>
               </div>
-              
+
               <div className="flex items-center gap-4">
                 <div className="text-center">
-                  <p className="text-lg font-bold text-gray-900">{performance.score}</p>
+                  <p className="text-lg font-bold text-gray-900">
+                    {performance.score}
+                  </p>
                   <p className="text-xs text-gray-500">得分</p>
                 </div>
-                
+
                 <div className="text-center">
                   <p className="text-lg font-bold text-gray-900">
                     {Math.round(performance.timeSpent / 60)}
                   </p>
                   <p className="text-xs text-gray-500">分钟</p>
                 </div>
-                
-                <Badge className={
-                  performance.score >= 90 ? 'bg-green-100 text-green-800' :
-                  performance.score >= 80 ? 'bg-blue-100 text-blue-800' :
-                  performance.score >= 70 ? 'bg-yellow-100 text-yellow-800' :
-                  'bg-red-100 text-red-800'
-                }>
-                  {performance.score >= 90 ? '优秀' :
-                   performance.score >= 80 ? '良好' :
-                   performance.score >= 70 ? '及格' : '需改进'}
+
+                <Badge
+                  className={
+                    performance.score >= 90
+                      ? 'bg-green-100 text-green-800'
+                      : performance.score >= 80
+                        ? 'bg-blue-100 text-blue-800'
+                        : performance.score >= 70
+                          ? 'bg-yellow-100 text-yellow-800'
+                          : 'bg-red-100 text-red-800'
+                  }
+                >
+                  {performance.score >= 90
+                    ? '优秀'
+                    : performance.score >= 80
+                      ? '良好'
+                      : performance.score >= 70
+                        ? '及格'
+                        : '需改进'}
                 </Badge>
               </div>
             </div>
@@ -368,7 +401,7 @@ export default function PerformanceStats({
         <h2 className="text-2xl font-bold text-gray-900">学习表现分析</h2>
         <select
           value={selectedPeriod}
-          onChange={(e) => setSelectedPeriod(e.target.value)}
+          onChange={e => setSelectedPeriod(e.target.value)}
           className="px-3 py-2 border border-gray-300 rounded-md"
         >
           <option value="7days">最近7天</option>

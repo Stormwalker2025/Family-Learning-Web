@@ -12,7 +12,11 @@ interface DiscussionGuideProps {
   onClose: () => void
 }
 
-export function DiscussionGuide({ prompts, learningObjectives, onClose }: DiscussionGuideProps) {
+export function DiscussionGuide({
+  prompts,
+  learningObjectives,
+  onClose,
+}: DiscussionGuideProps) {
   return (
     <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
       <Card className="w-full max-w-2xl max-h-[80vh] overflow-auto">
@@ -27,7 +31,7 @@ export function DiscussionGuide({ prompts, learningObjectives, onClose }: Discus
             </Button>
           </div>
         </CardHeader>
-        
+
         <CardContent className="space-y-6">
           <Card>
             <CardHeader>

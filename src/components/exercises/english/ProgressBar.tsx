@@ -12,17 +12,17 @@ interface ProgressBarProps {
   timeLimit?: number // in minutes
 }
 
-export function ProgressBar({ 
-  progress, 
-  currentQuestion, 
-  totalQuestions, 
-  timeElapsed, 
-  timeLimit 
+export function ProgressBar({
+  progress,
+  currentQuestion,
+  totalQuestions,
+  timeElapsed,
+  timeLimit,
 }: ProgressBarProps) {
   const formatTime = (minutes: number) => {
     const hrs = Math.floor(minutes / 60)
     const mins = minutes % 60
-    
+
     if (hrs > 0) {
       return `${hrs}h ${mins}m`
     }
@@ -31,9 +31,9 @@ export function ProgressBar({
 
   const getTimeStatus = () => {
     if (!timeLimit) return 'normal'
-    
+
     const timeUsedPercentage = (timeElapsed / timeLimit) * 100
-    
+
     if (timeUsedPercentage >= 90) return 'critical'
     if (timeUsedPercentage >= 75) return 'warning'
     return 'normal'
@@ -75,14 +75,15 @@ export function ProgressBar({
                 Question {currentQuestion} of {totalQuestions}
               </span>
             </div>
-            
+
             <div className="flex items-center space-x-2">
               {getTimeStatusIcon()}
               <span className={`text-sm font-medium ${getTimeStatusColor()}`}>
                 {formatTime(timeElapsed)}
                 {timeLimit && (
                   <span className="text-muted-foreground">
-                    {' '}/ {formatTime(timeLimit)}
+                    {' '}
+                    / {formatTime(timeLimit)}
                   </span>
                 )}
               </span>
@@ -91,13 +92,12 @@ export function ProgressBar({
 
           {/* Progress Bar */}
           <div className="space-y-2">
-            <Progress 
-              value={progress} 
-              className="h-3"
-            />
+            <Progress value={progress} className="h-3" />
             <div className="flex justify-between text-xs text-muted-foreground">
               <span>{Math.round(progress)}% Complete</span>
-              <span>{totalQuestions - currentQuestion} questions remaining</span>
+              <span>
+                {totalQuestions - currentQuestion} questions remaining
+              </span>
             </div>
           </div>
 
@@ -110,19 +110,20 @@ export function ProgressBar({
                   {Math.round((timeElapsed / timeLimit) * 100)}%
                 </span>
               </div>
-              <Progress 
+              <Progress
                 value={(timeElapsed / timeLimit) * 100}
                 className={`h-2 ${
-                  timeStatus === 'critical' ? '[&>div]:bg-red-500' :
-                  timeStatus === 'warning' ? '[&>div]:bg-yellow-500' :
-                  '[&>div]:bg-blue-500'
+                  timeStatus === 'critical'
+                    ? '[&>div]:bg-red-500'
+                    : timeStatus === 'warning'
+                      ? '[&>div]:bg-yellow-500'
+                      : '[&>div]:bg-blue-500'
                 }`}
               />
               <div className="text-xs text-muted-foreground text-center">
-                {timeLimit - timeElapsed > 0 
+                {timeLimit - timeElapsed > 0
                   ? `${formatTime(timeLimit - timeElapsed)} remaining`
-                  : 'Time exceeded'
-                }
+                  : 'Time exceeded'}
               </div>
             </div>
           )}
@@ -131,8 +132,8 @@ export function ProgressBar({
           {timeStatus === 'warning' && (
             <div className="p-2 bg-yellow-50 border border-yellow-200 rounded-md">
               <p className="text-xs text-yellow-800">
-                <strong>Time Warning:</strong> You've used 75% of the recommended time. 
-                Consider speeding up your pace.
+                <strong>Time Warning:</strong> You've used 75% of the
+                recommended time. Consider speeding up your pace.
               </p>
             </div>
           )}
@@ -140,8 +141,8 @@ export function ProgressBar({
           {timeStatus === 'critical' && (
             <div className="p-2 bg-red-50 border border-red-200 rounded-md">
               <p className="text-xs text-red-800">
-                <strong>Time Critical:</strong> You've used 90% of the recommended time. 
-                Please finish the remaining questions quickly.
+                <strong>Time Critical:</strong> You've used 90% of the
+                recommended time. Please finish the remaining questions quickly.
               </p>
             </div>
           )}

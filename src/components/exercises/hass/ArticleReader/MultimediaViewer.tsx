@@ -66,7 +66,9 @@ export function MultimediaViewer({ media, onClose }: MultimediaViewerProps) {
             />
             <div className="mt-4 p-4 bg-muted/50 rounded-lg">
               <h4 className="font-medium mb-2">Chart Information</h4>
-              <p className="text-sm text-muted-foreground">{media.description}</p>
+              <p className="text-sm text-muted-foreground">
+                {media.description}
+              </p>
             </div>
           </div>
         )
@@ -82,7 +84,9 @@ export function MultimediaViewer({ media, onClose }: MultimediaViewerProps) {
             {media.description && (
               <div className="mt-4 p-4 bg-muted/50 rounded-lg">
                 <h4 className="font-medium mb-2">Diagram Explanation</h4>
-                <p className="text-sm text-muted-foreground">{media.description}</p>
+                <p className="text-sm text-muted-foreground">
+                  {media.description}
+                </p>
               </div>
             )}
           </div>
@@ -99,14 +103,16 @@ export function MultimediaViewer({ media, onClose }: MultimediaViewerProps) {
 
   return (
     <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
-      <Card className={`w-full max-w-4xl max-h-[90vh] overflow-auto ${isFullscreen ? 'max-w-full max-h-full' : ''}`}>
+      <Card
+        className={`w-full max-w-4xl max-h-[90vh] overflow-auto ${isFullscreen ? 'max-w-full max-h-full' : ''}`}
+      >
         <CardHeader>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <CardTitle>{media.title}</CardTitle>
               <Badge variant="outline">{media.type}</Badge>
             </div>
-            
+
             <div className="flex items-center gap-2">
               {/* Media Controls */}
               <Button
@@ -121,7 +127,7 @@ export function MultimediaViewer({ media, onClose }: MultimediaViewerProps) {
                   <Maximize2 className="h-4 w-4" />
                 )}
               </Button>
-              
+
               <Button
                 size="sm"
                 variant="ghost"
@@ -136,7 +142,7 @@ export function MultimediaViewer({ media, onClose }: MultimediaViewerProps) {
               >
                 <Download className="h-4 w-4" />
               </Button>
-              
+
               <Button
                 size="sm"
                 variant="ghost"
@@ -145,7 +151,7 @@ export function MultimediaViewer({ media, onClose }: MultimediaViewerProps) {
                     navigator.share({
                       title: media.title,
                       text: media.description,
-                      url: media.url
+                      url: media.url,
                     })
                   } else {
                     navigator.clipboard.writeText(media.url)
@@ -155,22 +161,17 @@ export function MultimediaViewer({ media, onClose }: MultimediaViewerProps) {
               >
                 <Share2 className="h-4 w-4" />
               </Button>
-              
-              <Button
-                size="sm"
-                variant="ghost"
-                onClick={onClose}
-                title="Close"
-              >
+
+              <Button size="sm" variant="ghost" onClick={onClose} title="Close">
                 <X className="h-4 w-4" />
               </Button>
             </div>
           </div>
         </CardHeader>
-        
+
         <CardContent className="p-6">
           {renderMediaContent()}
-          
+
           {/* Media Metadata */}
           {(media.duration || media.metadata) && (
             <div className="mt-6 p-4 bg-muted/50 rounded-lg">
@@ -184,35 +185,43 @@ export function MultimediaViewer({ media, onClose }: MultimediaViewerProps) {
                     </p>
                   </div>
                 )}
-                
+
                 <div>
                   <span className="font-medium">Type:</span>
-                  <p className="text-muted-foreground capitalize">{media.type.replace('-', ' ')}</p>
+                  <p className="text-muted-foreground capitalize">
+                    {media.type.replace('-', ' ')}
+                  </p>
                 </div>
-                
+
                 {media.interactive && (
                   <div>
                     <span className="font-medium">Interactive:</span>
                     <p className="text-muted-foreground">Yes</p>
                   </div>
                 )}
-                
-                {media.metadata && Object.entries(media.metadata).map(([key, value]) => (
-                  <div key={key}>
-                    <span className="font-medium capitalize">{key.replace(/([A-Z])/g, ' $1')}:</span>
-                    <p className="text-muted-foreground">{String(value)}</p>
-                  </div>
-                ))}
+
+                {media.metadata &&
+                  Object.entries(media.metadata).map(([key, value]) => (
+                    <div key={key}>
+                      <span className="font-medium capitalize">
+                        {key.replace(/([A-Z])/g, ' $1')}:
+                      </span>
+                      <p className="text-muted-foreground">{String(value)}</p>
+                    </div>
+                  ))}
               </div>
             </div>
           )}
-          
+
           {/* Interactive Elements Help */}
           {media.interactive && (
             <div className="mt-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
-              <h4 className="font-medium text-blue-900 dark:text-blue-100 mb-2">Interactive Elements</h4>
+              <h4 className="font-medium text-blue-900 dark:text-blue-100 mb-2">
+                Interactive Elements
+              </h4>
               <p className="text-sm text-blue-700 dark:text-blue-300">
-                This media contains interactive elements. Click, hover, or use the controls to explore the content.
+                This media contains interactive elements. Click, hover, or use
+                the controls to explore the content.
               </p>
             </div>
           )}

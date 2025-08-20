@@ -5,16 +5,16 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
-import { 
-  Trophy, 
-  Clock, 
-  Target, 
-  CheckCircle, 
-  XCircle, 
-  BookOpen, 
+import {
+  Trophy,
+  Clock,
+  Target,
+  CheckCircle,
+  XCircle,
+  BookOpen,
   TrendingUp,
   Award,
-  RotateCcw
+  RotateCcw,
 } from 'lucide-react'
 
 interface ResultsSummaryProps {
@@ -24,14 +24,16 @@ interface ResultsSummaryProps {
   onRestart?: () => void
 }
 
-export function ResultsSummary({ 
-  submission, 
-  feedback, 
-  exercise, 
-  onRestart 
+export function ResultsSummary({
+  submission,
+  feedback,
+  exercise,
+  onRestart,
 }: ResultsSummaryProps) {
-  const scorePercentage = Math.round((submission.score / submission.maxScore) * 100)
-  
+  const scorePercentage = Math.round(
+    (submission.score / submission.maxScore) * 100
+  )
+
   const getScoreColor = (percentage: number) => {
     if (percentage >= 90) return 'text-green-600'
     if (percentage >= 80) return 'text-blue-600'
@@ -42,14 +44,15 @@ export function ResultsSummary({
   const getScoreBadgeColor = (percentage: number) => {
     if (percentage >= 90) return 'bg-green-100 text-green-800 border-green-200'
     if (percentage >= 80) return 'bg-blue-100 text-blue-800 border-blue-200'
-    if (percentage >= 70) return 'bg-yellow-100 text-yellow-800 border-yellow-200'
+    if (percentage >= 70)
+      return 'bg-yellow-100 text-yellow-800 border-yellow-200'
     return 'bg-red-100 text-red-800 border-red-200'
   }
 
   const formatTime = (minutes: number) => {
     const hrs = Math.floor(minutes / 60)
     const mins = minutes % 60
-    
+
     if (hrs > 0) {
       return `${hrs}h ${mins}m`
     }
@@ -63,7 +66,9 @@ export function ResultsSummary({
         <CardHeader className="text-center">
           <div className="flex justify-center mb-4">
             <div className="relative">
-              <Trophy className={`h-16 w-16 ${getScoreColor(scorePercentage)}`} />
+              <Trophy
+                className={`h-16 w-16 ${getScoreColor(scorePercentage)}`}
+              />
               {scorePercentage >= 90 && (
                 <Award className="h-8 w-8 text-yellow-500 absolute -top-2 -right-2" />
               )}
@@ -77,11 +82,16 @@ export function ResultsSummary({
           <p className="text-lg text-muted-foreground">
             {submission.score} out of {submission.maxScore} points
           </p>
-          <Badge className={`${getScoreBadgeColor(scorePercentage)} text-sm px-3 py-1`}>
-            {scorePercentage >= 90 ? 'Excellent!' :
-             scorePercentage >= 80 ? 'Great job!' :
-             scorePercentage >= 70 ? 'Good effort!' :
-             'Keep practicing!'}
+          <Badge
+            className={`${getScoreBadgeColor(scorePercentage)} text-sm px-3 py-1`}
+          >
+            {scorePercentage >= 90
+              ? 'Excellent!'
+              : scorePercentage >= 80
+                ? 'Great job!'
+                : scorePercentage >= 70
+                  ? 'Good effort!'
+                  : 'Keep practicing!'}
           </Badge>
         </CardHeader>
       </Card>
@@ -94,9 +104,7 @@ export function ResultsSummary({
             <div className="text-2xl font-bold text-green-600">
               {submission.correctAnswers}
             </div>
-            <div className="text-sm text-muted-foreground">
-              Correct Answers
-            </div>
+            <div className="text-sm text-muted-foreground">Correct Answers</div>
           </CardContent>
         </Card>
 
@@ -118,9 +126,7 @@ export function ResultsSummary({
             <div className="text-2xl font-bold text-blue-600">
               {formatTime(submission.timeSpent)}
             </div>
-            <div className="text-sm text-muted-foreground">
-              Time Spent
-            </div>
+            <div className="text-sm text-muted-foreground">Time Spent</div>
           </CardContent>
         </Card>
       </div>
@@ -136,15 +142,22 @@ export function ResultsSummary({
         <CardContent>
           <div className="space-y-4">
             {feedback.questionAnalysis.map((analysis, index) => {
-              const question = exercise.questions.find(q => q.id === analysis.questionId)
+              const question = exercise.questions.find(
+                q => q.id === analysis.questionId
+              )
               if (!question) return null
 
               return (
-                <div key={analysis.questionId} className="border rounded-lg p-4">
+                <div
+                  key={analysis.questionId}
+                  className="border rounded-lg p-4"
+                >
                   <div className="flex items-start justify-between mb-2">
                     <div className="flex-1">
                       <div className="flex items-center space-x-2 mb-2">
-                        <span className="font-semibold">Question {index + 1}</span>
+                        <span className="font-semibold">
+                          Question {index + 1}
+                        </span>
                         <Badge variant="outline" className="text-xs">
                           {analysis.questionType.replace('-', ' ')}
                         </Badge>
@@ -168,19 +181,23 @@ export function ResultsSummary({
                   <div className="space-y-2 text-sm">
                     <div>
                       <strong>Your answer:</strong>{' '}
-                      <span className={analysis.isCorrect ? 'text-green-600' : 'text-red-600'}>
-                        {Array.isArray(analysis.userAnswer) 
-                          ? analysis.userAnswer.join(', ') 
+                      <span
+                        className={
+                          analysis.isCorrect ? 'text-green-600' : 'text-red-600'
+                        }
+                      >
+                        {Array.isArray(analysis.userAnswer)
+                          ? analysis.userAnswer.join(', ')
                           : analysis.userAnswer}
                       </span>
                     </div>
-                    
+
                     {!analysis.isCorrect && (
                       <div>
                         <strong>Correct answer:</strong>{' '}
                         <span className="text-green-600">
-                          {Array.isArray(analysis.correctAnswer) 
-                            ? analysis.correctAnswer.join(', ') 
+                          {Array.isArray(analysis.correctAnswer)
+                            ? analysis.correctAnswer.join(', ')
                             : analysis.correctAnswer}
                         </span>
                       </div>
@@ -276,9 +293,7 @@ export function ResultsSummary({
             Try Again
           </Button>
         )}
-        <Button onClick={() => window.print()}>
-          Print Results
-        </Button>
+        <Button onClick={() => window.print()}>Print Results</Button>
       </div>
     </div>
   )

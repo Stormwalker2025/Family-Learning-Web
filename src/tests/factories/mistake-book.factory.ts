@@ -8,7 +8,15 @@ export interface MistakeBookFactory {
   wrongAnswer: string
   correctAnswer: string
   explanation?: string
-  mistakeType: 'CARELESS_ERROR' | 'CONCEPT_ERROR' | 'METHOD_ERROR' | 'CALCULATION_ERROR' | 'READING_ERROR' | 'TIME_PRESSURE' | 'VOCABULARY_ERROR' | 'GRAMMAR_ERROR'
+  mistakeType:
+    | 'CARELESS_ERROR'
+    | 'CONCEPT_ERROR'
+    | 'METHOD_ERROR'
+    | 'CALCULATION_ERROR'
+    | 'READING_ERROR'
+    | 'TIME_PRESSURE'
+    | 'VOCABULARY_ERROR'
+    | 'GRAMMAR_ERROR'
   topic?: string
   difficulty: 'BEGINNER' | 'EASY' | 'MEDIUM' | 'HARD' | 'ADVANCED'
   isResolved: boolean
@@ -30,7 +38,9 @@ export interface MistakeBookReviewFactory {
   reviewedAt: Date
 }
 
-export const createMistakeBook = (overrides: Partial<MistakeBookFactory> = {}): MistakeBookFactory => ({
+export const createMistakeBook = (
+  overrides: Partial<MistakeBookFactory> = {}
+): MistakeBookFactory => ({
   id: faker.string.uuid(),
   userId: faker.string.uuid(),
   exerciseId: faker.string.uuid(),
@@ -40,16 +50,22 @@ export const createMistakeBook = (overrides: Partial<MistakeBookFactory> = {}): 
   explanation: faker.lorem.sentence(),
   mistakeType: faker.helpers.arrayElement([
     'CARELESS_ERROR',
-    'CONCEPT_ERROR', 
+    'CONCEPT_ERROR',
     'METHOD_ERROR',
     'CALCULATION_ERROR',
     'READING_ERROR',
     'TIME_PRESSURE',
     'VOCABULARY_ERROR',
-    'GRAMMAR_ERROR'
+    'GRAMMAR_ERROR',
   ] as const),
   topic: faker.lorem.words({ min: 1, max: 3 }),
-  difficulty: faker.helpers.arrayElement(['BEGINNER', 'EASY', 'MEDIUM', 'HARD', 'ADVANCED'] as const),
+  difficulty: faker.helpers.arrayElement([
+    'BEGINNER',
+    'EASY',
+    'MEDIUM',
+    'HARD',
+    'ADVANCED',
+  ] as const),
   isResolved: faker.datatype.boolean({ probability: 0.3 }),
   reviewCount: faker.number.int({ min: 0, max: 5 }),
   lastReviewed: faker.datatype.boolean() ? faker.date.past() : undefined,
@@ -61,7 +77,9 @@ export const createMistakeBook = (overrides: Partial<MistakeBookFactory> = {}): 
   ...overrides,
 })
 
-export const createMistakeBookReview = (overrides: Partial<MistakeBookReviewFactory> = {}): MistakeBookReviewFactory => ({
+export const createMistakeBookReview = (
+  overrides: Partial<MistakeBookReviewFactory> = {}
+): MistakeBookReviewFactory => ({
   id: faker.string.uuid(),
   mistakeId: faker.string.uuid(),
   isCorrect: faker.datatype.boolean({ probability: 0.7 }),
@@ -72,7 +90,10 @@ export const createMistakeBookReview = (overrides: Partial<MistakeBookReviewFact
 })
 
 // 澳洲特定的错题类型
-export const createMathsMistake = (userId: string, exerciseId: string): MistakeBookFactory =>
+export const createMathsMistake = (
+  userId: string,
+  exerciseId: string
+): MistakeBookFactory =>
   createMistakeBook({
     userId,
     exerciseId,
@@ -85,46 +106,61 @@ export const createMathsMistake = (userId: string, exerciseId: string): MistakeB
     isResolved: false,
   })
 
-export const createEnglishMistake = (userId: string, exerciseId: string): MistakeBookFactory =>
+export const createEnglishMistake = (
+  userId: string,
+  exerciseId: string
+): MistakeBookFactory =>
   createMistakeBook({
     userId,
     exerciseId,
     wrongAnswer: 'Their going to the park',
     correctAnswer: "They're going to the park",
-    explanation: "Use 'They're' (they are) instead of 'Their' (possessive pronoun)",
+    explanation:
+      "Use 'They're' (they are) instead of 'Their' (possessive pronoun)",
     mistakeType: 'GRAMMAR_ERROR',
-    topic: 'Homophones - Their vs They\'re',
+    topic: "Homophones - Their vs They're",
     difficulty: 'EASY',
     isResolved: false,
   })
 
-export const createHASSMistake = (userId: string, exerciseId: string): MistakeBookFactory =>
+export const createHASSMistake = (
+  userId: string,
+  exerciseId: string
+): MistakeBookFactory =>
   createMistakeBook({
     userId,
     exerciseId,
     wrongAnswer: '1901',
     correctAnswer: '1788',
-    explanation: 'The First Fleet arrived in Australia in 1788, not 1901 (which was Federation)',
+    explanation:
+      'The First Fleet arrived in Australia in 1788, not 1901 (which was Federation)',
     mistakeType: 'CONCEPT_ERROR',
     topic: 'Australian History - First Fleet',
     difficulty: 'MEDIUM',
     isResolved: false,
   })
 
-export const createVocabularyMistake = (userId: string, exerciseId: string): MistakeBookFactory =>
+export const createVocabularyMistake = (
+  userId: string,
+  exerciseId: string
+): MistakeBookFactory =>
   createMistakeBook({
     userId,
     exerciseId,
     wrongAnswer: 'Joey means baby bird',
     correctAnswer: 'Joey means baby kangaroo/marsupial',
-    explanation: 'A joey is specifically a young kangaroo, wallaby, or other marsupial',
+    explanation:
+      'A joey is specifically a young kangaroo, wallaby, or other marsupial',
     mistakeType: 'VOCABULARY_ERROR',
     topic: 'Australian Animals Vocabulary',
     difficulty: 'EASY',
     isResolved: false,
   })
 
-export const createResolvedMistake = (userId: string, exerciseId: string): MistakeBookFactory =>
+export const createResolvedMistake = (
+  userId: string,
+  exerciseId: string
+): MistakeBookFactory =>
   createMistakeBook({
     userId,
     exerciseId,
@@ -135,7 +171,9 @@ export const createResolvedMistake = (userId: string, exerciseId: string): Mista
     notes: 'Mastered after 3 reviews. No longer making this mistake.',
   })
 
-export const createSuccessfulReview = (mistakeId: string): MistakeBookReviewFactory =>
+export const createSuccessfulReview = (
+  mistakeId: string
+): MistakeBookReviewFactory =>
   createMistakeBookReview({
     mistakeId,
     isCorrect: true,
@@ -143,7 +181,9 @@ export const createSuccessfulReview = (mistakeId: string): MistakeBookReviewFact
     notes: 'Got it right this time! Understanding improved.',
   })
 
-export const createFailedReview = (mistakeId: string): MistakeBookReviewFactory =>
+export const createFailedReview = (
+  mistakeId: string
+): MistakeBookReviewFactory =>
   createMistakeBookReview({
     mistakeId,
     isCorrect: false,

@@ -7,7 +7,7 @@ import { year6HassExercises } from '@/data/hass-exercises/year6-examples'
 // Combined mock data for demonstration - in production this would come from database
 const mockHassExercises: HassExercise[] = [
   ...year3HassExercises,
-  ...year6HassExercises
+  ...year6HassExercises,
 ]
 
 // GET /api/exercises/hass - Get all HASS exercises
@@ -53,8 +53,8 @@ export async function GET(request: NextRequest) {
     }
 
     if (topic) {
-      filteredExercises = filteredExercises.filter(
-        exercise => exercise.tags.includes(topic.toLowerCase())
+      filteredExercises = filteredExercises.filter(exercise =>
+        exercise.tags.includes(topic.toLowerCase())
       )
     }
 
@@ -64,9 +64,8 @@ export async function GET(request: NextRequest) {
       total: filteredExercises.length,
       subjects: ['history', 'geography', 'civics', 'economics'],
       yearLevels: [3, 6],
-      difficulties: ['foundation', 'developing', 'proficient', 'advanced']
+      difficulties: ['foundation', 'developing', 'proficient', 'advanced'],
     })
-
   } catch (error) {
     console.error('Error fetching HASS exercises:', error)
     return NextResponse.json(
@@ -87,15 +86,20 @@ export async function POST(request: NextRequest) {
 
     const decoded = await verifyToken(token)
     if (!decoded || decoded.role !== 'ADMIN') {
-      return NextResponse.json({ error: 'Admin access required' }, { status: 403 })
+      return NextResponse.json(
+        { error: 'Admin access required' },
+        { status: 403 }
+      )
     }
 
     const body = await request.json()
-    
+
     // Validate required fields
     if (!body.title || !body.subject || !body.article || !body.questions) {
       return NextResponse.json(
-        { error: 'Missing required fields: title, subject, article, questions' },
+        {
+          error: 'Missing required fields: title, subject, article, questions',
+        },
         { status: 400 }
       )
     }
@@ -104,7 +108,10 @@ export async function POST(request: NextRequest) {
     const validSubjects = ['history', 'geography', 'civics', 'economics']
     if (!validSubjects.includes(body.subject)) {
       return NextResponse.json(
-        { error: 'Invalid subject. Must be one of: history, geography, civics, economics' },
+        {
+          error:
+            'Invalid subject. Must be one of: history, geography, civics, economics',
+        },
         { status: 400 }
       )
     }
@@ -114,7 +121,7 @@ export async function POST(request: NextRequest) {
       id: `hass-${Date.now()}`,
       ...body,
       createdAt: new Date(),
-      updatedAt: new Date()
+      updatedAt: new Date(),
     }
 
     // Add to mock data for now
@@ -122,9 +129,8 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      exercise: newExercise
+      exercise: newExercise,
     })
-
   } catch (error) {
     console.error('Error creating HASS exercise:', error)
     return NextResponse.json(

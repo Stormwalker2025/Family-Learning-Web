@@ -9,12 +9,12 @@ export {
   NumberLine,
   FractionBar,
   ShapeDrawer,
-  PlaceValueChart
+  PlaceValueChart,
 } from './MathTools'
 
 // Question Types
 export {
   PlaceValueQuestion,
   FractionQuestion,
-  AreaPerimeterQuestion
+  AreaPerimeterQuestion,
 } from './QuestionTypes'

@@ -11,21 +11,21 @@ import { ROLE_PERMISSIONS } from '@/lib/auth/config'
 
 interface AuthGuardProps {
   children: ReactNode
-  
+
   // 认证要求
   requireAuth?: boolean
   requireRole?: UserRole
   requirePermission?: keyof typeof ROLE_PERMISSIONS.ADMIN
   requireAnyRole?: UserRole[]
-  
+
   // 重定向选项
   loginRedirect?: string
   accessDeniedRedirect?: string
-  
+
   // 加载和错误状态
   loadingComponent?: ReactNode
   errorComponent?: ReactNode
-  
+
   // 自定义检查
   customCheck?: (user: User) => boolean
 }
@@ -40,7 +40,7 @@ export default function AuthGuard({
   accessDeniedRedirect = '/dashboard',
   loadingComponent,
   errorComponent,
-  customCheck
+  customCheck,
 }: AuthGuardProps) {
   const router = useRouter()
   const [user, setUser] = useState<User | null>(null)
@@ -52,7 +52,7 @@ export default function AuthGuard({
     const checkAuth = async () => {
       try {
         const response = await fetch('/api/auth/me')
-        
+
         if (response.ok) {
           const data = await response.json()
           if (data.success) {
@@ -124,18 +124,17 @@ export default function AuthGuard({
       router.push(accessDeniedRedirect)
       return
     }
-
   }, [
-    user, 
-    loading, 
-    requireAuth, 
-    requireRole, 
-    requirePermission, 
-    requireAnyRole, 
+    user,
+    loading,
+    requireAuth,
+    requireRole,
+    requirePermission,
+    requireAnyRole,
     customCheck,
     router,
     loginRedirect,
-    accessDeniedRedirect
+    accessDeniedRedirect,
   ])
 
   // 加载状态
@@ -143,7 +142,7 @@ export default function AuthGuard({
     if (loadingComponent) {
       return <>{loadingComponent}</>
     }
-    
+
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
@@ -159,7 +158,7 @@ export default function AuthGuard({
     if (errorComponent) {
       return <>{errorComponent}</>
     }
-    
+
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
@@ -189,10 +188,10 @@ export default function AuthGuard({
 // 便捷保护组件
 
 // 管理员专用页面保护
-export function AdminGuard({ 
-  children, 
-  loadingComponent, 
-  errorComponent 
+export function AdminGuard({
+  children,
+  loadingComponent,
+  errorComponent,
 }: {
   children: ReactNode
   loadingComponent?: ReactNode
@@ -210,10 +209,10 @@ export function AdminGuard({
 }
 
 // 家长或管理员页面保护
-export function ParentOrAdminGuard({ 
-  children, 
-  loadingComponent, 
-  errorComponent 
+export function ParentOrAdminGuard({
+  children,
+  loadingComponent,
+  errorComponent,
 }: {
   children: ReactNode
   loadingComponent?: ReactNode
@@ -231,10 +230,10 @@ export function ParentOrAdminGuard({
 }
 
 // 学生专用页面保护
-export function StudentGuard({ 
-  children, 
-  loadingComponent, 
-  errorComponent 
+export function StudentGuard({
+  children,
+  loadingComponent,
+  errorComponent,
 }: {
   children: ReactNode
   loadingComponent?: ReactNode
@@ -252,10 +251,10 @@ export function StudentGuard({
 }
 
 // 基本认证保护（任何登录用户）
-export function BasicAuthGuard({ 
-  children, 
-  loadingComponent, 
-  errorComponent 
+export function BasicAuthGuard({
+  children,
+  loadingComponent,
+  errorComponent,
 }: {
   children: ReactNode
   loadingComponent?: ReactNode

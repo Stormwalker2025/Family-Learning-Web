@@ -12,8 +12,14 @@ interface BackgroundInfoProps {
   onClose: () => void
 }
 
-export function BackgroundInfo({ info, culturalContext, onClose }: BackgroundInfoProps) {
-  const contexts = Array.isArray(culturalContext) ? culturalContext : [culturalContext]
+export function BackgroundInfo({
+  info,
+  culturalContext,
+  onClose,
+}: BackgroundInfoProps) {
+  const contexts = Array.isArray(culturalContext)
+    ? culturalContext
+    : [culturalContext]
 
   return (
     <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
@@ -29,7 +35,7 @@ export function BackgroundInfo({ info, culturalContext, onClose }: BackgroundInf
             </Button>
           </div>
         </CardHeader>
-        
+
         <CardContent>
           <div className="space-y-4">
             <div className="flex flex-wrap gap-2">
@@ -39,7 +45,7 @@ export function BackgroundInfo({ info, culturalContext, onClose }: BackgroundInf
                 </Badge>
               ))}
             </div>
-            
+
             <div className="prose prose-sm max-w-none">
               <p className="leading-relaxed">{info}</p>
             </div>

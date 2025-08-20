@@ -6,17 +6,17 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { 
-  BookOpen, 
-  Search, 
-  Filter, 
-  Clock, 
-  Target, 
+import {
+  BookOpen,
+  Search,
+  Filter,
+  Clock,
+  Target,
   Users,
   Globe,
   Landmark,
   Scale,
-  Briefcase
+  Briefcase,
 } from 'lucide-react'
 import { HassExercise as HassExerciseType, HassSubmission } from '@/types'
 import { HassExercise } from '@/components/exercises/hass'
@@ -26,17 +26,33 @@ export default function HassPage() {
   const { user } = useAuth()
   const [exercises, setExercises] = useState<HassExerciseType[]>([])
   const [loading, setLoading] = useState(true)
-  const [selectedExercise, setSelectedExercise] = useState<HassExerciseType | null>(null)
+  const [selectedExercise, setSelectedExercise] =
+    useState<HassExerciseType | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedSubject, setSelectedSubject] = useState<string>('all')
   const [selectedDifficulty, setSelectedDifficulty] = useState<string>('all')
   const [selectedYearLevel, setSelectedYearLevel] = useState<string>('all')
 
   const subjects = [
-    { value: 'history', label: 'History', icon: Landmark, color: 'text-purple-600' },
-    { value: 'geography', label: 'Geography', icon: Globe, color: 'text-blue-600' },
+    {
+      value: 'history',
+      label: 'History',
+      icon: Landmark,
+      color: 'text-purple-600',
+    },
+    {
+      value: 'geography',
+      label: 'Geography',
+      icon: Globe,
+      color: 'text-blue-600',
+    },
     { value: 'civics', label: 'Civics', icon: Scale, color: 'text-green-600' },
-    { value: 'economics', label: 'Economics', icon: Briefcase, color: 'text-orange-600' }
+    {
+      value: 'economics',
+      label: 'Economics',
+      icon: Briefcase,
+      color: 'text-orange-600',
+    },
   ]
 
   useEffect(() => {
@@ -48,13 +64,15 @@ export default function HassPage() {
       setLoading(true)
       const params = new URLSearchParams()
       if (selectedSubject !== 'all') params.set('subject', selectedSubject)
-      if (selectedDifficulty !== 'all') params.set('difficulty', selectedDifficulty)
-      if (selectedYearLevel !== 'all') params.set('yearLevel', selectedYearLevel)
+      if (selectedDifficulty !== 'all')
+        params.set('difficulty', selectedDifficulty)
+      if (selectedYearLevel !== 'all')
+        params.set('yearLevel', selectedYearLevel)
 
       const response = await fetch(`/api/exercises/hass?${params}`, {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
-        }
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
       })
 
       if (response.ok) {
@@ -69,11 +87,14 @@ export default function HassPage() {
   }
 
   const filteredExercises = exercises.filter(exercise => {
-    const matchesSearch = searchTerm === '' || 
+    const matchesSearch =
+      searchTerm === '' ||
       exercise.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       exercise.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      exercise.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()))
-    
+      exercise.tags.some(tag =>
+        tag.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+
     return matchesSearch
   })
 
@@ -83,9 +104,9 @@ export default function HassPage() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
-        body: JSON.stringify(submission)
+        body: JSON.stringify(submission),
       })
 
       if (response.ok) {
@@ -101,17 +122,24 @@ export default function HassPage() {
   const getSubjectIcon = (subject: string) => {
     const subjectConfig = subjects.find(s => s.value === subject)
     const Icon = subjectConfig?.icon || BookOpen
-    return <Icon className={`h-4 w-4 ${subjectConfig?.color || 'text-gray-600'}`} />
+    return (
+      <Icon className={`h-4 w-4 ${subjectConfig?.color || 'text-gray-600'}`} />
+    )
   }
 
   const getDifficultyColor = (difficulty: string) => {
     const colors = {
-      foundation: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
-      developing: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
-      proficient: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
-      advanced: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
+      foundation:
+        'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
+      developing:
+        'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
+      proficient:
+        'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
+      advanced: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
     }
-    return colors[difficulty as keyof typeof colors] || 'bg-gray-100 text-gray-800'
+    return (
+      colors[difficulty as keyof typeof colors] || 'bg-gray-100 text-gray-800'
+    )
   }
 
   if (selectedExercise && user) {
@@ -128,9 +156,12 @@ export default function HassPage() {
     <div className="container mx-auto p-6 space-y-6">
       {/* Header */}
       <div className="text-center">
-        <h1 className="text-3xl font-bold mb-2">HASS (Humanities and Social Sciences)</h1>
+        <h1 className="text-3xl font-bold mb-2">
+          HASS (Humanities and Social Sciences)
+        </h1>
         <p className="text-muted-foreground">
-          Explore history, geography, civics, and economics through engaging Australian content
+          Explore history, geography, civics, and economics through engaging
+          Australian content
         </p>
       </div>
 
@@ -149,7 +180,7 @@ export default function HassPage() {
             <Input
               placeholder="Search exercises..."
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={e => setSearchTerm(e.target.value)}
               className="pl-9"
             />
           </div>
@@ -159,7 +190,11 @@ export default function HassPage() {
             <TabsList className="grid w-full grid-cols-5">
               <TabsTrigger value="all">All Subjects</TabsTrigger>
               {subjects.map(subject => (
-                <TabsTrigger key={subject.value} value={subject.value} className="flex items-center gap-2">
+                <TabsTrigger
+                  key={subject.value}
+                  value={subject.value}
+                  className="flex items-center gap-2"
+                >
                   {getSubjectIcon(subject.value)}
                   {subject.label}
                 </TabsTrigger>
@@ -173,7 +208,7 @@ export default function HassPage() {
               <label className="text-sm font-medium">Year Level:</label>
               <select
                 value={selectedYearLevel}
-                onChange={(e) => setSelectedYearLevel(e.target.value)}
+                onChange={e => setSelectedYearLevel(e.target.value)}
                 className="text-sm border rounded px-2 py-1"
               >
                 <option value="all">All Years</option>
@@ -186,7 +221,7 @@ export default function HassPage() {
               <label className="text-sm font-medium">Difficulty:</label>
               <select
                 value={selectedDifficulty}
-                onChange={(e) => setSelectedDifficulty(e.target.value)}
+                onChange={e => setSelectedDifficulty(e.target.value)}
                 className="text-sm border rounded px-2 py-1"
               >
                 <option value="all">All Levels</option>
@@ -208,8 +243,12 @@ export default function HassPage() {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredExercises.map((exercise) => (
-            <Card key={exercise.id} className="h-full flex flex-col hover:shadow-md transition-shadow cursor-pointer" onClick={() => setSelectedExercise(exercise)}>
+          {filteredExercises.map(exercise => (
+            <Card
+              key={exercise.id}
+              className="h-full flex flex-col hover:shadow-md transition-shadow cursor-pointer"
+              onClick={() => setSelectedExercise(exercise)}
+            >
               <CardHeader>
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
@@ -231,7 +270,7 @@ export default function HassPage() {
                   </Badge>
                 </div>
               </CardHeader>
-              
+
               <CardContent className="flex-1 flex flex-col">
                 <p className="text-sm text-muted-foreground mb-4 flex-1">
                   {exercise.description}
@@ -265,7 +304,7 @@ export default function HassPage() {
                 {/* Tags */}
                 {exercise.tags.length > 0 && (
                   <div className="flex flex-wrap gap-1 mt-3">
-                    {exercise.tags.slice(0, 3).map((tag) => (
+                    {exercise.tags.slice(0, 3).map(tag => (
                       <Badge key={tag} variant="secondary" className="text-xs">
                         {tag.replace('-', ' ')}
                       </Badge>
@@ -278,9 +317,7 @@ export default function HassPage() {
                   </div>
                 )}
 
-                <Button className="w-full mt-4">
-                  Start Exercise
-                </Button>
+                <Button className="w-full mt-4">Start Exercise</Button>
               </CardContent>
             </Card>
           ))}
@@ -292,7 +329,8 @@ export default function HassPage() {
           <BookOpen className="h-12 w-12 mx-auto mb-4 opacity-50" />
           <h3 className="text-lg font-semibold mb-2">No exercises found</h3>
           <p className="text-muted-foreground">
-            Try adjusting your search criteria or check back later for new content.
+            Try adjusting your search criteria or check back later for new
+            content.
           </p>
         </div>
       )}

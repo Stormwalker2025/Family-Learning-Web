@@ -88,10 +88,18 @@ export function validatePasswordStrength(password: string): {
 
   // 常见密码检查
   const commonPasswords = [
-    'password', '123456', '12345678', 'qwerty', 'abc123',
-    'password123', '111111', '123123', 'admin', 'welcome'
+    'password',
+    '123456',
+    '12345678',
+    'qwerty',
+    'abc123',
+    'password123',
+    '111111',
+    '123123',
+    'admin',
+    'welcome',
   ]
-  
+
   if (commonPasswords.includes(password.toLowerCase())) {
     errors.push('不能使用常见密码')
     score = Math.min(score, 30)
@@ -106,7 +114,7 @@ export function validatePasswordStrength(password: string): {
   return {
     isValid: errors.length === 0,
     errors,
-    score: Math.max(0, Math.min(100, score))
+    score: Math.max(0, Math.min(100, score)),
   }
 }
 
@@ -131,12 +139,12 @@ export function generateRandomPassword(
   }
 
   let password = ''
-  
+
   // 确保至少包含一个小写字母、一个大写字母和一个数字
   password += lowercase[Math.floor(Math.random() * lowercase.length)]
   password += uppercase[Math.floor(Math.random() * uppercase.length)]
   password += numbers[Math.floor(Math.random() * numbers.length)]
-  
+
   if (includeSpecialChars) {
     password += specialChars[Math.floor(Math.random() * specialChars.length)]
   }
@@ -202,9 +210,9 @@ export function calculatePasswordSimilarity(
         matrix[i][j] = matrix[i - 1][j - 1]
       } else {
         matrix[i][j] = Math.min(
-          matrix[i - 1][j] + 1,     // 删除
-          matrix[i][j - 1] + 1,     // 插入
-          matrix[i - 1][j - 1] + 1  // 替换
+          matrix[i - 1][j] + 1, // 删除
+          matrix[i][j - 1] + 1, // 插入
+          matrix[i - 1][j - 1] + 1 // 替换
         )
       }
     }

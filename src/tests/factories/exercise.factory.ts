@@ -28,13 +28,26 @@ export interface QuestionFactory {
   order: number
 }
 
-export const createExercise = (overrides: Partial<ExerciseFactory> = {}): ExerciseFactory => ({
+export const createExercise = (
+  overrides: Partial<ExerciseFactory> = {}
+): ExerciseFactory => ({
   id: faker.string.uuid(),
   title: faker.lorem.sentence({ min: 3, max: 8 }),
   description: faker.lorem.paragraph({ min: 1, max: 3 }),
-  subject: faker.helpers.arrayElement(['ENGLISH', 'MATHS', 'HASS', 'VOCABULARY'] as const),
+  subject: faker.helpers.arrayElement([
+    'ENGLISH',
+    'MATHS',
+    'HASS',
+    'VOCABULARY',
+  ] as const),
   yearLevel: faker.number.int({ min: 1, max: 12 }),
-  difficulty: faker.helpers.arrayElement(['BEGINNER', 'EASY', 'MEDIUM', 'HARD', 'ADVANCED'] as const),
+  difficulty: faker.helpers.arrayElement([
+    'BEGINNER',
+    'EASY',
+    'MEDIUM',
+    'HARD',
+    'ADVANCED',
+  ] as const),
   exerciseType: 'READING_COMPREHENSION',
   timeLimit: faker.number.int({ min: 10, max: 60 }),
   isActive: true,
@@ -75,10 +88,17 @@ export const createHASSExercise = (yearLevel: number = 6): ExerciseFactory =>
     timeLimit: 25,
   })
 
-export const createQuestion = (overrides: Partial<QuestionFactory> = {}): QuestionFactory => ({
+export const createQuestion = (
+  overrides: Partial<QuestionFactory> = {}
+): QuestionFactory => ({
   id: faker.string.uuid(),
   exerciseId: faker.string.uuid(),
-  type: faker.helpers.arrayElement(['MULTIPLE_CHOICE', 'SHORT_ANSWER', 'CALCULATION', 'TRUE_FALSE'] as const),
+  type: faker.helpers.arrayElement([
+    'MULTIPLE_CHOICE',
+    'SHORT_ANSWER',
+    'CALCULATION',
+    'TRUE_FALSE',
+  ] as const),
   question: faker.lorem.sentence() + '?',
   options: ['A. Option 1', 'B. Option 2', 'C. Option 3', 'D. Option 4'],
   correctAnswer: 'A',
@@ -88,17 +108,22 @@ export const createQuestion = (overrides: Partial<QuestionFactory> = {}): Questi
   ...overrides,
 })
 
-export const createMultipleChoiceQuestion = (exerciseId: string): QuestionFactory =>
+export const createMultipleChoiceQuestion = (
+  exerciseId: string
+): QuestionFactory =>
   createQuestion({
     exerciseId,
     type: 'MULTIPLE_CHOICE',
     question: 'Which of the following Australian animals is a marsupial?',
     options: ['A. Kangaroo', 'B. Platypus', 'C. Dingo', 'D. Crocodile'],
     correctAnswer: 'A',
-    explanation: 'Kangaroos are marsupials as they carry their young in a pouch.',
+    explanation:
+      'Kangaroos are marsupials as they carry their young in a pouch.',
   })
 
-export const createCalculationQuestion = (exerciseId: string): QuestionFactory =>
+export const createCalculationQuestion = (
+  exerciseId: string
+): QuestionFactory =>
   createQuestion({
     exerciseId,
     type: 'CALCULATION',

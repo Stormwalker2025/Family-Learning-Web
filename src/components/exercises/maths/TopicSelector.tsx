@@ -19,7 +19,11 @@ interface TopicInfo {
 }
 
 interface TopicSelectorProps {
-  onTopicSelect: (topic: MathTopic, yearLevel?: number, difficulty?: string) => void
+  onTopicSelect: (
+    topic: MathTopic,
+    yearLevel?: number,
+    difficulty?: string
+  ) => void
   availableExercises?: MathExercise[]
   selectedYear?: number
   className?: string
@@ -29,83 +33,143 @@ const topicData: TopicInfo[] = [
   {
     topic: 'place-value',
     name: 'Place Value',
-    description: 'Understanding the value of digits in numbers and working with large numbers and decimals',
+    description:
+      'Understanding the value of digits in numbers and working with large numbers and decimals',
     icon: '🔢',
     year3Count: 1,
     year6Count: 1,
     difficulty: ['foundation', 'developing', 'proficient'],
     skills: ['Number recognition', 'Digit value', 'Expanded form', 'Rounding'],
-    realWorldUses: ['Reading population statistics', 'Understanding distances', 'Working with money amounts']
+    realWorldUses: [
+      'Reading population statistics',
+      'Understanding distances',
+      'Working with money amounts',
+    ],
   },
   {
     topic: 'fractions',
     name: 'Fractions',
-    description: 'Learning about parts of a whole, equivalent fractions, and fraction operations',
+    description:
+      'Learning about parts of a whole, equivalent fractions, and fraction operations',
     icon: '🍕',
     year3Count: 1,
     year6Count: 1,
     difficulty: ['foundation', 'developing', 'proficient', 'advanced'],
-    skills: ['Visual fractions', 'Equivalence', 'Comparing', 'Adding/subtracting'],
-    realWorldUses: ['Cooking and recipes', 'Sharing equally', 'Understanding percentages', 'Time divisions']
+    skills: [
+      'Visual fractions',
+      'Equivalence',
+      'Comparing',
+      'Adding/subtracting',
+    ],
+    realWorldUses: [
+      'Cooking and recipes',
+      'Sharing equally',
+      'Understanding percentages',
+      'Time divisions',
+    ],
   },
   {
     topic: 'area',
     name: 'Area & Perimeter',
-    description: 'Measuring and calculating area and perimeter of shapes in practical contexts',
+    description:
+      'Measuring and calculating area and perimeter of shapes in practical contexts',
     icon: '📐',
     year3Count: 0,
     year6Count: 1,
     difficulty: ['foundation', 'developing', 'proficient', 'advanced'],
-    skills: ['Rectangle area', 'Triangle area', 'Perimeter calculation', 'Composite shapes'],
-    realWorldUses: ['Garden planning', 'Room decoration', 'Sports field design', 'Material purchasing']
+    skills: [
+      'Rectangle area',
+      'Triangle area',
+      'Perimeter calculation',
+      'Composite shapes',
+    ],
+    realWorldUses: [
+      'Garden planning',
+      'Room decoration',
+      'Sports field design',
+      'Material purchasing',
+    ],
   },
   {
     topic: 'decimals',
     name: 'Decimals & Money',
-    description: 'Working with decimal numbers and Australian currency calculations',
+    description:
+      'Working with decimal numbers and Australian currency calculations',
     icon: '💰',
     year3Count: 1,
     year6Count: 0,
     difficulty: ['foundation', 'developing', 'proficient'],
-    skills: ['Decimal place value', 'Money counting', 'Adding/subtracting', 'Making change'],
-    realWorldUses: ['Shopping and budgeting', 'Measuring precisely', 'Understanding prices', 'Saving money']
+    skills: [
+      'Decimal place value',
+      'Money counting',
+      'Adding/subtracting',
+      'Making change',
+    ],
+    realWorldUses: [
+      'Shopping and budgeting',
+      'Measuring precisely',
+      'Understanding prices',
+      'Saving money',
+    ],
   },
   {
     topic: 'measurement',
     name: 'Measurement',
-    description: 'Understanding units of measurement and converting between different units',
+    description:
+      'Understanding units of measurement and converting between different units',
     icon: '📏',
     year3Count: 0,
     year6Count: 0,
     difficulty: ['foundation', 'developing', 'proficient'],
-    skills: ['Unit recognition', 'Converting units', 'Measuring length', 'Measuring mass'],
-    realWorldUses: ['Building and construction', 'Cooking measurements', 'Sports records', 'Scientific experiments']
+    skills: [
+      'Unit recognition',
+      'Converting units',
+      'Measuring length',
+      'Measuring mass',
+    ],
+    realWorldUses: [
+      'Building and construction',
+      'Cooking measurements',
+      'Sports records',
+      'Scientific experiments',
+    ],
   },
   {
     topic: 'perimeter',
     name: 'Perimeter',
-    description: 'Measuring the distance around shapes and solving perimeter problems',
+    description:
+      'Measuring the distance around shapes and solving perimeter problems',
     icon: '⭕',
     year3Count: 0,
     year6Count: 0,
     difficulty: ['foundation', 'developing', 'proficient'],
-    skills: ['Perimeter calculation', 'Irregular shapes', 'Problem solving', 'Units of measure'],
-    realWorldUses: ['Fencing properties', 'Running tracks', 'Picture frames', 'Garden borders']
-  }
+    skills: [
+      'Perimeter calculation',
+      'Irregular shapes',
+      'Problem solving',
+      'Units of measure',
+    ],
+    realWorldUses: [
+      'Fencing properties',
+      'Running tracks',
+      'Picture frames',
+      'Garden borders',
+    ],
+  },
 ]
 
 export const TopicSelector: React.FC<TopicSelectorProps> = ({
   onTopicSelect,
   availableExercises = [],
   selectedYear,
-  className = ''
+  className = '',
 }) => {
   const [selectedTopic, setSelectedTopic] = useState<MathTopic | null>(null)
   const [hoveredTopic, setHoveredTopic] = useState<MathTopic | null>(null)
 
   const getExerciseCount = (topic: MathTopic, yearLevel?: number) => {
-    return availableExercises.filter(ex => 
-      ex.topic === topic && (!yearLevel || ex.yearLevel === yearLevel)
+    return availableExercises.filter(
+      ex => ex.topic === topic && (!yearLevel || ex.yearLevel === yearLevel)
     ).length
   }
 
@@ -150,7 +214,7 @@ export const TopicSelector: React.FC<TopicSelectorProps> = ({
           <h3 className="text-xl font-bold text-gray-900 mb-2">
             {topicInfo.name}
           </h3>
-          
+
           <div className="flex justify-center gap-2 mb-3">
             {year3Count > 0 && (
               <Badge variant="outline" className="text-xs">
@@ -169,15 +233,15 @@ export const TopicSelector: React.FC<TopicSelectorProps> = ({
             )}
           </div>
 
-          <p className="text-sm text-gray-600 mb-4">
-            {topicInfo.description}
-          </p>
+          <p className="text-sm text-gray-600 mb-4">{topicInfo.description}</p>
         </div>
 
         {hasExercises && (
           <div className="space-y-3">
             <div>
-              <h4 className="text-sm font-medium text-gray-700 mb-2">Key Skills:</h4>
+              <h4 className="text-sm font-medium text-gray-700 mb-2">
+                Key Skills:
+              </h4>
               <div className="flex flex-wrap gap-1">
                 {topicInfo.skills.slice(0, 3).map((skill, index) => (
                   <Badge key={index} variant="secondary" className="text-xs">
@@ -188,7 +252,9 @@ export const TopicSelector: React.FC<TopicSelectorProps> = ({
             </div>
 
             <div>
-              <h4 className="text-sm font-medium text-gray-700 mb-2">Real-world Uses:</h4>
+              <h4 className="text-sm font-medium text-gray-700 mb-2">
+                Real-world Uses:
+              </h4>
               <ul className="text-xs text-gray-600 space-y-1">
                 {topicInfo.realWorldUses.slice(0, 2).map((use, index) => (
                   <li key={index}>• {use}</li>
@@ -199,13 +265,15 @@ export const TopicSelector: React.FC<TopicSelectorProps> = ({
             {isSelected && (
               <div className="pt-4 border-t border-gray-200">
                 <div className="space-y-2">
-                  <h4 className="text-sm font-medium text-gray-700">Choose Difficulty:</h4>
+                  <h4 className="text-sm font-medium text-gray-700">
+                    Choose Difficulty:
+                  </h4>
                   {getDifficultyLevels(topicInfo.topic).map(difficulty => (
                     <Button
                       key={difficulty}
                       variant="outline"
                       size="sm"
-                      onClick={(e) => {
+                      onClick={e => {
                         e.stopPropagation()
                         handleStartExercise(difficulty)
                       }}
@@ -215,7 +283,7 @@ export const TopicSelector: React.FC<TopicSelectorProps> = ({
                     </Button>
                   ))}
                   <Button
-                    onClick={(e) => {
+                    onClick={e => {
                       e.stopPropagation()
                       handleStartExercise()
                     }}
@@ -239,9 +307,10 @@ export const TopicSelector: React.FC<TopicSelectorProps> = ({
           🧮 Choose Your Math Topic
         </h2>
         <p className="text-lg text-gray-600 mb-6">
-          Select a topic to start practicing Australian curriculum-aligned math concepts
+          Select a topic to start practicing Australian curriculum-aligned math
+          concepts
         </p>
-        
+
         {selectedYear && (
           <Badge variant="outline" className="text-lg px-4 py-2 mb-6">
             Year {selectedYear} Level
@@ -254,7 +323,10 @@ export const TopicSelector: React.FC<TopicSelectorProps> = ({
         {topicData
           .filter(topic => {
             if (!selectedYear) return true
-            return getExerciseCount(topic.topic, selectedYear) > 0 || getExerciseCount(topic.topic) > 0
+            return (
+              getExerciseCount(topic.topic, selectedYear) > 0 ||
+              getExerciseCount(topic.topic) > 0
+            )
           })
           .map(renderTopicCard)}
       </div>
@@ -264,12 +336,14 @@ export const TopicSelector: React.FC<TopicSelectorProps> = ({
         <Card className="p-6 bg-blue-50 border-blue-200">
           <div className="text-center">
             <h3 className="text-2xl font-bold text-blue-900 mb-4">
-              Ready to start {topicData.find(t => t.topic === selectedTopic)?.name}?
+              Ready to start{' '}
+              {topicData.find(t => t.topic === selectedTopic)?.name}?
             </h3>
             <p className="text-blue-700 mb-6">
-              You'll practice real Australian math problems and learn with interactive tools.
+              You'll practice real Australian math problems and learn with
+              interactive tools.
             </p>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center mb-6">
               <div className="bg-white rounded-lg p-4">
                 <div className="text-2xl font-bold text-blue-600">
@@ -277,24 +351,24 @@ export const TopicSelector: React.FC<TopicSelectorProps> = ({
                 </div>
                 <div className="text-sm text-blue-700">Exercises Available</div>
               </div>
-              
+
               <div className="bg-white rounded-lg p-4">
                 <div className="text-2xl font-bold text-green-600">
                   {getDifficultyLevels(selectedTopic).length}
                 </div>
                 <div className="text-sm text-green-700">Difficulty Levels</div>
               </div>
-              
+
               <div className="bg-white rounded-lg p-4">
-                <div className="text-2xl font-bold text-purple-600">
-                  🎯
+                <div className="text-2xl font-bold text-purple-600">🎯</div>
+                <div className="text-sm text-purple-700">
+                  Interactive Learning
                 </div>
-                <div className="text-sm text-purple-700">Interactive Learning</div>
               </div>
             </div>
 
-            <Button 
-              size="lg" 
+            <Button
+              size="lg"
               onClick={() => handleStartExercise()}
               className="px-8"
             >
@@ -310,14 +384,16 @@ export const TopicSelector: React.FC<TopicSelectorProps> = ({
           🗺️ Recommended Learning Path
         </h3>
         <div className="flex flex-wrap justify-center gap-2">
-          {['place-value', 'fractions', 'decimals', 'area'].map((topic, index) => (
-            <div key={topic} className="flex items-center">
-              <Badge variant="outline" className="capitalize">
-                {topic.replace('-', ' ')}
-              </Badge>
-              {index < 3 && <span className="mx-2 text-gray-400">→</span>}
-            </div>
-          ))}
+          {['place-value', 'fractions', 'decimals', 'area'].map(
+            (topic, index) => (
+              <div key={topic} className="flex items-center">
+                <Badge variant="outline" className="capitalize">
+                  {topic.replace('-', ' ')}
+                </Badge>
+                {index < 3 && <span className="mx-2 text-gray-400">→</span>}
+              </div>
+            )
+          )}
         </div>
         <p className="text-center text-sm text-gray-600 mt-4">
           Follow this path to build strong mathematical foundations step by step
@@ -332,24 +408,27 @@ export const TopicSelector: React.FC<TopicSelectorProps> = ({
           </div>
           <div className="text-sm text-gray-600">Total Exercises</div>
         </Card>
-        
+
         <Card className="p-4">
           <div className="text-2xl font-bold text-green-600 mb-2">
             {availableExercises.filter(ex => ex.yearLevel === 3).length}
           </div>
           <div className="text-sm text-gray-600">Year 3 Exercises</div>
         </Card>
-        
+
         <Card className="p-4">
           <div className="text-2xl font-bold text-purple-600 mb-2">
             {availableExercises.filter(ex => ex.yearLevel === 6).length}
           </div>
           <div className="text-sm text-gray-600">Year 6 Exercises</div>
         </Card>
-        
+
         <Card className="p-4">
           <div className="text-2xl font-bold text-orange-600 mb-2">
-            {topicData.filter(topic => getExerciseCount(topic.topic) > 0).length}
+            {
+              topicData.filter(topic => getExerciseCount(topic.topic) > 0)
+                .length
+            }
           </div>
           <div className="text-sm text-gray-600">Available Topics</div>
         </Card>

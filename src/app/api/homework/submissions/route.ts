@@ -8,17 +8,19 @@ const prisma = new PrismaClient()
 // 提交作业模式
 const submitHomeworkSchema = z.object({
   homeworkId: z.string(),
-  exerciseSubmissions: z.array(z.object({
-    exerciseId: z.string(),
-    submissionId: z.string(),
-    score: z.number().optional(),
-    timeSpent: z.number() // 秒
-  }))
+  exerciseSubmissions: z.array(
+    z.object({
+      exerciseId: z.string(),
+      submissionId: z.string(),
+      score: z.number().optional(),
+      timeSpent: z.number(), // 秒
+    })
+  ),
 })
 
 // 开始作业模式
 const startHomeworkSchema = z.object({
-  homeworkId: z.string()
+  homeworkId: z.string(),
 })
 
 // GET - 获取用户的作业提交记录
@@ -53,20 +55,26 @@ export async function GET(request: NextRequest) {
         if (hasAccess) {
           targetUserId = userId
         } else {
-          return NextResponse.json({ error: '无权查看此用户的提交记录' }, { status: 403 })
+          return NextResponse.json(
+            { error: '无权查看此用户的提交记录' },
+            { status: 403 }
+          )
         }
       } else {
-        return NextResponse.json({ error: '无权查看其他用户的提交记录' }, { status: 403 })
+        return NextResponse.json(
+          { error: '无权查看其他用户的提交记录' },
+          { status: 403 }
+        )
       }
     }
 
     // 构建查询条件
     const where: any = { userId: targetUserId }
-    
+
     if (homeworkId) {
       where.homeworkId = homeworkId
     }
-    
+
     if (status) {
       where.status = status.toUpperCase()
     }
@@ -88,22 +96,24 @@ export async function GET(request: NextRequest) {
               totalPoints: true,
               passingScore: true,
               assignedByUser: {
-                select: { id: true, displayName: true }
-              }
-            }
+                select: { id: true, displayName: true },
+              },
+            },
           },
           user: {
-            select: { id: true, displayName: true, username: true, yearLevel: true }
-          }
+            select: {
+              id: true,
+              displayName: true,
+              username: true,
+              yearLevel: true,
+            },
+          },
         },
-        orderBy: [
-          { lastWorkedAt: 'desc' },
-          { createdAt: 'desc' }
-        ],
+        orderBy: [{ lastWorkedAt: 'desc' }, { createdAt: 'desc' }],
         skip,
-        take: limit
+        take: limit,
       }),
-      prisma.homeworkSubmission.count({ where })
+      prisma.homeworkSubmission.count({ where }),
     ])
 
     return NextResponse.json({
@@ -113,16 +123,12 @@ export async function GET(request: NextRequest) {
         page,
         limit,
         total,
-        totalPages: Math.ceil(total / limit)
-      }
+        totalPages: Math.ceil(total / limit),
+      },
     })
-
   } catch (error) {
     console.error('获取作业提交记录失败:', error)
-    return NextResponse.json(
-      { error: '获取作业提交记录失败' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: '获取作业提交记录失败' }, { status: 500 })
   }
 }
 
@@ -147,18 +153,11 @@ export async function POST(request: NextRequest) {
     } else if (action === 'submit') {
       return await submitHomework(body, payload)
     } else {
-      return NextResponse.json(
-        { error: '无效的操作类型' },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: '无效的操作类型' }, { status: 400 })
     }
-
   } catch (error) {
     console.error('处理作业操作失败:', error)
-    return NextResponse.json(
-      { error: '处理作业操作失败' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: '处理作业操作失败' }, { status: 500 })
   }
 }
 
@@ -170,8 +169,8 @@ async function startHomework(body: any, payload: any) {
   const homework = await prisma.homeworkAssignment.findUnique({
     where: { id: validatedData.homeworkId },
     include: {
-      assignedTo: { select: { id: true } }
-    }
+      assignedTo: { select: { id: true } },
+    },
   })
 
   if (!homework) {
@@ -192,9 +191,9 @@ async function startHomework(body: any, payload: any) {
     where: {
       homeworkId_userId: {
         homeworkId: validatedData.homeworkId,
-        userId: payload.userId
-      }
-    }
+        userId: payload.userId,
+      },
+    },
   })
 
   if (!submission) {
@@ -207,8 +206,8 @@ async function startHomework(body: any, payload: any) {
         startedAt: new Date(),
         lastWorkedAt: new Date(),
         totalExercises: homework.exercises?.length || 0,
-        maxPossibleScore: homework.totalPoints
-      }
+        maxPossibleScore: homework.totalPoints,
+      },
     })
   } else if (submission.status === 'NOT_STARTED') {
     // 更新状态为进行中
@@ -217,15 +216,15 @@ async function startHomework(body: any, payload: any) {
       data: {
         status: 'IN_PROGRESS',
         startedAt: submission.startedAt || new Date(),
-        lastWorkedAt: new Date()
-      }
+        lastWorkedAt: new Date(),
+      },
     })
   }
 
   return NextResponse.json({
     success: true,
     data: submission,
-    message: '作业已开始'
+    message: '作业已开始',
   })
 }
 
@@ -238,21 +237,21 @@ async function submitHomework(body: any, payload: any) {
     where: {
       homeworkId_userId: {
         homeworkId: validatedData.homeworkId,
-        userId: payload.userId
-      }
+        userId: payload.userId,
+      },
     },
     include: {
       homework: {
         include: {
           exercises: {
             include: {
-              exercise: true
+              exercise: true,
             },
-            orderBy: { order: 'asc' }
-          }
-        }
-      }
-    }
+            orderBy: { order: 'asc' },
+          },
+        },
+      },
+    },
   })
 
   if (!submission) {
@@ -265,19 +264,23 @@ async function submitHomework(body: any, payload: any) {
 
   // 验证练习提交
   const exerciseIds = submission.homework.exercises.map(e => e.exerciseId)
-  const submittedExerciseIds = validatedData.exerciseSubmissions.map(s => s.exerciseId)
-  
+  const submittedExerciseIds = validatedData.exerciseSubmissions.map(
+    s => s.exerciseId
+  )
+
   // 检查必需的练习是否都已提交
-  const requiredExercises = submission.homework.exercises.filter(e => e.isRequired)
+  const requiredExercises = submission.homework.exercises.filter(
+    e => e.isRequired
+  )
   const missingRequired = requiredExercises.filter(
     e => !submittedExerciseIds.includes(e.exerciseId)
   )
 
   if (missingRequired.length > 0) {
     return NextResponse.json(
-      { 
+      {
         error: '必需的练习尚未完成',
-        missingExercises: missingRequired.map(e => e.exercise.title)
+        missingExercises: missingRequired.map(e => e.exercise.title),
       },
       { status: 400 }
     )
@@ -295,13 +298,16 @@ async function submitHomework(body: any, payload: any) {
     totalTimeSpent += exerciseSubmission.timeSpent
   }
 
-  const percentage = submission.maxPossibleScore > 0 
-    ? (totalScore / submission.maxPossibleScore) * 100 
-    : 0
+  const percentage =
+    submission.maxPossibleScore > 0
+      ? (totalScore / submission.maxPossibleScore) * 100
+      : 0
 
   // 检查是否迟交
   const now = new Date()
-  const isLate = submission.homework.dueDate ? now > submission.homework.dueDate : false
+  const isLate = submission.homework.dueDate
+    ? now > submission.homework.dueDate
+    : false
 
   // 应用迟交扣分
   let finalScore = totalScore
@@ -320,7 +326,7 @@ async function submitHomework(body: any, payload: any) {
       submittedAt: now,
       lastWorkedAt: now,
       totalTimeSpent: totalTimeSpent,
-      isLate
+      isLate,
     },
     include: {
       homework: {
@@ -328,10 +334,10 @@ async function submitHomework(body: any, payload: any) {
           id: true,
           title: true,
           totalPoints: true,
-          passingScore: true
-        }
-      }
-    }
+          passingScore: true,
+        },
+      },
+    },
   })
 
   // TODO: 触发自动批改流程
@@ -340,12 +346,15 @@ async function submitHomework(body: any, payload: any) {
   return NextResponse.json({
     success: true,
     data: updatedSubmission,
-    message: '作业提交成功'
+    message: '作业提交成功',
   })
 }
 
 // 辅助函数：检查家长权限
-async function checkParentAccess(parentId: string, studentIds: string[]): Promise<boolean> {
+async function checkParentAccess(
+  parentId: string,
+  studentIds: string[]
+): Promise<boolean> {
   const parent = await prisma.user.findUnique({
     where: { id: parentId },
     include: {
@@ -353,11 +362,11 @@ async function checkParentAccess(parentId: string, studentIds: string[]): Promis
         include: {
           members: {
             where: { role: 'STUDENT' },
-            select: { id: true }
-          }
-        }
-      }
-    }
+            select: { id: true },
+          },
+        },
+      },
+    },
   })
 
   if (!parent?.family?.members) {

@@ -5,27 +5,34 @@
 ### 1.1 主要用户角色
 
 #### 学生 (Student)
+
 **Emma, 9岁, Year 3学生**
+
 - 技能水平: 基本的设备操作能力，需要清晰的视觉指导
 - 目标: 完成作业，获得iPad时间，查看学习进度
 - 痛点: 复杂的界面会让她困惑，需要即时反馈来保持动机
 - 使用环境: 主要在家中，可能在嘈杂的环境中使用
 
 **Liam, 12岁, Year 6学生**
+
 - 技能水平: 熟练的数字原住民，期望现代化的用户体验
 - 目标: 高效完成作业，挑战更难的题目，管理自己的学习进度
 - 痛点: 过于简单的界面会让他觉得幼稚，需要更多控制权
 - 使用环境: 在家和学校，可能同时使用多个设备
 
 #### 家长 (Parent)
+
 **Sarah, 35岁, 两个孩子的妈妈**
+
 - 技能水平: 中等技术水平，忙碌的工作和家庭生活
 - 目标: 监控孩子学习进度，设置合理的iPad使用规则，支持孩子学习
 - 痛点: 时间有限，需要快速了解孩子的学习状况
 - 使用环境: 主要在手机上使用，偶尔使用电脑
 
 #### 管理员/教师 (Admin/Teacher)
+
 **Mrs. Johnson, 45岁, 小学教师**
+
 - 技能水平: 教育技术专家，熟悉各种教学平台
 - 目标: 创建和管理作业，分析学生表现，导入教学内容
 - 痛点: 需要高效的批量操作，详细的分析数据
@@ -34,6 +41,7 @@
 ## 2. 家长用户旅程 (Parent User Journey)
 
 ### 2.1 首次使用流程
+
 ```mermaid
 graph TD
     A[收到邀请邮件] --> B[点击注册链接]
@@ -47,6 +55,7 @@ graph TD
 ```
 
 ### 2.2 日常使用流程
+
 ```mermaid
 graph TD
     A[登录系统] --> B{查看通知}
@@ -62,6 +71,7 @@ graph TD
 ```
 
 ### 2.3 家长面板线框图
+
 ```
 ┌─────────────────────────────────────────────────────┐
 │ 🏠 家长控制面板                    🔔 [3]  👤 Sarah  │
@@ -97,6 +107,7 @@ graph TD
 ## 3. 学生用户旅程 (Student User Journey)
 
 ### 3.1 Year 3 学生 (Emma) 使用流程
+
 ```mermaid
 graph TD
     A[看到iPad解锁通知] --> B[打开学习应用]
@@ -114,6 +125,7 @@ graph TD
 ```
 
 ### 3.2 学生练习界面线框图
+
 ```
 ┌─────────────────────────────────────────────────────┐
 │ 📚 英语练习 - 阅读理解              ⏱️ 15:30  🌟 Emma │
@@ -146,6 +158,7 @@ graph TD
 ```
 
 ### 3.3 结果反馈界面
+
 ```
 ┌─────────────────────────────────────────────────────┐
 │ 🎉 太棒了, Emma!                           🌟 分数面板│
@@ -180,6 +193,7 @@ graph TD
 ## 4. 管理员用户旅程 (Admin User Journey)
 
 ### 4.1 内容管理流程
+
 ```mermaid
 graph TD
     A[登录管理后台] --> B[选择内容类型]
@@ -196,6 +210,7 @@ graph TD
 ```
 
 ### 4.2 管理员控制台线框图
+
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
 │ 🛠️ 管理员控制台                        🔔 [2] 👤 Mrs.Johnson (Admin) │
@@ -237,6 +252,7 @@ graph TD
 ### 5.1 题目组件系列
 
 #### 多选题组件 (MCQ Component)
+
 ```typescript
 interface MCQComponentProps {
   question: {
@@ -278,6 +294,7 @@ interface MCQComponentProps {
 ```
 
 #### 判断题组件 (True/False Component)
+
 ```typescript
 <Card className="tf-container">
   <CardHeader>
@@ -285,14 +302,14 @@ interface MCQComponentProps {
   </CardHeader>
   <CardContent>
     <div className="flex justify-center space-x-8">
-      <Button 
+      <Button
         variant={selectedAnswer === true ? "default" : "outline"}
         onClick={() => onAnswerChange(true)}
         className="px-8 py-4"
       >
         ✓ True
       </Button>
-      <Button 
+      <Button
         variant={selectedAnswer === false ? "default" : "outline"}
         onClick={() => onAnswerChange(false)}
         className="px-8 py-4"
@@ -305,6 +322,7 @@ interface MCQComponentProps {
 ```
 
 #### 匹配题组件 (Matching Component)
+
 ```typescript
 <Card className="matching-container">
   <CardHeader>
@@ -314,8 +332,8 @@ interface MCQComponentProps {
     <div className="grid grid-cols-2 gap-8">
       <div className="left-column">
         {leftItems.map(item => (
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             className="mb-2 justify-start"
             draggable
             onDragStart={() => setDragSource(item.id)}
@@ -326,7 +344,7 @@ interface MCQComponentProps {
       </div>
       <div className="right-column">
         {rightItems.map(item => (
-          <div 
+          <div
             className="drop-zone p-4 border-dashed border-2 mb-2"
             onDrop={() => handleDrop(item.id)}
             onDragOver={e => e.preventDefault()}
@@ -341,6 +359,7 @@ interface MCQComponentProps {
 ```
 
 #### 填空题组件 (Fill-in-the-blank)
+
 ```typescript
 <Card className="fill-blank-container">
   <CardHeader>
@@ -348,9 +367,9 @@ interface MCQComponentProps {
   </CardHeader>
   <CardContent>
     <div className="text-content">
-      {textParts.map((part, index) => 
+      {textParts.map((part, index) =>
         part.isBlank ? (
-          <Input 
+          <Input
             key={index}
             className="inline-input mx-1"
             placeholder="___"
@@ -369,6 +388,7 @@ interface MCQComponentProps {
 ### 5.2 进度和反馈组件
 
 #### 进度条组件
+
 ```typescript
 <Card className="progress-container">
   <CardHeader className="pb-3">
@@ -391,6 +411,7 @@ interface MCQComponentProps {
 ```
 
 #### 计时器组件
+
 ```typescript
 <Card className="timer-container">
   <CardContent className="flex items-center space-x-2 p-4">
@@ -410,6 +431,7 @@ interface MCQComponentProps {
 ### 5.3 结果展示组件
 
 #### 结果摘要卡片
+
 ```typescript
 <Card className="result-summary">
   <CardHeader>
@@ -437,7 +459,7 @@ interface MCQComponentProps {
         <div className="text-sm text-muted-foreground">iPad时间</div>
       </div>
     </div>
-    
+
     {achievements.length > 0 && (
       <div className="mt-4">
         <h4 className="font-medium mb-2">获得成就:</h4>
@@ -459,6 +481,7 @@ interface MCQComponentProps {
 ### 6.1 WCAG 2.1 AA 合规性
 
 #### 键盘导航
+
 - 所有交互元素必须可通过键盘访问
 - Tab键顺序符合逻辑流程
 - 焦点指示器清晰可见
@@ -469,25 +492,26 @@ interface MCQComponentProps {
 const handleKeyDown = (e: KeyboardEvent) => {
   switch (e.key) {
     case 'Tab':
-      if (!e.shiftKey) focusNext();
-      else focusPrevious();
-      break;
+      if (!e.shiftKey) focusNext()
+      else focusPrevious()
+      break
     case 'Enter':
     case ' ':
-      if (focusedElement) activateElement(focusedElement);
-      break;
+      if (focusedElement) activateElement(focusedElement)
+      break
     case 'Escape':
-      closeModal();
-      break;
+      closeModal()
+      break
     case 'ArrowUp':
     case 'ArrowDown':
-      navigateOptions(e.key);
-      break;
+      navigateOptions(e.key)
+      break
   }
-};
+}
 ```
 
 #### 语义HTML标签
+
 ```html
 <!-- 练习结构使用正确的语义标签 -->
 <main role="main" aria-labelledby="exercise-title">
@@ -499,7 +523,7 @@ const handleKeyDown = (e: KeyboardEvent) => {
       </ol>
     </nav>
   </header>
-  
+
   <section aria-labelledby="question-heading">
     <h2 id="question-heading">问题</h2>
     <fieldset>
@@ -516,6 +540,7 @@ const handleKeyDown = (e: KeyboardEvent) => {
 ```
 
 #### ARIA 标签和属性
+
 ```typescript
 interface AccessibilityProps {
   // 必需的ARIA属性
@@ -530,7 +555,7 @@ interface AccessibilityProps {
 }
 
 // 使用示例
-<Button 
+<Button
   aria-label="提交答案并继续下一题"
   aria-describedby="submit-help"
 >
@@ -544,6 +569,7 @@ interface AccessibilityProps {
 ### 6.2 视觉设计可访问性
 
 #### 颜色对比度
+
 ```css
 /* 确保文本对比度至少4.5:1 */
 .text-primary {
@@ -568,6 +594,7 @@ interface AccessibilityProps {
 ```
 
 #### 响应式文本缩放
+
 ```css
 /* 支持200%文本缩放而不破坏布局 */
 .container {
@@ -589,58 +616,63 @@ interface AccessibilityProps {
 ```
 
 ### 6.3 屏幕阅读器支持
+
 ```typescript
 // 动态内容更新的实时播报
-const announceToScreenReader = (message: string, priority: 'polite' | 'assertive' = 'polite') => {
-  const announcement = document.createElement('div');
-  announcement.setAttribute('aria-live', priority);
-  announcement.setAttribute('aria-atomic', 'true');
-  announcement.className = 'sr-only';
-  announcement.textContent = message;
-  
-  document.body.appendChild(announcement);
-  
+const announceToScreenReader = (
+  message: string,
+  priority: 'polite' | 'assertive' = 'polite'
+) => {
+  const announcement = document.createElement('div')
+  announcement.setAttribute('aria-live', priority)
+  announcement.setAttribute('aria-atomic', 'true')
+  announcement.className = 'sr-only'
+  announcement.textContent = message
+
+  document.body.appendChild(announcement)
+
   // 清理
   setTimeout(() => {
-    document.body.removeChild(announcement);
-  }, 1000);
-};
+    document.body.removeChild(announcement)
+  }, 1000)
+}
 
 // 使用示例
 const handleAnswerSubmit = () => {
   // ... 提交逻辑
   if (isCorrect) {
-    announceToScreenReader('正确！答案已保存。', 'assertive');
+    announceToScreenReader('正确！答案已保存。', 'assertive')
   } else {
-    announceToScreenReader('答案不正确。请重试。', 'assertive');
+    announceToScreenReader('答案不正确。请重试。', 'assertive')
   }
-};
+}
 ```
 
 ## 7. 设计系统和样式指南 (Design System)
 
 ### 7.1 颜色调色板
+
 ```css
 :root {
   /* 品牌颜色 */
-  --primary: 220 70% 50%;      /* 深蓝色 - 专业可信 */
+  --primary: 220 70% 50%; /* 深蓝色 - 专业可信 */
   --primary-foreground: 220 70% 95%;
-  --secondary: 42 87% 55%;     /* 温暖黄色 - 友好积极 */
+  --secondary: 42 87% 55%; /* 温暖黄色 - 友好积极 */
   --secondary-foreground: 42 87% 15%;
-  
+
   /* 功能颜色 */
-  --success: 142 71% 45%;      /* 绿色 - 成功状态 */
-  --warning: 38 92% 50%;       /* 橙色 - 警告状态 */
-  --error: 0 84% 60%;          /* 红色 - 错误状态 */
-  --info: 200 95% 45%;         /* 浅蓝 - 信息状态 */
-  
+  --success: 142 71% 45%; /* 绿色 - 成功状态 */
+  --warning: 38 92% 50%; /* 橙色 - 警告状态 */
+  --error: 0 84% 60%; /* 红色 - 错误状态 */
+  --info: 200 95% 45%; /* 浅蓝 - 信息状态 */
+
   /* 中性颜色 */
   --background: 0 0% 100%;
   --foreground: 224 71% 4%;
   --muted: 220 14% 96%;
   --muted-foreground: 220 8% 46%;
   --border: 220 13% 91%;
-  
+
   /* 年龄特定颜色 */
   --year3-accent: 280 65% 60%; /* 紫色 - Year 3专用 */
   --year6-accent: 160 84% 39%; /* 青绿色 - Year 6专用 */
@@ -648,22 +680,51 @@ const handleAnswerSubmit = () => {
 ```
 
 ### 7.2 排版系统
+
 ```css
 /* 字体设置 */
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family:
+    'Inter',
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
   font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
 }
 
 /* 标题层级 */
-.text-4xl { font-size: 2.25rem; line-height: 2.5rem; }  /* 36px - 页面标题 */
-.text-3xl { font-size: 1.875rem; line-height: 2.25rem; } /* 30px - 章节标题 */
-.text-2xl { font-size: 1.5rem; line-height: 2rem; }     /* 24px - 子标题 */
-.text-xl { font-size: 1.25rem; line-height: 1.75rem; }  /* 20px - 大号正文 */
-.text-lg { font-size: 1.125rem; line-height: 1.75rem; } /* 18px - 中号正文 */
-.text-base { font-size: 1rem; line-height: 1.5rem; }    /* 16px - 标准正文 */
-.text-sm { font-size: 0.875rem; line-height: 1.25rem; } /* 14px - 小字 */
-.text-xs { font-size: 0.75rem; line-height: 1rem; }     /* 12px - 辅助文字 */
+.text-4xl {
+  font-size: 2.25rem;
+  line-height: 2.5rem;
+} /* 36px - 页面标题 */
+.text-3xl {
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+} /* 30px - 章节标题 */
+.text-2xl {
+  font-size: 1.5rem;
+  line-height: 2rem;
+} /* 24px - 子标题 */
+.text-xl {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+} /* 20px - 大号正文 */
+.text-lg {
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+} /* 18px - 中号正文 */
+.text-base {
+  font-size: 1rem;
+  line-height: 1.5rem;
+} /* 16px - 标准正文 */
+.text-sm {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+} /* 14px - 小字 */
+.text-xs {
+  font-size: 0.75rem;
+  line-height: 1rem;
+} /* 12px - 辅助文字 */
 
 /* 阅读优化 */
 .reading-text {
@@ -675,16 +736,33 @@ body {
 ```
 
 ### 7.3 间距系统
+
 ```css
 /* 基于8px的间距系统 */
-.space-1 { margin: 0.25rem; }  /* 4px */
-.space-2 { margin: 0.5rem; }   /* 8px */
-.space-3 { margin: 0.75rem; }  /* 12px */
-.space-4 { margin: 1rem; }     /* 16px */
-.space-6 { margin: 1.5rem; }   /* 24px */
-.space-8 { margin: 2rem; }     /* 32px */
-.space-12 { margin: 3rem; }    /* 48px */
-.space-16 { margin: 4rem; }    /* 64px */
+.space-1 {
+  margin: 0.25rem;
+} /* 4px */
+.space-2 {
+  margin: 0.5rem;
+} /* 8px */
+.space-3 {
+  margin: 0.75rem;
+} /* 12px */
+.space-4 {
+  margin: 1rem;
+} /* 16px */
+.space-6 {
+  margin: 1.5rem;
+} /* 24px */
+.space-8 {
+  margin: 2rem;
+} /* 32px */
+.space-12 {
+  margin: 3rem;
+} /* 48px */
+.space-16 {
+  margin: 4rem;
+} /* 64px */
 
 /* 组件间距规则 */
 .component-spacing > * + * {

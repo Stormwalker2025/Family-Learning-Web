@@ -5,7 +5,8 @@ export const year3Templates: HomeworkTemplate[] = [
   {
     id: 'y3-daily-practice',
     name: 'Year 3 日常练习',
-    description: '适合Year 3学生的日常基础练习，包含英语阅读、数学计算和HASS常识',
+    description:
+      '适合Year 3学生的日常基础练习，包含英语阅读、数学计算和HASS常识',
     type: 'quick-assignment',
     yearLevels: [3],
     subjects: ['ENGLISH', 'MATHS', 'HASS'],
@@ -14,26 +15,26 @@ export const year3Templates: HomeworkTemplate[] = [
         subject: 'ENGLISH',
         minCount: 1,
         maxCount: 2,
-        difficultyDistribution: { 'EASY': 70, 'MEDIUM': 30 },
+        difficultyDistribution: { EASY: 70, MEDIUM: 30 },
         topicCoverage: ['reading-comprehension', 'vocabulary'],
-        adaptToStudentLevel: true
+        adaptToStudentLevel: true,
       },
       {
         subject: 'MATHS',
         minCount: 1,
         maxCount: 2,
-        difficultyDistribution: { 'EASY': 60, 'MEDIUM': 40 },
+        difficultyDistribution: { EASY: 60, MEDIUM: 40 },
         topicCoverage: ['place-value', 'basic-operations'],
-        adaptToStudentLevel: true
+        adaptToStudentLevel: true,
       },
       {
         subject: 'HASS',
         minCount: 1,
         maxCount: 1,
-        difficultyDistribution: { 'EASY': 100 },
+        difficultyDistribution: { EASY: 100 },
         topicCoverage: ['australian-history', 'geography-basics'],
-        adaptToStudentLevel: true
-      }
+        adaptToStudentLevel: true,
+      },
     ],
     defaultSettings: {
       estimatedTime: 45,
@@ -42,7 +43,7 @@ export const year3Templates: HomeworkTemplate[] = [
       passingScore: 70,
       allowMultipleAttempts: true,
       autoRelease: true,
-      lateSubmissionAllowed: true
+      lateSubmissionAllowed: true,
     },
     usageCount: 0,
     estimatedTime: 45,
@@ -51,9 +52,9 @@ export const year3Templates: HomeworkTemplate[] = [
     createdBy: 'system',
     createdAt: new Date(),
     updatedAt: new Date(),
-    isActive: true
+    isActive: true,
   },
-  
+
   {
     id: 'y3-weekly-review',
     name: 'Year 3 周练习',
@@ -66,34 +67,38 @@ export const year3Templates: HomeworkTemplate[] = [
         subject: 'ENGLISH',
         minCount: 2,
         maxCount: 3,
-        difficultyDistribution: { 'EASY': 50, 'MEDIUM': 40, 'HARD': 10 },
-        topicCoverage: ['reading-comprehension', 'grammar-basics', 'creative-writing'],
-        adaptToStudentLevel: true
+        difficultyDistribution: { EASY: 50, MEDIUM: 40, HARD: 10 },
+        topicCoverage: [
+          'reading-comprehension',
+          'grammar-basics',
+          'creative-writing',
+        ],
+        adaptToStudentLevel: true,
       },
       {
         subject: 'MATHS',
         minCount: 2,
         maxCount: 3,
-        difficultyDistribution: { 'EASY': 40, 'MEDIUM': 50, 'HARD': 10 },
+        difficultyDistribution: { EASY: 40, MEDIUM: 50, HARD: 10 },
         topicCoverage: ['number-sense', 'measurement', 'geometry-basics'],
-        adaptToStudentLevel: true
+        adaptToStudentLevel: true,
       },
       {
         subject: 'HASS',
         minCount: 1,
         maxCount: 2,
-        difficultyDistribution: { 'EASY': 70, 'MEDIUM': 30 },
+        difficultyDistribution: { EASY: 70, MEDIUM: 30 },
         topicCoverage: ['community-helpers', 'local-environment'],
-        adaptToStudentLevel: true
+        adaptToStudentLevel: true,
       },
       {
         subject: 'VOCABULARY',
         minCount: 1,
         maxCount: 1,
-        difficultyDistribution: { 'EASY': 80, 'MEDIUM': 20 },
+        difficultyDistribution: { EASY: 80, MEDIUM: 20 },
         topicCoverage: ['daily-life', 'school-subjects'],
-        adaptToStudentLevel: true
-      }
+        adaptToStudentLevel: true,
+      },
     ],
     defaultSettings: {
       estimatedTime: 90,
@@ -102,7 +107,7 @@ export const year3Templates: HomeworkTemplate[] = [
       passingScore: 75,
       allowMultipleAttempts: true,
       autoRelease: true,
-      lateSubmissionAllowed: true
+      lateSubmissionAllowed: true,
     },
     usageCount: 0,
     estimatedTime: 90,
@@ -111,7 +116,7 @@ export const year3Templates: HomeworkTemplate[] = [
     createdBy: 'system',
     createdAt: new Date(),
     updatedAt: new Date(),
-    isActive: true
+    isActive: true,
   },
 
   {
@@ -126,18 +131,22 @@ export const year3Templates: HomeworkTemplate[] = [
         subject: 'ENGLISH',
         minCount: 3,
         maxCount: 4,
-        difficultyDistribution: { 'EASY': 40, 'MEDIUM': 50, 'HARD': 10 },
-        topicCoverage: ['short-stories', 'informational-texts', 'picture-books'],
-        adaptToStudentLevel: true
+        difficultyDistribution: { EASY: 40, MEDIUM: 50, HARD: 10 },
+        topicCoverage: [
+          'short-stories',
+          'informational-texts',
+          'picture-books',
+        ],
+        adaptToStudentLevel: true,
       },
       {
         subject: 'VOCABULARY',
         minCount: 2,
         maxCount: 2,
-        difficultyDistribution: { 'EASY': 60, 'MEDIUM': 40 },
+        difficultyDistribution: { EASY: 60, MEDIUM: 40 },
         topicCoverage: ['reading-vocabulary', 'context-clues'],
-        adaptToStudentLevel: true
-      }
+        adaptToStudentLevel: true,
+      },
     ],
     defaultSettings: {
       estimatedTime: 60,
@@ -146,7 +155,7 @@ export const year3Templates: HomeworkTemplate[] = [
       passingScore: 80,
       allowMultipleAttempts: true,
       autoRelease: true,
-      lateSubmissionAllowed: false
+      lateSubmissionAllowed: false,
     },
     usageCount: 0,
     estimatedTime: 60,
@@ -155,8 +164,8 @@ export const year3Templates: HomeworkTemplate[] = [
     createdBy: 'system',
     createdAt: new Date(),
     updatedAt: new Date(),
-    isActive: true
-  }
+    isActive: true,
+  },
 ]
 
 // Year 3 示例作业内容
@@ -190,7 +199,7 @@ export const year3ExampleAssignments: Partial<HomeworkAssignmentConfig>[] = [
     allowMultipleAttempts: true,
     autoRelease: true,
     lateSubmissionAllowed: true,
-    latePenalty: 5
+    latePenalty: 5,
   },
 
   {
@@ -221,7 +230,7 @@ export const year3ExampleAssignments: Partial<HomeworkAssignmentConfig>[] = [
     allowMultipleAttempts: true,
     autoRelease: true,
     lateSubmissionAllowed: true,
-    latePenalty: 10
+    latePenalty: 10,
   },
 
   {
@@ -253,8 +262,8 @@ export const year3ExampleAssignments: Partial<HomeworkAssignmentConfig>[] = [
     allowMultipleAttempts: true,
     autoRelease: true,
     lateSubmissionAllowed: true,
-    latePenalty: 0
-  }
+    latePenalty: 0,
+  },
 ]
 
 // Year 3 快速分配选项
@@ -267,8 +276,8 @@ export const year3QuickAssignments = [
       subjectFocus: 'MATHS' as const,
       difficultyLevel: 'easy' as const,
       includeReview: true,
-      priority: 'MEDIUM' as const
-    }
+      priority: 'MEDIUM' as const,
+    },
   },
   {
     name: '周末作业 (60分钟)',
@@ -277,8 +286,8 @@ export const year3QuickAssignments = [
       timeframe: 'weekend' as const,
       difficultyLevel: 'medium' as const,
       includeReview: true,
-      priority: 'MEDIUM' as const
-    }
+      priority: 'MEDIUM' as const,
+    },
   },
   {
     name: '英语阅读专项 (45分钟)',
@@ -289,7 +298,7 @@ export const year3QuickAssignments = [
       subjectFocus: 'ENGLISH' as const,
       difficultyLevel: 'adaptive' as const,
       includeReview: false,
-      priority: 'HIGH' as const
-    }
-  }
+      priority: 'HIGH' as const,
+    },
+  },
 ]

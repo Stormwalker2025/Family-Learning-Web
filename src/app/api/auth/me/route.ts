@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
   try {
     // 提取用户信息
     const { user, error } = await extractUserFromRequest(request)
-    
+
     if (!user) {
       return NextResponse.json(
         { success: false, message: error || '未授权访问' },
@@ -34,12 +34,12 @@ export async function GET(request: NextRequest) {
                 username: true,
                 displayName: true,
                 role: true,
-                isActive: true
-              }
-            }
-          }
-        }
-      }
+                isActive: true,
+              },
+            },
+          },
+        },
+      },
     })
 
     if (!userWithDetails) {
@@ -62,52 +62,55 @@ export async function GET(request: NextRequest) {
       canViewSystemLogs: permissionChecker.canViewSystemLogs(),
       isAdmin: permissionChecker.isAdmin(),
       isParent: permissionChecker.isParent(),
-      isStudent: permissionChecker.isStudent()
+      isStudent: permissionChecker.isStudent(),
     }
 
     // 获取用户统计信息
     let stats = {}
-    
+
     if (user.role === 'STUDENT') {
       // 学生统计信息
-      const [submissionCount, progressCount, homeworkCount] = await Promise.all([
-        prisma.submission.count({
-          where: { userId: user.id }
-        }),
-        prisma.learningProgress.count({
-          where: { userId: user.id }
-        }),
-        prisma.homeworkSubmission.count({
-          where: { userId: user.id }
-        })
-      ])
+      const [submissionCount, progressCount, homeworkCount] = await Promise.all(
+        [
+          prisma.submission.count({
+            where: { userId: user.id },
+          }),
+          prisma.learningProgress.count({
+            where: { userId: user.id },
+          }),
+          prisma.homeworkSubmission.count({
+            where: { userId: user.id },
+          }),
+        ]
+      )
 
       stats = {
         totalSubmissions: submissionCount,
         learningProgress: progressCount,
-        homeworkAssignments: homeworkCount
+        homeworkAssignments: homeworkCount,
       }
     } else if (user.role === 'PARENT') {
       // 家长统计信息：查看子女的学习情况
       if (userWithDetails.familyId) {
-        const childrenIds = userWithDetails.family?.members
-          .filter(member => member.role === 'STUDENT')
-          .map(child => child.id) || []
+        const childrenIds =
+          userWithDetails.family?.members
+            .filter(member => member.role === 'STUDENT')
+            .map(child => child.id) || []
 
         if (childrenIds.length > 0) {
           const [childrenSubmissions, assignedHomework] = await Promise.all([
             prisma.submission.count({
-              where: { userId: { in: childrenIds } }
+              where: { userId: { in: childrenIds } },
             }),
             prisma.homeworkAssignment.count({
-              where: { assignedBy: user.id }
-            })
+              where: { assignedBy: user.id },
+            }),
           ])
 
           stats = {
             childrenSubmissions,
             assignedHomework,
-            childrenCount: childrenIds.length
+            childrenCount: childrenIds.length,
           }
         }
       }
@@ -116,13 +119,13 @@ export async function GET(request: NextRequest) {
       const [totalUsers, totalExercises, totalSubmissions] = await Promise.all([
         prisma.user.count(),
         prisma.exercise.count(),
-        prisma.submission.count()
+        prisma.submission.count(),
       ])
 
       stats = {
         totalUsers,
         totalExercises,
-        totalSubmissions
+        totalSubmissions,
       }
     }
 
@@ -142,31 +145,32 @@ export async function GET(request: NextRequest) {
         familyId: userWithDetails.familyId,
         lastLoginAt: userWithDetails.lastLoginAt,
         createdAt: userWithDetails.createdAt,
-        updatedAt: userWithDetails.updatedAt
+        updatedAt: userWithDetails.updatedAt,
       },
-      family: userWithDetails.family ? {
-        id: userWithDetails.family.id,
-        name: userWithDetails.family.name,
-        timezone: userWithDetails.family.timezone,
-        members: userWithDetails.family.members,
-        createdAt: userWithDetails.family.createdAt,
-        updatedAt: userWithDetails.family.updatedAt
-      } : null,
+      family: userWithDetails.family
+        ? {
+            id: userWithDetails.family.id,
+            name: userWithDetails.family.name,
+            timezone: userWithDetails.family.timezone,
+            members: userWithDetails.family.members,
+            createdAt: userWithDetails.family.createdAt,
+            updatedAt: userWithDetails.family.updatedAt,
+          }
+        : null,
       permissions,
-      stats
+      stats,
     }
 
     return NextResponse.json({
       success: true,
-      data: responseData
+      data: responseData,
     })
-
   } catch (error) {
     console.error('Get current user error:', error)
     return NextResponse.json(
       {
         success: false,
-        message: '获取用户信息失败'
+        message: '获取用户信息失败',
       },
       { status: 500 }
     )
@@ -181,7 +185,7 @@ export async function PUT(request: NextRequest) {
   try {
     // 提取用户信息
     const { user, error } = await extractUserFromRequest(request)
-    
+
     if (!user) {
       return NextResponse.json(
         { success: false, message: error || '未授权访问' },
@@ -190,7 +194,7 @@ export async function PUT(request: NextRequest) {
     }
 
     const body = await request.json()
-    
+
     // 允许用户更新的字段
     const allowedFields = ['displayName', 'email', 'timezone']
     const updateData: any = {}
@@ -216,8 +220,8 @@ export async function PUT(request: NextRequest) {
       const existingUser = await prisma.user.findFirst({
         where: {
           email: updateData.email,
-          id: { not: user.id }
-        }
+          id: { not: user.id },
+        },
       })
 
       if (existingUser) {
@@ -250,7 +254,7 @@ export async function PUT(request: NextRequest) {
     // 更新用户信息
     const updatedUser = await prisma.user.update({
       where: { id: user.id },
-      data: updateData
+      data: updateData,
     })
 
     // 记录更新活动
@@ -262,12 +266,13 @@ export async function PUT(request: NextRequest) {
           details: JSON.stringify({
             action: 'update_profile',
             updatedFields: Object.keys(updateData),
-            timestamp: new Date().toISOString()
+            timestamp: new Date().toISOString(),
           }),
           resourceType: 'User',
           resourceId: user.id,
-          ipAddress: request.ip || request.headers.get('x-forwarded-for') || 'unknown'
-        }
+          ipAddress:
+            request.ip || request.headers.get('x-forwarded-for') || 'unknown',
+        },
       })
     } catch (logError) {
       console.error('Failed to log profile update:', logError)
@@ -283,16 +288,15 @@ export async function PUT(request: NextRequest) {
         displayName: updatedUser.displayName,
         role: updatedUser.role,
         timezone: updatedUser.timezone,
-        updatedAt: updatedUser.updatedAt
-      }
+        updatedAt: updatedUser.updatedAt,
+      },
     })
-
   } catch (error) {
     console.error('Update user profile error:', error)
     return NextResponse.json(
       {
         success: false,
-        message: '更新用户信息失败'
+        message: '更新用户信息失败',
       },
       { status: 500 }
     )

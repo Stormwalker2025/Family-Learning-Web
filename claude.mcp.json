@@ -3,13 +3,13 @@
   "version": "1.0",
   "name": "Family Learning Web MCP Config",
   "description": "MCP权限配置，遵循最小权限原则，支持澳洲本地化教育系统开发",
-  
+
   "permissions": {
     "filesystem": {
       "read": [
         "./",
         "app/",
-        "src/", 
+        "src/",
         "prisma/",
         "tests/",
         "docs/",
@@ -41,7 +41,7 @@
         "tsconfig.json",
         "next.config.mjs",
         "tailwind.config.ts",
-        "postcss.config.mjs", 
+        "postcss.config.mjs",
         "playwright.config.ts",
         "vitest.config.ts",
         ".env.example",
@@ -63,7 +63,7 @@
         "*.backup"
       ]
     },
-    
+
     "shell": {
       "allow": [
         "git status",
@@ -80,10 +80,10 @@
         "git pull",
         "git push",
         "git push -u origin",
-        
+
         "npm install",
         "npm install --save",
-        "npm install --save-dev", 
+        "npm install --save-dev",
         "npm uninstall",
         "npm run dev",
         "npm run build",
@@ -99,25 +99,25 @@
         "npm audit fix",
         "npm outdated",
         "npm update",
-        
+
         "npx prisma generate",
         "npx prisma db push",
-        "npx prisma db pull", 
+        "npx prisma db pull",
         "npx prisma db seed",
         "npx prisma studio",
         "npx prisma format",
         "npx prisma validate",
         "npx prisma migrate dev",
         "npx prisma migrate reset",
-        
+
         "npx playwright install",
         "npx playwright test",
         "npx playwright test --ui",
         "npx playwright show-report",
-        
+
         "npx shadcn-ui add",
         "npx shadcn-ui init",
-        
+
         "node -v",
         "npm -v",
         "ls",
@@ -129,7 +129,7 @@
         "cat tsconfig.json",
         "cat *.md"
       ],
-      
+
       "deny": [
         "rm -rf",
         "rm -rf /",
@@ -170,12 +170,12 @@
         ":(){ :|:& };:"
       ]
     },
-    
+
     "network": {
       "allow": [
         "api.github.com",
         "registry.npmjs.org",
-        "nodejs.org", 
+        "nodejs.org",
         "cdn.jsdelivr.net",
         "fonts.googleapis.com",
         "fonts.gstatic.com",
@@ -197,7 +197,7 @@
       ]
     }
   },
-  
+
   "environment": {
     "NODE_ENV": "development",
     "ALLOWED_HOSTS": ["localhost", "127.0.0.1", "0.0.0.0"],
@@ -205,7 +205,7 @@
     "MAX_UPLOAD_FILES": 10,
     "SESSION_TIMEOUT": "30m"
   },
-  
+
   "security": {
     "enforceHttps": false,
     "allowSelfSignedCerts": true,
@@ -224,7 +224,7 @@
       "connectSrc": ["'self'", "api.github.com"]
     }
   },
-  
+
   "logging": {
     "level": "info",
     "auditLog": true,
@@ -237,14 +237,14 @@
       "credential"
     ]
   },
-  
+
   "development": {
     "hotReload": true,
     "debugMode": true,
     "verboseLogging": true,
     "allowedPorts": [3000, 3001, 3002, 5173, 8080, 9090]
   },
-  
+
   "compliance": {
     "region": "AU",
     "dataLocalisation": true,
@@ -253,7 +253,7 @@
     "accessibilityWCAG": "AA",
     "auditRetention": "7 years"
   },
-  
+
   "education": {
     "curriculumStandard": "ACARA",
     "yearLevels": [3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
@@ -262,7 +262,7 @@
     "maxSessionTime": "45m",
     "childSafetyEnabled": true
   },
-  
+
   "features": {
     "ipadUnlockSystem": {
       "enabled": true,
@@ -285,7 +285,7 @@
       "supportedLocales": ["en-AU", "zh-CN"]
     }
   },
-  
+
   "monitoring": {
     "healthCheck": {
       "enabled": true,
@@ -308,7 +308,7 @@
       }
     }
   },
-  
+
   "backup": {
     "enabled": true,
     "schedule": "daily",

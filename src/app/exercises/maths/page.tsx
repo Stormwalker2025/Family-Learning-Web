@@ -6,8 +6,16 @@ import { AuthGuard } from '@/components/auth/AuthGuard'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { TopicSelector, MathExercise, MathResults } from '@/components/exercises/maths'
-import { MathExercise as MathExerciseType, MathTopic, MathSubmission } from '@/types'
+import {
+  TopicSelector,
+  MathExercise,
+  MathResults,
+} from '@/components/exercises/maths'
+import {
+  MathExercise as MathExerciseType,
+  MathTopic,
+  MathSubmission,
+} from '@/types'
 
 type ViewMode = 'topic-selection' | 'exercise' | 'results' | 'loading'
 
@@ -25,8 +33,11 @@ interface MathSubmissionResult {
 export default function MathExercisePage() {
   const { user } = useAuth()
   const [viewMode, setViewMode] = useState<ViewMode>('topic-selection')
-  const [availableExercises, setAvailableExercises] = useState<MathExerciseType[]>([])
-  const [currentExercise, setCurrentExercise] = useState<MathExerciseType | null>(null)
+  const [availableExercises, setAvailableExercises] = useState<
+    MathExerciseType[]
+  >([])
+  const [currentExercise, setCurrentExercise] =
+    useState<MathExerciseType | null>(null)
   const [selectedTopic, setSelectedTopic] = useState<MathTopic | null>(null)
   const [results, setResults] = useState<MathSubmissionResult | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -44,9 +55,9 @@ export default function MathExercisePage() {
 
       const response = await fetch('/api/exercises/maths', {
         headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
       })
 
       if (!response.ok) {
@@ -65,7 +76,11 @@ export default function MathExercisePage() {
     }
   }
 
-  const handleTopicSelect = async (topic: MathTopic, yearLevel?: number, difficulty?: string) => {
+  const handleTopicSelect = async (
+    topic: MathTopic,
+    yearLevel?: number,
+    difficulty?: string
+  ) => {
     setViewMode('loading')
     setSelectedTopic(topic)
 
@@ -81,12 +96,15 @@ export default function MathExercisePage() {
       if (difficulty) params.set('difficulty', difficulty)
       params.set('limit', '1') // For now, just get one exercise
 
-      const response = await fetch(`/api/exercises/maths/${topic}?${params.toString()}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
+      const response = await fetch(
+        `/api/exercises/maths/${topic}?${params.toString()}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
         }
-      })
+      )
 
       if (!response.ok) {
         throw new Error('Failed to load topic exercises')
@@ -106,7 +124,9 @@ export default function MathExercisePage() {
     }
   }
 
-  const handleExerciseComplete = async (submission: Partial<MathSubmission>) => {
+  const handleExerciseComplete = async (
+    submission: Partial<MathSubmission>
+  ) => {
     setViewMode('loading')
 
     try {
@@ -118,10 +138,10 @@ export default function MathExercisePage() {
       const response = await fetch('/api/exercises/maths/submit', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify(submission)
+        body: JSON.stringify(submission),
       })
 
       if (!response.ok) {
@@ -174,18 +194,13 @@ export default function MathExercisePage() {
               Interactive Australian curriculum-aligned math exercises
             </p>
             {user && (
-              <Badge variant="outline">
-                Welcome, {user.displayName}
-              </Badge>
+              <Badge variant="outline">Welcome, {user.displayName}</Badge>
             )}
           </div>
         </div>
 
         {viewMode !== 'topic-selection' && (
-          <Button
-            variant="outline"
-            onClick={handleBackToTopics}
-          >
+          <Button variant="outline" onClick={handleBackToTopics}>
             ← Back to Topics
           </Button>
         )}
@@ -200,11 +215,9 @@ export default function MathExercisePage() {
         <h2 className="text-2xl font-bold mb-2">Oops! Something went wrong</h2>
         <p className="text-lg">{error}</p>
       </div>
-      
+
       <div className="flex gap-4 justify-center mt-6">
-        <Button onClick={handleBackToTopics}>
-          Back to Topics
-        </Button>
+        <Button onClick={handleBackToTopics}>Back to Topics</Button>
         <Button variant="outline" onClick={() => window.location.reload()}>
           Refresh Page
         </Button>
@@ -218,10 +231,12 @@ export default function MathExercisePage() {
         <div className="text-6xl mb-4 animate-bounce">🧮</div>
         <h2 className="text-2xl font-bold mb-2">Loading Math Exercises...</h2>
         <p className="text-lg text-gray-600">
-          {selectedTopic ? `Preparing ${selectedTopic.replace('-', ' ')} exercises` : 'Getting things ready for you'}
+          {selectedTopic
+            ? `Preparing ${selectedTopic.replace('-', ' ')} exercises`
+            : 'Getting things ready for you'}
         </p>
       </div>
-      
+
       <div className="flex justify-center mt-6">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
       </div>
@@ -285,9 +300,12 @@ export default function MathExercisePage() {
             <div className="text-center">
               <div className="text-2xl mb-2">🎯</div>
               <p className="text-gray-700 font-medium">
-                "Mathematics is not about numbers, equations, computations, or algorithms: it is about understanding."
+                &ldquo;Mathematics is not about numbers, equations, computations, or
+                algorithms: it is about understanding.&rdquo;
               </p>
-              <p className="text-gray-500 text-sm mt-2">— William Paul Thurston</p>
+              <p className="text-gray-500 text-sm mt-2">
+                — William Paul Thurston
+              </p>
             </div>
           </Card>
         </div>

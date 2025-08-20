@@ -9,21 +9,29 @@ const prisma = new PrismaClient()
 const unlockConfigSchema = z.object({
   name: z.string().min(1, '配置名称不能为空'),
   description: z.string().optional(),
-  rules: z.array(z.object({
-    subject: z.enum(['ENGLISH', 'MATHS', 'HASS', 'VOCABULARY']),
-    scoreThresholds: z.array(z.object({
-      minScore: z.number().min(0).max(100),
-      maxScore: z.number().min(0).max(100),
-      baseMinutes: z.number().min(0),
-      bonusMinutes: z.number().min(0)
-    })),
-    dailyLimit: z.number().min(0).optional(),
-    consecutiveDaysBonus: z.array(z.object({
-      days: z.number().min(1),
-      bonusMultiplier: z.number().min(1)
-    })).optional()
-  })),
-  isActive: z.boolean().default(true)
+  rules: z.array(
+    z.object({
+      subject: z.enum(['ENGLISH', 'MATHS', 'HASS', 'VOCABULARY']),
+      scoreThresholds: z.array(
+        z.object({
+          minScore: z.number().min(0).max(100),
+          maxScore: z.number().min(0).max(100),
+          baseMinutes: z.number().min(0),
+          bonusMinutes: z.number().min(0),
+        })
+      ),
+      dailyLimit: z.number().min(0).optional(),
+      consecutiveDaysBonus: z
+        .array(
+          z.object({
+            days: z.number().min(1),
+            bonusMultiplier: z.number().min(1),
+          })
+        )
+        .optional(),
+    })
+  ),
+  isActive: z.boolean().default(true),
 })
 
 // GET - 获取iPad解锁状态和配置
@@ -45,39 +53,41 @@ export async function GET(request: NextRequest) {
 
     // 权限检查：学生只能查看自己的，家长可以查看孩子的
     if (payload.role === 'STUDENT' && userId !== payload.userId) {
-      return NextResponse.json({ error: '无权查看其他用户的数据' }, { status: 403 })
+      return NextResponse.json(
+        { error: '无权查看其他用户的数据' },
+        { status: 403 }
+      )
     }
 
     if (payload.role === 'PARENT') {
       const hasAccess = await checkParentAccess(payload.userId, [userId])
       if (!hasAccess) {
-        return NextResponse.json({ error: '无权查看此用户的数据' }, { status: 403 })
+        return NextResponse.json(
+          { error: '无权查看此用户的数据' },
+          { status: 403 }
+        )
       }
     }
 
     switch (action) {
       case 'status':
         return await getUnlockStatus(userId)
-      
+
       case 'config':
         if (payload.role !== 'ADMIN' && payload.role !== 'PARENT') {
           return NextResponse.json({ error: '无权查看配置' }, { status: 403 })
         }
         return await getUnlockConfiguration(userId)
-      
+
       case 'history':
         return await getUnlockHistory(userId)
-      
+
       default:
         return await getUnlockStatus(userId)
     }
-
   } catch (error) {
     console.error('获取iPad解锁信息失败:', error)
-    return NextResponse.json(
-      { error: '获取iPad解锁信息失败' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: '获取iPad解锁信息失败' }, { status: 500 })
   }
 }
 
@@ -96,7 +106,10 @@ export async function POST(request: NextRequest) {
 
     // 只有管理员和家长可以配置规则
     if (payload.role === 'STUDENT') {
-      return NextResponse.json({ error: '学生无权配置解锁规则' }, { status: 403 })
+      return NextResponse.json(
+        { error: '学生无权配置解锁规则' },
+        { status: 403 }
+      )
     }
 
     const body = await request.json()
@@ -109,22 +122,18 @@ export async function POST(request: NextRequest) {
         description: validatedData.description || '',
         rules: JSON.stringify(validatedData.rules),
         isActive: validatedData.isActive,
-        createdBy: payload.userId
-      }
+        createdBy: payload.userId,
+      },
     })
 
     return NextResponse.json({
       success: true,
       data: configuration,
-      message: 'iPad解锁规则配置成功'
+      message: 'iPad解锁规则配置成功',
     })
-
   } catch (error) {
     console.error('配置iPad解锁规则失败:', error)
-    return NextResponse.json(
-      { error: '配置iPad解锁规则失败' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: '配置iPad解锁规则失败' }, { status: 500 })
   }
 }
 
@@ -146,57 +155,62 @@ export async function PUT(request: NextRequest) {
 
     // 权限检查
     if (payload.role === 'STUDENT' && userId !== payload.userId) {
-      return NextResponse.json({ error: '无权为其他用户触发解锁' }, { status: 403 })
+      return NextResponse.json(
+        { error: '无权为其他用户触发解锁' },
+        { status: 403 }
+      )
     }
 
-    const unlockResult = await processUnlockTrigger(userId, subject, score, triggeredBy)
-    
+    const unlockResult = await processUnlockTrigger(
+      userId,
+      subject,
+      score,
+      triggeredBy
+    )
+
     return NextResponse.json({
       success: true,
       data: unlockResult,
-      message: unlockResult.unlockedMinutes > 0 
-        ? `恭喜！你获得了${unlockResult.unlockedMinutes}分钟的iPad时间！`
-        : '继续努力，争取更好的成绩解锁iPad时间！'
+      message:
+        unlockResult.unlockedMinutes > 0
+          ? `恭喜！你获得了${unlockResult.unlockedMinutes}分钟的iPad时间！`
+          : '继续努力，争取更好的成绩解锁iPad时间！',
     })
-
   } catch (error) {
     console.error('处理解锁触发失败:', error)
-    return NextResponse.json(
-      { error: '处理解锁触发失败' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: '处理解锁触发失败' }, { status: 500 })
   }
 }
 
 // 获取用户的解锁状态
 async function getUnlockStatus(userId: string) {
   const now = new Date()
-  
+
   // 获取活跃的解锁记录（未过期且未使用）
   const activeUnlocks = await prisma.ipadUnlockRecord.findMany({
     where: {
       userId,
       expiresAt: { gt: now },
-      used: false
+      used: false,
     },
-    orderBy: { unlockedAt: 'desc' }
+    orderBy: { unlockedAt: 'desc' },
   })
 
   // 获取最近的成就记录
   const recentAchievements = await prisma.ipadUnlockRecord.findMany({
     where: {
       userId,
-      unlockedAt: { 
-        gte: new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000) // 最近7天
-      }
+      unlockedAt: {
+        gte: new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000), // 最近7天
+      },
     },
     orderBy: { unlockedAt: 'desc' },
-    take: 10
+    take: 10,
   })
 
   // 计算当前可用分钟数
   const currentUnlockedMinutes = activeUnlocks.reduce(
-    (total, unlock) => total + unlock.unlockedMinutes, 
+    (total, unlock) => total + unlock.unlockedMinutes,
     0
   )
 
@@ -212,9 +226,9 @@ async function getUnlockStatus(userId: string) {
       userId,
       used: true,
       usedAt: {
-        gte: new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
-      }
-    }
+        gte: new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000),
+      },
+    },
   })
   const totalUsedMinutes = usedRecords.reduce(
     (total, unlock) => total + unlock.unlockedMinutes,
@@ -231,12 +245,12 @@ async function getUnlockStatus(userId: string) {
     totalUsedMinutes,
     activeUnlocks,
     recentAchievements,
-    nextUnlockRequirements
+    nextUnlockRequirements,
   }
 
   return NextResponse.json({
     success: true,
-    data: status
+    data: status,
   })
 }
 
@@ -244,12 +258,12 @@ async function getUnlockStatus(userId: string) {
 async function getUnlockConfiguration(userId: string) {
   const configurations = await prisma.ipadUnlockConfiguration.findMany({
     where: { isActive: true },
-    orderBy: { createdAt: 'desc' }
+    orderBy: { createdAt: 'desc' },
   })
 
   return NextResponse.json({
     success: true,
-    data: configurations
+    data: configurations,
   })
 }
 
@@ -258,25 +272,25 @@ async function getUnlockHistory(userId: string) {
   const history = await prisma.ipadUnlockRecord.findMany({
     where: { userId },
     orderBy: { unlockedAt: 'desc' },
-    take: 50
+    take: 50,
   })
 
   return NextResponse.json({
     success: true,
-    data: history
+    data: history,
   })
 }
 
 // 处理解锁触发
 async function processUnlockTrigger(
-  userId: string, 
-  subject: string, 
-  score: number, 
+  userId: string,
+  subject: string,
+  score: number,
   triggeredBy: string
 ) {
   // 获取活跃的解锁配置
   const configurations = await prisma.ipadUnlockConfiguration.findMany({
-    where: { isActive: true }
+    where: { isActive: true },
   })
 
   if (configurations.length === 0) {
@@ -289,19 +303,20 @@ async function processUnlockTrigger(
   for (const config of configurations) {
     const rules = JSON.parse(config.rules)
     const subjectRule = rules.find((r: any) => r.subject === subject)
-    
+
     if (!subjectRule) continue
 
     // 找到匹配的分数阈值
-    const matchedThreshold = subjectRule.scoreThresholds.find((threshold: any) => 
-      score >= threshold.minScore && score <= threshold.maxScore
+    const matchedThreshold = subjectRule.scoreThresholds.find(
+      (threshold: any) =>
+        score >= threshold.minScore && score <= threshold.maxScore
     )
 
     if (!matchedThreshold) continue
 
     // 计算解锁分钟数
     let unlockedMinutes = matchedThreshold.baseMinutes
-    
+
     // 如果是满分，添加奖励分钟
     if (score >= matchedThreshold.maxScore) {
       unlockedMinutes += matchedThreshold.bonusMinutes
@@ -311,19 +326,19 @@ async function processUnlockTrigger(
     if (subjectRule.dailyLimit) {
       const today = new Date()
       today.setHours(0, 0, 0, 0)
-      
+
       const todaysUnlocks = await prisma.ipadUnlockRecord.findMany({
         where: {
           userId,
-          unlockedAt: { gte: today }
-        }
+          unlockedAt: { gte: today },
+        },
       })
-      
+
       const todayTotal = todaysUnlocks.reduce(
         (total, unlock) => total + unlock.unlockedMinutes,
         0
       )
-      
+
       if (todayTotal + unlockedMinutes > subjectRule.dailyLimit) {
         unlockedMinutes = Math.max(0, subjectRule.dailyLimit - todayTotal)
       }
@@ -341,8 +356,8 @@ async function processUnlockTrigger(
           unlockedAt: new Date(),
           expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24小时过期
           used: false,
-          triggeredBy
-        }
+          triggeredBy,
+        },
       })
 
       unlockRecords.push(unlockRecord)
@@ -353,38 +368,40 @@ async function processUnlockTrigger(
   return {
     unlockedMinutes: totalUnlockedMinutes,
     records: unlockRecords,
-    message: totalUnlockedMinutes > 0 
-      ? `获得${totalUnlockedMinutes}分钟iPad时间`
-      : '未达到解锁要求'
+    message:
+      totalUnlockedMinutes > 0
+        ? `获得${totalUnlockedMinutes}分钟iPad时间`
+        : '未达到解锁要求',
   }
 }
 
 // 计算下次解锁要求
 async function calculateNextUnlockRequirements(userId: string) {
   const configurations = await prisma.ipadUnlockConfiguration.findMany({
-    where: { isActive: true }
+    where: { isActive: true },
   })
 
   const requirements = []
-  
+
   for (const config of configurations) {
     const rules = JSON.parse(config.rules)
-    
+
     for (const rule of rules) {
       // 获取该学科的最近成绩
       const recentScore = await getRecentSubjectScore(userId, rule.subject)
-      
+
       // 找到下一个可达成的阈值
-      const nextThreshold = rule.scoreThresholds.find((threshold: any) => 
-        threshold.minScore > recentScore
+      const nextThreshold = rule.scoreThresholds.find(
+        (threshold: any) => threshold.minScore > recentScore
       )
-      
+
       if (nextThreshold) {
         requirements.push({
           subject: rule.subject,
           currentScore: recentScore,
           requiredScore: nextThreshold.minScore,
-          potentialMinutes: nextThreshold.baseMinutes + (nextThreshold.bonusMinutes || 0)
+          potentialMinutes:
+            nextThreshold.baseMinutes + (nextThreshold.bonusMinutes || 0),
         })
       }
     }
@@ -394,14 +411,20 @@ async function calculateNextUnlockRequirements(userId: string) {
 }
 
 // 获取用户在某学科的最近成绩
-async function getRecentSubjectScore(userId: string, subject: string): Promise<number> {
+async function getRecentSubjectScore(
+  userId: string,
+  subject: string
+): Promise<number> {
   // 这里需要查询最近的作业或练习成绩
   // 暂时返回0，实际实现需要根据具体的成绩存储结构
   return 0
 }
 
 // 检查家长权限
-async function checkParentAccess(parentId: string, studentIds: string[]): Promise<boolean> {
+async function checkParentAccess(
+  parentId: string,
+  studentIds: string[]
+): Promise<boolean> {
   const parent = await prisma.user.findUnique({
     where: { id: parentId },
     include: {
@@ -409,11 +432,11 @@ async function checkParentAccess(parentId: string, studentIds: string[]): Promis
         include: {
           members: {
             where: { role: 'STUDENT' },
-            select: { id: true }
-          }
-        }
-      }
-    }
+            select: { id: true },
+          },
+        },
+      },
+    },
   })
 
   if (!parent?.family?.members) {

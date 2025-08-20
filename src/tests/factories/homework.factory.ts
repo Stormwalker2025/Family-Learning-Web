@@ -22,7 +22,12 @@ export interface HomeworkSubmissionFactory {
   id: string
   homeworkId: string
   userId: string
-  status: 'NOT_STARTED' | 'IN_PROGRESS' | 'COMPLETED' | 'SUBMITTED' | 'LATE_SUBMIT'
+  status:
+    | 'NOT_STARTED'
+    | 'IN_PROGRESS'
+    | 'COMPLETED'
+    | 'SUBMITTED'
+    | 'LATE_SUBMIT'
   totalScore?: number
   maxPossibleScore?: number
   percentage?: number
@@ -38,7 +43,9 @@ export interface HomeworkSubmissionFactory {
   updatedAt: Date
 }
 
-export const createHomeworkAssignment = (overrides: Partial<HomeworkAssignmentFactory> = {}): HomeworkAssignmentFactory => ({
+export const createHomeworkAssignment = (
+  overrides: Partial<HomeworkAssignmentFactory> = {}
+): HomeworkAssignmentFactory => ({
   id: faker.string.uuid(),
   title: faker.lorem.sentence({ min: 3, max: 6 }),
   description: faker.lorem.paragraph({ min: 1, max: 2 }),
@@ -46,7 +53,12 @@ export const createHomeworkAssignment = (overrides: Partial<HomeworkAssignmentFa
   assignedBy: faker.string.uuid(),
   dueDate: faker.date.future({ days: 7 }),
   estimatedTime: faker.number.int({ min: 30, max: 120 }),
-  priority: faker.helpers.arrayElement(['LOW', 'MEDIUM', 'HIGH', 'URGENT'] as const),
+  priority: faker.helpers.arrayElement([
+    'LOW',
+    'MEDIUM',
+    'HIGH',
+    'URGENT',
+  ] as const),
   status: 'ASSIGNED',
   isVisible: true,
   totalPoints: 100,
@@ -57,7 +69,9 @@ export const createHomeworkAssignment = (overrides: Partial<HomeworkAssignmentFa
   ...overrides,
 })
 
-export const createHomeworkSubmission = (overrides: Partial<HomeworkSubmissionFactory> = {}): HomeworkSubmissionFactory => ({
+export const createHomeworkSubmission = (
+  overrides: Partial<HomeworkSubmissionFactory> = {}
+): HomeworkSubmissionFactory => ({
   id: faker.string.uuid(),
   homeworkId: faker.string.uuid(),
   userId: faker.string.uuid(),
@@ -79,20 +93,27 @@ export const createHomeworkSubmission = (overrides: Partial<HomeworkSubmissionFa
 })
 
 // 澳洲特定的作业模板
-export const createAustralianHomework = (yearLevel: 3 | 6 = 6): HomeworkAssignmentFactory =>
+export const createAustralianHomework = (
+  yearLevel: 3 | 6 = 6
+): HomeworkAssignmentFactory =>
   createHomeworkAssignment({
-    title: yearLevel === 3 
-      ? 'Year 3 Australian Animals and Basic Maths' 
-      : 'Year 6 IELTS Reading and Advanced Maths',
-    description: yearLevel === 3
-      ? 'Learn about Australian native animals and practice basic arithmetic'
-      : 'Practice IELTS GT reading comprehension and solve complex mathematical problems',
+    title:
+      yearLevel === 3
+        ? 'Year 3 Australian Animals and Basic Maths'
+        : 'Year 6 IELTS Reading and Advanced Maths',
+    description:
+      yearLevel === 3
+        ? 'Learn about Australian native animals and practice basic arithmetic'
+        : 'Practice IELTS GT reading comprehension and solve complex mathematical problems',
     estimatedTime: yearLevel === 3 ? 45 : 90,
     totalPoints: yearLevel === 3 ? 80 : 120,
     passingScore: yearLevel === 3 ? 60 : 85,
   })
 
-export const createCompletedSubmission = (homeworkId: string, userId: string): HomeworkSubmissionFactory =>
+export const createCompletedSubmission = (
+  homeworkId: string,
+  userId: string
+): HomeworkSubmissionFactory =>
   createHomeworkSubmission({
     homeworkId,
     userId,
@@ -110,7 +131,10 @@ export const createCompletedSubmission = (homeworkId: string, userId: string): H
     isLate: false,
   })
 
-export const createInProgressSubmission = (homeworkId: string, userId: string): HomeworkSubmissionFactory =>
+export const createInProgressSubmission = (
+  homeworkId: string,
+  userId: string
+): HomeworkSubmissionFactory =>
   createHomeworkSubmission({
     homeworkId,
     userId,

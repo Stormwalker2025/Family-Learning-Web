@@ -5,11 +5,12 @@ export const year6HassExercises: HassExercise[] = [
   {
     id: 'year6-history-federation',
     title: 'The Birth of Modern Australia - Federation 1901',
-    description: 'Discover how six separate colonies became one united nation in 1901.',
+    description:
+      'Discover how six separate colonies became one united nation in 1901.',
     subject: 'history',
     yearLevel: 6,
     difficulty: 'proficient',
-    
+
     article: {
       id: 'article-federation',
       title: 'The Birth of Modern Australia - Federation 1901',
@@ -114,7 +115,13 @@ Today, we still celebrate Australia Day (January 26th) and remember that Federat
       difficulty: 'proficient',
       readingTime: 15,
       wordCount: 580,
-      topics: ['federation', 'australian-history', 'government', 'colonies', 'constitution'],
+      topics: [
+        'federation',
+        'australian-history',
+        'government',
+        'colonies',
+        'constitution',
+      ],
       culturalContext: ['historical', 'contemporary'],
       australianCurriculum: ['ACHASSK134', 'ACHASSK135', 'ACHASSK136'],
       mediaResources: [
@@ -123,70 +130,81 @@ Today, we still celebrate Australia Day (January 26th) and remember that Federat
           type: 'timeline',
           title: 'Timeline of Australian Federation',
           url: '/timelines/federation',
-          description: 'Interactive timeline showing key events leading to Federation'
+          description:
+            'Interactive timeline showing key events leading to Federation',
         },
         {
           id: 'constitution-document',
           type: 'image',
           title: 'The Australian Constitution',
           url: '/images/constitution-1901.jpg',
-          description: 'The original Australian Constitution document from 1901'
-        }
+          description:
+            'The original Australian Constitution document from 1901',
+        },
       ],
       interactiveElements: ['federation-map-comparison'],
       keyVocabulary: [
         {
           id: 'federation',
           term: 'Federation',
-          definition: 'The joining together of separate states or colonies to form one united country',
+          definition:
+            'The joining together of separate states or colonies to form one united country',
           context: 'Australian political history',
           examples: ['The federation of Australia happened in 1901'],
           difficulty: 3,
           subject: 'history',
-          yearLevel: 6
+          yearLevel: 6,
         },
         {
           id: 'colony',
           term: 'Colony',
-          definition: 'A territory controlled by another country, usually far away',
+          definition:
+            'A territory controlled by another country, usually far away',
           context: 'Colonial history',
           examples: ['Before 1901, New South Wales was a British colony'],
           difficulty: 2,
           subject: 'history',
-          yearLevel: 6
+          yearLevel: 6,
         },
         {
           id: 'constitution',
           term: 'Constitution',
-          definition: 'A set of fundamental rules and principles that govern a country',
+          definition:
+            'A set of fundamental rules and principles that govern a country',
           context: 'Government and law',
-          examples: ['The Australian Constitution established our system of government'],
+          examples: [
+            'The Australian Constitution established our system of government',
+          ],
           difficulty: 4,
           subject: 'history',
-          yearLevel: 6
+          yearLevel: 6,
         },
         {
           id: 'commonwealth',
           term: 'Commonwealth',
-          definition: 'The official name for Australia after Federation in 1901',
+          definition:
+            'The official name for Australia after Federation in 1901',
           context: 'Australian political terminology',
-          examples: ['The Commonwealth of Australia was established on January 1, 1901'],
+          examples: [
+            'The Commonwealth of Australia was established on January 1, 1901',
+          ],
           difficulty: 3,
           subject: 'history',
-          yearLevel: 6
-        }
+          yearLevel: 6,
+        },
       ],
-      backgroundInfo: 'Federation was a peaceful process that created modern Australia. Unlike many countries, Australia became independent through negotiation rather than war.',
+      backgroundInfo:
+        'Federation was a peaceful process that created modern Australia. Unlike many countries, Australia became independent through negotiation rather than war.',
       discussionPrompts: [
         'What were the main benefits and challenges of Federation for ordinary Australians?',
         'How might Australia be different today if Federation had never happened?',
         'What can we learn from the Federation process about compromise and working together?',
-        'How did Federation affect Aboriginal and Torres Strait Islander peoples?'
+        'How did Federation affect Aboriginal and Torres Strait Islander peoples?',
       ],
       createdAt: new Date('2024-01-15'),
-      updatedAt: new Date('2024-01-15')
+      updatedAt: new Date('2024-01-15'),
     },
-    
+
     questions: [
       {
         id: 'q1-federation-date',
@@ -196,9 +214,9 @@ Today, we still celebrate Australia Day (January 26th) and remember that Federat
         question: 'When did the Federation of Australia take place?',
         options: [
           'January 26, 1901',
-          'January 1, 1901', 
+          'January 1, 1901',
           'January 1, 1900',
-          'December 31, 1900'
+          'December 31, 1900',
         ],
         correctAnswer: 'January 1, 1901',
         skillsAssessed: ['factual-recall', 'chronology'],
@@ -206,160 +224,188 @@ Today, we still celebrate Australia Day (January 26th) and remember that Federat
         points: 2,
         order: 1,
         difficulty: 'developing',
-        estimatedTime: 1
+        estimatedTime: 1,
       },
       {
         id: 'q2-problems-colonies',
         articleId: 'article-federation',
         type: 'analysis',
         subject: 'history',
-        question: 'Analyse the main problems faced by the separate colonies before Federation. Explain how Federation helped solve these problems.',
+        question:
+          'Analyse the main problems faced by the separate colonies before Federation. Explain how Federation helped solve these problems.',
         sampleAnswers: [
           'Defence: Small separate armies were weak, Federation created a stronger national defence',
           'Trade: Different money and railway systems, Federation created common currency and standards',
-          'Communication: Separate postal systems, Federation unified communications'
+          'Communication: Separate postal systems, Federation unified communications',
         ],
         skillsAssessed: ['analysis', 'cause-effect', 'problem-solving'],
         bloomsTaxonomy: 'analyze',
         points: 8,
         order: 2,
         difficulty: 'proficient',
-        estimatedTime: 6
+        estimatedTime: 6,
       },
       {
         id: 'q3-key-figures',
         articleId: 'article-federation',
         type: 'comprehension',
         subject: 'history',
-        question: 'Who were the three key figures mentioned in bringing about Federation, and what did each contribute?',
+        question:
+          'Who were the three key figures mentioned in bringing about Federation, and what did each contribute?',
         sampleAnswers: [
           'Sir Henry Parkes - gave famous speech calling for federation, called "Father of Federation"',
           'Sir Edmund Barton - became first Prime Minister, worked to convince colonies',
-          'Alfred Deakin - from Victoria, helped create the Constitution'
+          'Alfred Deakin - from Victoria, helped create the Constitution',
         ],
         skillsAssessed: ['comprehension', 'historical-figures'],
         bloomsTaxonomy: 'understand',
         points: 6,
         order: 3,
         difficulty: 'proficient',
-        estimatedTime: 4
+        estimatedTime: 4,
       },
       {
         id: 'q4-federal-system',
         articleId: 'article-federation',
         type: 'application',
         subject: 'history',
-        question: 'The article explains Australia\'s federal system with three levels of government. Give one example of a responsibility for each level and explain why this division makes sense.',
-        skillsAssessed: ['application', 'government-understanding', 'logical-reasoning'],
+        question:
+          "The article explains Australia's federal system with three levels of government. Give one example of a responsibility for each level and explain why this division makes sense.",
+        skillsAssessed: [
+          'application',
+          'government-understanding',
+          'logical-reasoning',
+        ],
         bloomsTaxonomy: 'apply',
         hints: [
           'Think about what issues affect the whole country vs. just one state vs. just one community',
-          'Consider which level of government would be best placed to handle different issues'
+          'Consider which level of government would be best placed to handle different issues',
         ],
         points: 9,
         order: 4,
         difficulty: 'advanced',
-        estimatedTime: 6
+        estimatedTime: 6,
       },
       {
         id: 'q5-federation-evaluation',
         articleId: 'article-federation',
         type: 'evaluation',
         subject: 'history',
-        question: 'Evaluate the success of Federation. What evidence from the article suggests Federation was beneficial for Australia? Can you think of any potential disadvantages?',
-        skillsAssessed: ['evaluation', 'critical-thinking', 'evidence-analysis', 'balanced-argument'],
+        question:
+          'Evaluate the success of Federation. What evidence from the article suggests Federation was beneficial for Australia? Can you think of any potential disadvantages?',
+        skillsAssessed: [
+          'evaluation',
+          'critical-thinking',
+          'evidence-analysis',
+          'balanced-argument',
+        ],
         bloomsTaxonomy: 'evaluate',
         hints: [
           'Look at what changed after Federation - were these changes positive?',
           'Think about what might have been lost when colonies gave up some independence',
-          'Consider different perspectives - who benefited most and least?'
+          'Consider different perspectives - who benefited most and least?',
         ],
         points: 10,
         order: 5,
         difficulty: 'advanced',
-        estimatedTime: 8
+        estimatedTime: 8,
       },
       {
         id: 'q6-historical-significance',
         articleId: 'article-federation',
         type: 'creative',
         subject: 'history',
-        question: 'Imagine you are a newspaper reporter in 1901. Write a short article (100-150 words) explaining to readers what Federation means for their daily lives.',
-        skillsAssessed: ['creative-writing', 'historical-empathy', 'communication', 'perspective-taking'],
+        question:
+          'Imagine you are a newspaper reporter in 1901. Write a short article (100-150 words) explaining to readers what Federation means for their daily lives.',
+        skillsAssessed: [
+          'creative-writing',
+          'historical-empathy',
+          'communication',
+          'perspective-taking',
+        ],
         bloomsTaxonomy: 'create',
         hints: [
           'Think about what ordinary people in 1901 would care about most',
           'Use language that people in 1901 might understand',
-          'Focus on practical changes that would affect daily life'
+          'Focus on practical changes that would affect daily life',
         ],
         points: 12,
         order: 6,
         difficulty: 'advanced',
-        estimatedTime: 10
-      }
+        estimatedTime: 10,
+      },
     ],
-    
+
     learningObjectives: [
       'Explain why and how the Australian colonies federated in 1901',
       'Identify key figures and events in the Federation movement',
       'Analyse the problems that Federation was designed to solve',
       'Understand the federal system of government created by Federation',
-      'Evaluate the significance of Federation for modern Australia'
+      'Evaluate the significance of Federation for modern Australia',
     ],
-    
+
     assessmentCriteria: [
       'Demonstrates knowledge of Federation chronology and key events',
       'Explains causes and consequences of Federation',
       'Identifies and describes contributions of historical figures',
       'Shows understanding of federal system and levels of government',
-      'Uses historical evidence to support arguments and evaluations'
+      'Uses historical evidence to support arguments and evaluations',
     ],
-    
+
     crossCurricularLinks: [
       'Civics - Australian government system',
       'Geography - states and territories of Australia',
-      'English - persuasive writing and historical sources'
+      'English - persuasive writing and historical sources',
     ],
-    
+
     estimatedDuration: 45,
     timeLimit: 60,
-    
+
     extensionActivities: [
       {
         id: 'federation-debate',
         title: 'Federation Debate',
-        description: 'Role-play a debate between colonists for and against Federation',
+        description:
+          'Role-play a debate between colonists for and against Federation',
         type: 'presentation',
         instructions: [
           'Research arguments for and against Federation from different colonies',
           'Choose a role (NSW politician, WA farmer, Victorian businessman, etc.)',
-          'Prepare a 2-minute speech from your character\'s perspective',
-          'Participate in a class debate about whether to federate'
+          "Prepare a 2-minute speech from your character's perspective",
+          'Participate in a class debate about whether to federate',
         ],
         duration: 30,
-        difficulty: 'advanced'
-      }
+        difficulty: 'advanced',
+      },
     ],
-    
-    tags: ['federation', 'australian-history', '1901', 'government', 'colonies', 'constitution'],
+
+    tags: [
+      'federation',
+      'australian-history',
+      '1901',
+      'government',
+      'colonies',
+      'constitution',
+    ],
     totalPoints: 47,
-    
+
     createdAt: new Date('2024-01-15'),
-    updatedAt: new Date('2024-01-15')
+    updatedAt: new Date('2024-01-15'),
   },
 
-  // Geography Exercise - Climate Change in Australia  
+  // Geography Exercise - Climate Change in Australia
   {
     id: 'year6-geography-climate-change',
-    title: 'Climate Change and Australia\'s Environment',
-    description: 'Explore how climate change is affecting Australia\'s unique environment and what we can do about it.',
+    title: "Climate Change and Australia's Environment",
+    description:
+      "Explore how climate change is affecting Australia's unique environment and what we can do about it.",
     subject: 'geography',
     yearLevel: 6,
     difficulty: 'proficient',
-    
+
     article: {
       id: 'article-climate-change',
-      title: 'Climate Change and Australia\'s Environment',
+      title: "Climate Change and Australia's Environment",
       content: `# Climate Change and Australia\'s Environment
 
 Australia is experiencing the effects of **climate change** more than many other countries. Our unique environment and wildlife are facing serious challenges that require immediate action.
@@ -488,250 +534,312 @@ Australia has always been a land of innovation and resilience. With that same sp
       difficulty: 'proficient',
       readingTime: 18,
       wordCount: 750,
-      topics: ['climate-change', 'environment', 'sustainability', 'great-barrier-reef', 'renewable-energy'],
+      topics: [
+        'climate-change',
+        'environment',
+        'sustainability',
+        'great-barrier-reef',
+        'renewable-energy',
+      ],
       culturalContext: ['contemporary'],
-      australianCurriculum: ['ACHASSK137', 'ACHASSK138', 'ACHASSK139', 'ACHASSK140'],
+      australianCurriculum: [
+        'ACHASSK137',
+        'ACHASSK138',
+        'ACHASSK139',
+        'ACHASSK140',
+      ],
       mediaResources: [
         {
           id: 'climate-data-charts',
           type: 'chart',
           title: 'Australian Climate Change Data',
           url: '/charts/climate-data',
-          description: 'Interactive charts showing temperature and rainfall changes over time'
+          description:
+            'Interactive charts showing temperature and rainfall changes over time',
         },
         {
           id: 'barrier-reef-comparison',
           type: 'image',
           title: 'Great Barrier Reef - Before and After Bleaching',
           url: '/images/reef-bleaching.jpg',
-          description: 'Side-by-side comparison showing coral bleaching effects'
+          description:
+            'Side-by-side comparison showing coral bleaching effects',
         },
         {
           id: 'renewable-energy-map',
           type: 'interactive-map',
           title: 'Australian Renewable Energy Projects',
           url: '/maps/renewable-energy',
-          description: 'Map showing solar and wind energy projects across Australia'
-        }
+          description:
+            'Map showing solar and wind energy projects across Australia',
+        },
       ],
-      interactiveElements: ['carbon-footprint-calculator', 'climate-solutions-game'],
+      interactiveElements: [
+        'carbon-footprint-calculator',
+        'climate-solutions-game',
+      ],
       keyVocabulary: [
         {
           id: 'climate-change',
           term: 'Climate Change',
-          definition: 'Long-term changes in global weather patterns, mainly caused by human activities',
+          definition:
+            'Long-term changes in global weather patterns, mainly caused by human activities',
           context: 'Environmental science and geography',
-          examples: ['Climate change is causing Australia to experience more extreme weather'],
+          examples: [
+            'Climate change is causing Australia to experience more extreme weather',
+          ],
           difficulty: 3,
           subject: 'geography',
-          yearLevel: 6
+          yearLevel: 6,
         },
         {
           id: 'greenhouse-gases',
           term: 'Greenhouse Gases',
-          definition: 'Gases in the atmosphere that trap heat from the sun, including carbon dioxide and methane',
+          definition:
+            'Gases in the atmosphere that trap heat from the sun, including carbon dioxide and methane',
           context: 'Environmental science',
-          examples: ['Burning fossil fuels releases greenhouse gases into the atmosphere'],
+          examples: [
+            'Burning fossil fuels releases greenhouse gases into the atmosphere',
+          ],
           difficulty: 4,
           subject: 'geography',
-          yearLevel: 6
+          yearLevel: 6,
         },
         {
           id: 'coral-bleaching',
           term: 'Coral Bleaching',
-          definition: 'When coral polyps expel their colorful algae due to stress, usually from warm water',
+          definition:
+            'When coral polyps expel their colorful algae due to stress, usually from warm water',
           context: 'Marine biology and climate impacts',
-          examples: ['The Great Barrier Reef has experienced severe coral bleaching in recent years'],
+          examples: [
+            'The Great Barrier Reef has experienced severe coral bleaching in recent years',
+          ],
           difficulty: 4,
           subject: 'geography',
-          yearLevel: 6
+          yearLevel: 6,
         },
         {
           id: 'renewable-energy',
           term: 'Renewable Energy',
-          definition: 'Energy from sources that naturally replenish, like solar, wind, and hydroelectric power',
+          definition:
+            'Energy from sources that naturally replenish, like solar, wind, and hydroelectric power',
           context: 'Sustainable technology and energy',
-          examples: ['Australia is increasing its use of renewable energy like solar and wind power'],
+          examples: [
+            'Australia is increasing its use of renewable energy like solar and wind power',
+          ],
           difficulty: 3,
           subject: 'geography',
-          yearLevel: 6
-        }
+          yearLevel: 6,
+        },
       ],
-      backgroundInfo: 'Australia is one of the countries most affected by climate change due to its geography, with impacts already visible across the continent.',
+      backgroundInfo:
+        'Australia is one of the countries most affected by climate change due to its geography, with impacts already visible across the continent.',
       discussionPrompts: [
         'What evidence of climate change have you noticed in your local area?',
         'How might climate change affect your future career choices?',
         'What are the most important actions Australia should take to address climate change?',
-        'How can young people make a difference in addressing climate change?'
+        'How can young people make a difference in addressing climate change?',
       ],
       createdAt: new Date('2024-01-15'),
-      updatedAt: new Date('2024-01-15')
+      updatedAt: new Date('2024-01-15'),
     },
-    
+
     questions: [
       {
         id: 'q1-greenhouse-effect',
         articleId: 'article-climate-change',
         type: 'comprehension',
         subject: 'geography',
-        question: 'Explain the difference between the natural greenhouse effect and the enhanced greenhouse effect.',
+        question:
+          'Explain the difference between the natural greenhouse effect and the enhanced greenhouse effect.',
         sampleAnswers: [
           'Natural greenhouse effect keeps Earth warm enough for life',
           'Enhanced greenhouse effect is caused by human activities adding extra greenhouse gases',
-          'Enhanced effect traps too much heat, making Earth warmer than normal'
+          'Enhanced effect traps too much heat, making Earth warmer than normal',
         ],
         skillsAssessed: ['comprehension', 'environmental-understanding'],
         bloomsTaxonomy: 'understand',
         points: 6,
         order: 1,
         difficulty: 'proficient',
-        estimatedTime: 4
+        estimatedTime: 4,
       },
       {
         id: 'q2-australia-evidence',
         articleId: 'article-climate-change',
         type: 'analysis',
         subject: 'geography',
-        question: 'Analyse three pieces of evidence that show climate change is happening in Australia. For each piece of evidence, explain what is causing it.',
+        question:
+          'Analyse three pieces of evidence that show climate change is happening in Australia. For each piece of evidence, explain what is causing it.',
         skillsAssessed: ['analysis', 'evidence-evaluation', 'cause-effect'],
         bloomsTaxonomy: 'analyze',
         points: 9,
         order: 2,
         difficulty: 'proficient',
-        estimatedTime: 6
+        estimatedTime: 6,
       },
       {
         id: 'q3-barrier-reef',
         articleId: 'article-climate-change',
         type: 'source-analysis',
         subject: 'geography',
-        question: 'Using evidence from the article, explain why the Great Barrier Reef is particularly vulnerable to climate change and what specific impacts it faces.',
-        skillsAssessed: ['source-analysis', 'environmental-understanding', 'evidence-use'],
+        question:
+          'Using evidence from the article, explain why the Great Barrier Reef is particularly vulnerable to climate change and what specific impacts it faces.',
+        skillsAssessed: [
+          'source-analysis',
+          'environmental-understanding',
+          'evidence-use',
+        ],
         bloomsTaxonomy: 'analyze',
         points: 8,
         order: 3,
         difficulty: 'proficient',
-        estimatedTime: 5
+        estimatedTime: 5,
       },
       {
         id: 'q4-human-impacts',
         articleId: 'article-climate-change',
         type: 'application',
         subject: 'geography',
-        question: 'Choose one human impact of climate change mentioned in the article (agriculture, urban areas, or coastal communities). Explain how this impact might affect a specific Australian city or region you know about.',
-        skillsAssessed: ['application', 'spatial-reasoning', 'local-connections'],
+        question:
+          'Choose one human impact of climate change mentioned in the article (agriculture, urban areas, or coastal communities). Explain how this impact might affect a specific Australian city or region you know about.',
+        skillsAssessed: [
+          'application',
+          'spatial-reasoning',
+          'local-connections',
+        ],
         bloomsTaxonomy: 'apply',
         hints: [
           'Think about specific places in Australia you know',
           'Consider how geography affects climate impacts',
-          'Connect the general impacts to specific local examples'
+          'Connect the general impacts to specific local examples',
         ],
         points: 8,
         order: 4,
         difficulty: 'advanced',
-        estimatedTime: 6
+        estimatedTime: 6,
       },
       {
         id: 'q5-solutions-evaluation',
         articleId: 'article-climate-change',
         type: 'evaluation',
         subject: 'geography',
-        question: 'Evaluate the different types of climate change solutions mentioned in the article (government actions, community initiatives, individual actions). Which do you think will be most effective and why?',
-        skillsAssessed: ['evaluation', 'critical-thinking', 'solution-assessment'],
+        question:
+          'Evaluate the different types of climate change solutions mentioned in the article (government actions, community initiatives, individual actions). Which do you think will be most effective and why?',
+        skillsAssessed: [
+          'evaluation',
+          'critical-thinking',
+          'solution-assessment',
+        ],
         bloomsTaxonomy: 'evaluate',
         hints: [
           'Consider the scale and speed of different solutions',
           'Think about what has worked in other situations',
-          'Consider multiple perspectives and evidence'
+          'Consider multiple perspectives and evidence',
         ],
         points: 10,
         order: 5,
         difficulty: 'advanced',
-        estimatedTime: 7
+        estimatedTime: 7,
       },
       {
         id: 'q6-future-australia',
         articleId: 'article-climate-change',
         type: 'creative',
         subject: 'geography',
-        question: 'Create a plan for how your school or local community could become more sustainable and help address climate change. Include at least 5 specific actions and explain how each would help.',
-        skillsAssessed: ['creative-thinking', 'planning', 'environmental-action', 'practical-application'],
+        question:
+          'Create a plan for how your school or local community could become more sustainable and help address climate change. Include at least 5 specific actions and explain how each would help.',
+        skillsAssessed: [
+          'creative-thinking',
+          'planning',
+          'environmental-action',
+          'practical-application',
+        ],
         bloomsTaxonomy: 'create',
         hints: [
           'Think about what your school or community already does',
           'Consider actions that are realistic and achievable',
           'Include both immediate and longer-term actions',
-          'Think about energy, waste, transport, and education'
+          'Think about energy, waste, transport, and education',
         ],
         points: 15,
         order: 6,
         difficulty: 'advanced',
-        estimatedTime: 10
-      }
+        estimatedTime: 10,
+      },
     ],
-    
+
     learningObjectives: [
       'Explain the causes and effects of climate change in Australia',
       'Identify evidence of climate change in Australian environments',
       'Analyse the impacts of climate change on Australian ecosystems and human communities',
       'Evaluate different strategies for addressing climate change',
-      'Develop plans for sustainable action at local and community levels'
+      'Develop plans for sustainable action at local and community levels',
     ],
-    
+
     assessmentCriteria: [
       'Demonstrates understanding of climate change causes and processes',
       'Uses evidence to support explanations of climate change impacts',
       'Analyses connections between climate change and Australian environments',
       'Evaluates effectiveness of different climate solutions',
-      'Proposes realistic and well-reasoned sustainability actions'
+      'Proposes realistic and well-reasoned sustainability actions',
     ],
-    
+
     crossCurricularLinks: [
       'Science - greenhouse effect and environmental systems',
       'Mathematics - interpreting climate data and graphs',
-      'English - persuasive writing about environmental issues'
+      'English - persuasive writing about environmental issues',
     ],
-    
+
     estimatedDuration: 50,
     timeLimit: 65,
-    
+
     extensionActivities: [
       {
         id: 'climate-action-project',
         title: 'School Climate Action Project',
-        description: 'Design and implement a climate action project for your school',
+        description:
+          'Design and implement a climate action project for your school',
         type: 'field-work',
         instructions: [
           'Conduct a climate audit of your school (energy use, waste, transport)',
           'Research best practice examples from other schools',
           'Design a climate action plan with specific, measurable goals',
           'Present your plan to school leadership',
-          'Implement one action and monitor its effectiveness'
+          'Implement one action and monitor its effectiveness',
         ],
         duration: 120,
-        difficulty: 'advanced'
-      }
+        difficulty: 'advanced',
+      },
     ],
-    
-    tags: ['climate-change', 'environment', 'sustainability', 'great-barrier-reef', 'renewable-energy', 'geography'],
+
+    tags: [
+      'climate-change',
+      'environment',
+      'sustainability',
+      'great-barrier-reef',
+      'renewable-energy',
+      'geography',
+    ],
     totalPoints: 56,
-    
+
     createdAt: new Date('2024-01-15'),
-    updatedAt: new Date('2024-01-15')
+    updatedAt: new Date('2024-01-15'),
   },
 
   // Economics Exercise - Resources and Trade
   {
     id: 'year6-economics-resources-trade',
-    title: 'Australia\'s Resources and Global Trade',
-    description: 'Discover how Australia\'s natural resources connect us to the world through trade and commerce.',
+    title: "Australia's Resources and Global Trade",
+    description:
+      "Discover how Australia's natural resources connect us to the world through trade and commerce.",
     subject: 'economics',
     yearLevel: 6,
     difficulty: 'proficient',
-    
+
     article: {
       id: 'article-resources-trade',
-      title: 'Australia\'s Resources and Global Trade',
+      title: "Australia's Resources and Global Trade",
       content: `# Australia\'s Resources and Global Trade
 
 Australia is often called "the lucky country" because of our incredible **natural resources**. These resources have made Australia wealthy and connected us to countries all around the world through **trade**.
@@ -928,243 +1036,297 @@ Trade and resources will continue to shape Australia's future, and young Austral
         {
           id: 'trade-flow-map',
           type: 'interactive-map',
-          title: 'Australia\'s Trade Flows',
+          title: "Australia's Trade Flows",
           url: '/maps/trade-flows',
-          description: 'Interactive map showing imports and exports between Australia and trading partners'
+          description:
+            'Interactive map showing imports and exports between Australia and trading partners',
         },
         {
           id: 'resource-locations',
           type: 'interactive-map',
           title: 'Australian Resource Locations',
           url: '/maps/resources',
-          description: 'Map showing where different resources are found across Australia'
+          description:
+            'Map showing where different resources are found across Australia',
         },
         {
           id: 'trade-statistics',
           type: 'chart',
           title: 'Australian Trade Statistics',
           url: '/charts/trade-stats',
-          description: 'Charts showing Australia\'s major exports and imports over time'
-        }
+          description:
+            "Charts showing Australia's major exports and imports over time",
+        },
       ],
-      interactiveElements: ['trade-balance-calculator', 'resource-matching-game'],
+      interactiveElements: [
+        'trade-balance-calculator',
+        'resource-matching-game',
+      ],
       keyVocabulary: [
         {
           id: 'natural-resources',
           term: 'Natural Resources',
-          definition: 'Materials found in nature that people can use to create goods and services',
+          definition:
+            'Materials found in nature that people can use to create goods and services',
           context: 'Economics and geography',
-          examples: ['Australia\'s natural resources include iron ore, coal, and wheat'],
+          examples: [
+            "Australia's natural resources include iron ore, coal, and wheat",
+          ],
           difficulty: 2,
           subject: 'economics',
-          yearLevel: 6
+          yearLevel: 6,
         },
         {
           id: 'trade',
           term: 'Trade',
-          definition: 'The buying and selling of goods and services between different countries',
+          definition:
+            'The buying and selling of goods and services between different countries',
           context: 'International economics',
-          examples: ['Australia trades iron ore with China in exchange for manufactured goods'],
+          examples: [
+            'Australia trades iron ore with China in exchange for manufactured goods',
+          ],
           difficulty: 2,
           subject: 'economics',
-          yearLevel: 6
+          yearLevel: 6,
         },
         {
           id: 'exports',
           term: 'Exports',
-          definition: 'Goods and services that a country sells to other countries',
+          definition:
+            'Goods and services that a country sells to other countries',
           context: 'International trade',
-          examples: ['Australia\'s main exports include iron ore, coal, and beef'],
+          examples: [
+            "Australia's main exports include iron ore, coal, and beef",
+          ],
           difficulty: 3,
           subject: 'economics',
-          yearLevel: 6
+          yearLevel: 6,
         },
         {
           id: 'imports',
           term: 'Imports',
-          definition: 'Goods and services that a country buys from other countries',
+          definition:
+            'Goods and services that a country buys from other countries',
           context: 'International trade',
-          examples: ['Australia imports cars, electronics, and clothing from other countries'],
+          examples: [
+            'Australia imports cars, electronics, and clothing from other countries',
+          ],
           difficulty: 3,
           subject: 'economics',
-          yearLevel: 6
+          yearLevel: 6,
         },
         {
           id: 'value-adding',
           term: 'Value-Adding',
-          definition: 'Processing raw materials to create more valuable finished products',
+          definition:
+            'Processing raw materials to create more valuable finished products',
           context: 'Manufacturing and economics',
-          examples: ['Making steel from iron ore is an example of value-adding'],
+          examples: [
+            'Making steel from iron ore is an example of value-adding',
+          ],
           difficulty: 4,
           subject: 'economics',
-          yearLevel: 6
-        }
+          yearLevel: 6,
+        },
       ],
-      backgroundInfo: 'Australia\'s economy has historically been built on natural resource extraction and export, making us closely connected to global commodity markets.',
+      backgroundInfo:
+        "Australia's economy has historically been built on natural resource extraction and export, making us closely connected to global commodity markets.",
       discussionPrompts: [
-        'How do Australia\'s natural resources affect your daily life?',
+        "How do Australia's natural resources affect your daily life?",
         'What are the advantages and disadvantages of relying heavily on resource exports?',
-        'How might climate change affect Australia\'s role in global trade?',
-        'What new industries or exports might be important for Australia\'s future?'
+        "How might climate change affect Australia's role in global trade?",
+        "What new industries or exports might be important for Australia's future?",
       ],
       createdAt: new Date('2024-01-15'),
-      updatedAt: new Date('2024-01-15')
+      updatedAt: new Date('2024-01-15'),
     },
-    
+
     questions: [
       {
         id: 'q1-major-resources',
         articleId: 'article-resources-trade',
         type: 'comprehension',
         subject: 'economics',
-        question: 'List Australia\'s three most important mineral resources mentioned in the article and explain what each is used for.',
+        question:
+          "List Australia's three most important mineral resources mentioned in the article and explain what each is used for.",
         sampleAnswers: [
           'Iron ore - used to make steel for buildings, cars, and machines',
           'Coal - used for energy and making steel',
-          'Gold - used in jewelry, electronics, and investments'
+          'Gold - used in jewelry, electronics, and investments',
         ],
         skillsAssessed: ['comprehension', 'factual-recall'],
         bloomsTaxonomy: 'understand',
         points: 6,
         order: 1,
         difficulty: 'developing',
-        estimatedTime: 3
+        estimatedTime: 3,
       },
       {
         id: 'q2-trade-relationship',
         articleId: 'article-resources-trade',
         type: 'analysis',
         subject: 'economics',
-        question: 'Analyse Australia\'s trade relationship with China. What does Australia export to China, what do we import, and why is this relationship important?',
-        skillsAssessed: ['analysis', 'economic-relationships', 'trade-understanding'],
+        question:
+          "Analyse Australia's trade relationship with China. What does Australia export to China, what do we import, and why is this relationship important?",
+        skillsAssessed: [
+          'analysis',
+          'economic-relationships',
+          'trade-understanding',
+        ],
         bloomsTaxonomy: 'analyze',
         points: 8,
         order: 2,
         difficulty: 'proficient',
-        estimatedTime: 5
+        estimatedTime: 5,
       },
       {
         id: 'q3-benefits-challenges',
         articleId: 'article-resources-trade',
         type: 'evaluation',
         subject: 'economics',
-        question: 'Compare the benefits and challenges of Australia\'s reliance on natural resource exports. Which do you think outweigh the other and why?',
-        skillsAssessed: ['evaluation', 'critical-thinking', 'economic-analysis'],
+        question:
+          "Compare the benefits and challenges of Australia's reliance on natural resource exports. Which do you think outweigh the other and why?",
+        skillsAssessed: [
+          'evaluation',
+          'critical-thinking',
+          'economic-analysis',
+        ],
         bloomsTaxonomy: 'evaluate',
         hints: [
           'Consider both economic and environmental factors',
           'Think about long-term vs short-term effects',
-          'Consider what happens when resource prices change'
+          'Consider what happens when resource prices change',
         ],
         points: 10,
         order: 3,
         difficulty: 'advanced',
-        estimatedTime: 7
+        estimatedTime: 7,
       },
       {
         id: 'q4-value-adding',
         articleId: 'article-resources-trade',
         type: 'application',
         subject: 'economics',
-        question: 'Choose one Australian resource and explain how value-adding could be applied to it. What would be the benefits of this approach?',
+        question:
+          'Choose one Australian resource and explain how value-adding could be applied to it. What would be the benefits of this approach?',
         skillsAssessed: ['application', 'economic-thinking', 'innovation'],
         bloomsTaxonomy: 'apply',
         hints: [
           'Think about taking a raw material and processing it further',
           'Consider what products could be made from the resource',
-          'Think about jobs, profits, and economic benefits'
+          'Think about jobs, profits, and economic benefits',
         ],
         points: 8,
         order: 4,
         difficulty: 'proficient',
-        estimatedTime: 5
+        estimatedTime: 5,
       },
       {
         id: 'q5-future-trade',
         articleId: 'article-resources-trade',
         type: 'creative',
         subject: 'economics',
-        question: 'Design a plan for how Australia could diversify its economy to be less dependent on traditional resource exports. Include at least three new industries or export opportunities.',
-        skillsAssessed: ['creative-thinking', 'economic-planning', 'innovation', 'future-thinking'],
+        question:
+          'Design a plan for how Australia could diversify its economy to be less dependent on traditional resource exports. Include at least three new industries or export opportunities.',
+        skillsAssessed: [
+          'creative-thinking',
+          'economic-planning',
+          'innovation',
+          'future-thinking',
+        ],
         bloomsTaxonomy: 'create',
         hints: [
-          'Consider Australia\'s strengths beyond traditional resources',
+          "Consider Australia's strengths beyond traditional resources",
           'Think about global trends like technology and sustainability',
           'Consider our geographic advantages and skilled workforce',
-          'Think about services as well as goods'
+          'Think about services as well as goods',
         ],
         points: 12,
         order: 5,
         difficulty: 'advanced',
-        estimatedTime: 8
+        estimatedTime: 8,
       },
       {
         id: 'q6-local-connections',
         articleId: 'article-resources-trade',
         type: 'application',
         subject: 'economics',
-        question: 'How does Australia\'s international trade affect your local community? Give specific examples of how global trade impacts jobs, products available, or the local economy where you live.',
-        skillsAssessed: ['application', 'local-global-connections', 'economic-awareness'],
+        question:
+          "How does Australia's international trade affect your local community? Give specific examples of how global trade impacts jobs, products available, or the local economy where you live.",
+        skillsAssessed: [
+          'application',
+          'local-global-connections',
+          'economic-awareness',
+        ],
         bloomsTaxonomy: 'apply',
         hints: [
           'Think about local businesses that might be connected to exports or imports',
           'Consider the products you use and where they come from',
-          'Think about jobs in your area that might be connected to trade'
+          'Think about jobs in your area that might be connected to trade',
         ],
         points: 8,
         order: 6,
         difficulty: 'proficient',
-        estimatedTime: 5
-      }
+        estimatedTime: 5,
+      },
     ],
-    
+
     learningObjectives: [
-      'Identify Australia\'s major natural resources and their uses',
+      "Identify Australia's major natural resources and their uses",
       'Explain how international trade works and its importance to Australia',
-      'Analyse Australia\'s trading relationships with major partners',
+      "Analyse Australia's trading relationships with major partners",
       'Evaluate the benefits and challenges of resource-dependent economies',
-      'Understand the concept of value-adding and economic diversification'
+      'Understand the concept of value-adding and economic diversification',
     ],
-    
+
     assessmentCriteria: [
       'Demonstrates knowledge of Australian natural resources and their uses',
       'Explains trade relationships and their economic importance',
       'Analyses economic benefits and challenges using evidence',
       'Evaluates economic strategies and proposes realistic alternatives',
-      'Makes connections between global trade and local communities'
+      'Makes connections between global trade and local communities',
     ],
-    
+
     crossCurricularLinks: [
       'Geography - location of resources and trading partners',
       'Mathematics - interpreting trade statistics and economic data',
-      'Science - understanding resource formation and extraction processes'
+      'Science - understanding resource formation and extraction processes',
     ],
-    
+
     estimatedDuration: 45,
     timeLimit: 60,
-    
+
     extensionActivities: [
       {
         id: 'trade-simulation',
         title: 'International Trade Simulation',
-        description: 'Role-play a trade negotiation between Australia and another country',
+        description:
+          'Role-play a trade negotiation between Australia and another country',
         type: 'presentation',
         instructions: [
           'Research a specific trade relationship (e.g., Australia-Japan)',
-          'Form teams representing each country\'s interests',
+          "Form teams representing each country's interests",
           'Negotiate trade deals considering resources, needs, and economic factors',
           'Present your negotiated agreement to the class',
-          'Reflect on the challenges of international trade negotiations'
+          'Reflect on the challenges of international trade negotiations',
         ],
         duration: 60,
-        difficulty: 'advanced'
-      }
+        difficulty: 'advanced',
+      },
     ],
-    
-    tags: ['resources', 'trade', 'exports', 'imports', 'economy', 'mining', 'agriculture'],
+
+    tags: [
+      'resources',
+      'trade',
+      'exports',
+      'imports',
+      'economy',
+      'mining',
+      'agriculture',
+    ],
     totalPoints: 52,
-    
+
     createdAt: new Date('2024-01-15'),
-    updatedAt: new Date('2024-01-15')
-  }
+    updatedAt: new Date('2024-01-15'),
+  },
 ]

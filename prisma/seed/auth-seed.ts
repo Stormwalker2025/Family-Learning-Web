@@ -17,15 +17,15 @@ export async function seedAuthData() {
     // 1. 创建家庭
     console.log('创建家庭...')
     let family = await prisma.family.findFirst({
-      where: { name: 'The Chen Family' }
+      where: { name: 'The Chen Family' },
     })
-    
+
     if (!family) {
       family = await prisma.family.create({
         data: {
           name: 'The Chen Family',
-          timezone: 'Australia/Brisbane'
-        }
+          timezone: 'Australia/Brisbane',
+        },
       })
     }
     console.log(`✓ 创建家庭: ${family.name} (ID: ${family.id})`)
@@ -44,10 +44,12 @@ export async function seedAuthData() {
         role: 'ADMIN',
         familyId: family.id,
         timezone: 'Australia/Brisbane',
-        isActive: true
-      }
+        isActive: true,
+      },
     })
-    console.log(`✓ 创建管理员: ${adminUser.displayName} (${adminUser.username})`)
+    console.log(
+      `✓ 创建管理员: ${adminUser.displayName} (${adminUser.username})`
+    )
 
     // 3. 创建家长用户 Grace
     console.log('创建家长用户 Grace...')
@@ -63,10 +65,12 @@ export async function seedAuthData() {
         role: 'PARENT',
         familyId: family.id,
         timezone: 'Australia/Brisbane',
-        isActive: true
-      }
+        isActive: true,
+      },
     })
-    console.log(`✓ 创建家长: ${parentUser.displayName} (${parentUser.username})`)
+    console.log(
+      `✓ 创建家长: ${parentUser.displayName} (${parentUser.username})`
+    )
 
     // 4. 创建学生用户 August (Year 3, 8岁)
     console.log('创建学生用户 August...')
@@ -84,10 +88,12 @@ export async function seedAuthData() {
         familyId: family.id,
         parentalCode: 'AUG123',
         timezone: 'Australia/Brisbane',
-        isActive: true
-      }
+        isActive: true,
+      },
     })
-    console.log(`✓ 创建学生: ${augustUser.displayName} (${augustUser.username}) - Year ${augustUser.yearLevel}`)
+    console.log(
+      `✓ 创建学生: ${augustUser.displayName} (${augustUser.username}) - Year ${augustUser.yearLevel}`
+    )
 
     // 5. 创建学生用户 Michael (Year 6, 11岁)
     console.log('创建学生用户 Michael...')
@@ -105,25 +111,27 @@ export async function seedAuthData() {
         familyId: family.id,
         parentalCode: 'MIC456',
         timezone: 'Australia/Brisbane',
-        isActive: true
-      }
+        isActive: true,
+      },
     })
-    console.log(`✓ 创建学生: ${michaelUser.displayName} (${michaelUser.username}) - Year ${michaelUser.yearLevel}`)
+    console.log(
+      `✓ 创建学生: ${michaelUser.displayName} (${michaelUser.username}) - Year ${michaelUser.yearLevel}`
+    )
 
     // 6. 创建额外的测试用户
     console.log('创建额外测试用户...')
-    
+
     // 另一个家庭
     let smithFamily = await prisma.family.findFirst({
-      where: { name: 'The Smith Family' }
+      where: { name: 'The Smith Family' },
     })
-    
+
     if (!smithFamily) {
       smithFamily = await prisma.family.create({
         data: {
           name: 'The Smith Family',
-          timezone: 'Australia/Sydney'
-        }
+          timezone: 'Australia/Sydney',
+        },
       })
     }
 
@@ -140,8 +148,8 @@ export async function seedAuthData() {
         role: 'PARENT',
         familyId: smithFamily.id,
         timezone: 'Australia/Sydney',
-        isActive: true
-      }
+        isActive: true,
+      },
     })
 
     // Smith 家庭的学生
@@ -159,8 +167,8 @@ export async function seedAuthData() {
         familyId: smithFamily.id,
         parentalCode: 'EMM789',
         timezone: 'Australia/Sydney',
-        isActive: true
-      }
+        isActive: true,
+      },
     })
 
     console.log(`✓ 创建 Smith 家庭: ${smithFamily.name}`)
@@ -175,10 +183,11 @@ export async function seedAuthData() {
           userId: adminUser.id,
           action: 'LOGIN',
           details: JSON.stringify({
-            userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-            timestamp: new Date().toISOString()
+            userAgent:
+              'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+            timestamp: new Date().toISOString(),
           }),
-          ipAddress: '127.0.0.1'
+          ipAddress: '127.0.0.1',
         },
         {
           userId: adminUser.id,
@@ -186,22 +195,22 @@ export async function seedAuthData() {
           details: JSON.stringify({
             action: 'create_user',
             targetUserId: augustUser.id,
-            timestamp: new Date().toISOString()
+            timestamp: new Date().toISOString(),
           }),
           resourceType: 'User',
           resourceId: augustUser.id,
-          ipAddress: '127.0.0.1'
+          ipAddress: '127.0.0.1',
         },
         {
           userId: parentUser.id,
           action: 'LOGIN',
           details: JSON.stringify({
             userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X)',
-            timestamp: new Date().toISOString()
+            timestamp: new Date().toISOString(),
           }),
-          ipAddress: '192.168.1.100'
-        }
-      ]
+          ipAddress: '192.168.1.100',
+        },
+      ],
     })
 
     console.log('✓ 创建示例活动日志')
@@ -215,36 +224,36 @@ export async function seedAuthData() {
           minLength: 6,
           requireNumbers: false,
           requireUppercase: false,
-          requireSpecialChars: false
+          requireSpecialChars: false,
         }),
         category: 'security',
-        description: '密码策略配置'
+        description: '密码策略配置',
       },
       {
         key: 'auth.session_timeout',
         value: JSON.stringify({ timeout: 24 * 60 * 60 * 1000 }), // 24小时
         category: 'security',
-        description: '会话超时配置'
+        description: '会话超时配置',
       },
       {
         key: 'family.max_members',
         value: JSON.stringify({ maxMembers: 10 }),
         category: 'family',
-        description: '家庭最大成员数'
+        description: '家庭最大成员数',
       },
       {
         key: 'platform.name',
         value: JSON.stringify({ name: 'Family Learning Platform' }),
         category: 'general',
-        description: '平台名称'
-      }
+        description: '平台名称',
+      },
     ]
 
     for (const config of systemConfigs) {
       await prisma.systemConfig.upsert({
         where: { key: config.key },
         update: {},
-        create: config
+        create: config,
       })
     }
 
@@ -275,10 +284,9 @@ export async function seedAuthData() {
         admin: adminUser,
         parent: parentUser,
         augustStudent: augustUser,
-        michaelStudent: michaelUser
-      }
+        michaelStudent: michaelUser,
+      },
     }
-
   } catch (error) {
     console.error('创建认证系统种子数据时发生错误:', error)
     throw error
@@ -288,14 +296,14 @@ export async function seedAuthData() {
 // 清理认证数据
 export async function cleanAuthData() {
   console.log('清理认证系统数据...')
-  
+
   try {
     // 按依赖关系顺序删除
     await prisma.activityLog.deleteMany()
     await prisma.systemConfig.deleteMany()
     await prisma.user.deleteMany()
     await prisma.family.deleteMany()
-    
+
     console.log('✓ 认证系统数据清理完成')
   } catch (error) {
     console.error('清理认证数据时发生错误:', error)
@@ -306,7 +314,7 @@ export async function cleanAuthData() {
 // 如果直接运行此文件
 if (require.main === module) {
   seedAuthData()
-    .catch((e) => {
+    .catch(e => {
       console.error(e)
       process.exit(1)
     })

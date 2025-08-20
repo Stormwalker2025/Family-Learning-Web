@@ -7,9 +7,8 @@ import { year6ReadingExercises } from '@/data/reading-exercises/year6-examples'
 // Combined mock data for demonstration - in production this would come from database
 const mockReadingExercises: ReadingExercise[] = [
   ...year3ReadingExercises,
-  ...year6ReadingExercises
+  ...year6ReadingExercises,
 ]
-
 
 // GET /api/exercises/english/[id] - Get specific reading exercise
 export async function GET(
@@ -29,10 +28,10 @@ export async function GET(
     }
 
     const { id } = params
-    
+
     // Find exercise by ID
     const exercise = mockReadingExercises.find(ex => ex.id === id)
-    
+
     if (!exercise) {
       return NextResponse.json(
         { error: 'Reading exercise not found' },
@@ -42,9 +41,8 @@ export async function GET(
 
     return NextResponse.json({
       success: true,
-      exercise
+      exercise,
     })
-
   } catch (error) {
     console.error('Error fetching reading exercise:', error)
     return NextResponse.json(
@@ -68,15 +66,18 @@ export async function PUT(
 
     const decoded = await verifyToken(token)
     if (!decoded || decoded.role !== 'ADMIN') {
-      return NextResponse.json({ error: 'Admin access required' }, { status: 403 })
+      return NextResponse.json(
+        { error: 'Admin access required' },
+        { status: 403 }
+      )
     }
 
     const { id } = params
     const body = await request.json()
-    
+
     // Find exercise index
     const exerciseIndex = mockReadingExercises.findIndex(ex => ex.id === id)
-    
+
     if (exerciseIndex === -1) {
       return NextResponse.json(
         { error: 'Reading exercise not found' },
@@ -89,16 +90,15 @@ export async function PUT(
       ...mockReadingExercises[exerciseIndex],
       ...body,
       id, // Ensure ID doesn't change
-      updatedAt: new Date()
+      updatedAt: new Date(),
     }
 
     mockReadingExercises[exerciseIndex] = updatedExercise
 
     return NextResponse.json({
       success: true,
-      exercise: updatedExercise
+      exercise: updatedExercise,
     })
-
   } catch (error) {
     console.error('Error updating reading exercise:', error)
     return NextResponse.json(
@@ -122,14 +122,17 @@ export async function DELETE(
 
     const decoded = await verifyToken(token)
     if (!decoded || decoded.role !== 'ADMIN') {
-      return NextResponse.json({ error: 'Admin access required' }, { status: 403 })
+      return NextResponse.json(
+        { error: 'Admin access required' },
+        { status: 403 }
+      )
     }
 
     const { id } = params
-    
+
     // Find exercise index
     const exerciseIndex = mockReadingExercises.findIndex(ex => ex.id === id)
-    
+
     if (exerciseIndex === -1) {
       return NextResponse.json(
         { error: 'Reading exercise not found' },
@@ -143,9 +146,8 @@ export async function DELETE(
     return NextResponse.json({
       success: true,
       message: 'Reading exercise deleted successfully',
-      exercise: deletedExercise
+      exercise: deletedExercise,
     })
-
   } catch (error) {
     console.error('Error deleting reading exercise:', error)
     return NextResponse.json(

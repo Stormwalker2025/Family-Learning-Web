@@ -17,7 +17,7 @@ const updateUserSchema = z.object({
   yearLevel: z.number().min(1).max(12).optional(),
   birthYear: z.number().min(1990).max(new Date().getFullYear()).optional(),
   familyId: z.string().cuid().optional(),
-  timezone: z.string().optional()
+  timezone: z.string().optional(),
 })
 
 /**
@@ -39,12 +39,13 @@ async function logUserOperation(
           action,
           targetUserId,
           ...details,
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         }),
         resourceType: 'User',
         resourceId: targetUserId,
-        ipAddress: request.ip || request.headers.get('x-forwarded-for') || 'unknown'
-      }
+        ipAddress:
+          request.ip || request.headers.get('x-forwarded-for') || 'unknown',
+      },
     })
   } catch (error) {
     console.error('Failed to log user operation:', error)
@@ -62,7 +63,7 @@ export async function GET(
   try {
     // 验证用户权限
     const { user: currentUser, error } = await extractUserFromRequest(request)
-    
+
     if (!currentUser) {
       return NextResponse.json(
         { success: false, message: error || '未授权访问' },
@@ -93,12 +94,12 @@ export async function GET(
                 username: true,
                 displayName: true,
                 role: true,
-                isActive: true
-              }
-            }
-          }
-        }
-      }
+                isActive: true,
+              },
+            },
+          },
+        },
+      },
     })
 
     if (!user) {
@@ -110,24 +111,25 @@ export async function GET(
 
     // 获取用户统计信息
     let stats = {}
-    
+
     if (user.role === 'STUDENT') {
-      const [submissionCount, progressCount, vocabularyCount] = await Promise.all([
-        prisma.submission.count({
-          where: { userId: user.id }
-        }),
-        prisma.learningProgress.count({
-          where: { userId: user.id }
-        }),
-        prisma.vocabularyProgress.count({
-          where: { userId: user.id }
-        })
-      ])
+      const [submissionCount, progressCount, vocabularyCount] =
+        await Promise.all([
+          prisma.submission.count({
+            where: { userId: user.id },
+          }),
+          prisma.learningProgress.count({
+            where: { userId: user.id },
+          }),
+          prisma.vocabularyProgress.count({
+            where: { userId: user.id },
+          }),
+        ])
 
       stats = {
         totalSubmissions: submissionCount,
         learningProgress: progressCount,
-        vocabularyWords: vocabularyCount
+        vocabularyWords: vocabularyCount,
       }
     }
 
@@ -138,16 +140,15 @@ export async function GET(
       success: true,
       data: {
         user: userInfo,
-        stats
-      }
+        stats,
+      },
     })
-
   } catch (error) {
     console.error('Get user error:', error)
     return NextResponse.json(
       {
         success: false,
-        message: '获取用户信息失败'
+        message: '获取用户信息失败',
       },
       { status: 500 }
     )
@@ -165,7 +166,7 @@ export async function PUT(
   try {
     // 验证用户权限
     const { user: currentUser, error } = await extractUserFromRequest(request)
-    
+
     if (!currentUser) {
       return NextResponse.json(
         { success: false, message: error || '未授权访问' },
@@ -178,7 +179,7 @@ export async function PUT(
 
     // 获取目标用户信息
     const targetUser = await prisma.user.findUnique({
-      where: { id: targetUserId }
+      where: { id: targetUserId },
     })
 
     if (!targetUser) {
@@ -189,7 +190,12 @@ export async function PUT(
     }
 
     // 权限检查
-    if (!permissionChecker.canModifyUserData(targetUserId, targetUser.role as UserRole)) {
+    if (
+      !permissionChecker.canModifyUserData(
+        targetUserId,
+        targetUser.role as UserRole
+      )
+    ) {
       return NextResponse.json(
         { success: false, message: '权限不足，无法修改该用户信息' },
         { status: 403 }
@@ -197,7 +203,7 @@ export async function PUT(
     }
 
     const body = await request.json()
-    
+
     // 验证请求数据
     const validation = updateUserSchema.safeParse(body)
     if (!validation.success) {
@@ -205,7 +211,7 @@ export async function PUT(
         {
           success: false,
           message: '请求数据格式错误',
-          errors: validation.error.errors
+          errors: validation.error.errors,
         },
         { status: 400 }
       )
@@ -214,7 +220,10 @@ export async function PUT(
     const updateData = validation.data
 
     // 特殊权限检查
-    if (updateData.role && !permissionChecker.canChangeUserRole(targetUserId, updateData.role)) {
+    if (
+      updateData.role &&
+      !permissionChecker.canChangeUserRole(targetUserId, updateData.role)
+    ) {
       return NextResponse.json(
         { success: false, message: '权限不足，无法更改用户角色' },
         { status: 403 }
@@ -226,8 +235,8 @@ export async function PUT(
       const existingUser = await prisma.user.findFirst({
         where: {
           email: updateData.email,
-          id: { not: targetUserId }
-        }
+          id: { not: targetUserId },
+        },
       })
 
       if (existingUser) {
@@ -242,7 +251,7 @@ export async function PUT(
     if (updateData.familyId) {
       const family = await prisma.family.findUnique({
         where: { id: updateData.familyId },
-        include: { members: true }
+        include: { members: true },
       })
 
       if (!family) {
@@ -253,7 +262,10 @@ export async function PUT(
       }
 
       // 检查家庭成员数量限制（如果用户不在该家庭中）
-      if (targetUser.familyId !== updateData.familyId && family.members.length >= 10) {
+      if (
+        targetUser.familyId !== updateData.familyId &&
+        family.members.length >= 10
+      ) {
         return NextResponse.json(
           { success: false, message: '目标家庭成员已满' },
           { status: 400 }
@@ -278,11 +290,11 @@ export async function PUT(
       where: { id: targetUserId },
       data: {
         ...updateData,
-        updatedAt: new Date()
+        updatedAt: new Date(),
       },
       include: {
-        family: true
-      }
+        family: true,
+      },
     })
 
     // 记录操作日志
@@ -292,7 +304,7 @@ export async function PUT(
       'EDIT_CONTENT',
       {
         action: 'update_user',
-        updatedFields: Object.keys(updateData)
+        updatedFields: Object.keys(updateData),
       },
       request
     )
@@ -303,15 +315,14 @@ export async function PUT(
     return NextResponse.json({
       success: true,
       message: '用户信息更新成功',
-      data: { user: userResponse }
+      data: { user: userResponse },
     })
-
   } catch (error) {
     console.error('Update user error:', error)
     return NextResponse.json(
       {
         success: false,
-        message: '更新用户信息失败'
+        message: '更新用户信息失败',
       },
       { status: 500 }
     )
@@ -329,7 +340,7 @@ export async function DELETE(
   try {
     // 验证用户权限
     const { user: currentUser, error } = await extractUserFromRequest(request)
-    
+
     if (!currentUser) {
       return NextResponse.json(
         { success: false, message: error || '未授权访问' },
@@ -342,7 +353,7 @@ export async function DELETE(
 
     // 获取目标用户信息
     const targetUser = await prisma.user.findUnique({
-      where: { id: targetUserId }
+      where: { id: targetUserId },
     })
 
     if (!targetUser) {
@@ -373,8 +384,8 @@ export async function DELETE(
       where: { id: targetUserId },
       data: {
         isActive: false,
-        updatedAt: new Date()
-      }
+        updatedAt: new Date(),
+      },
     })
 
     // 记录删除操作
@@ -384,22 +395,21 @@ export async function DELETE(
       'DELETE_CONTENT',
       {
         action: 'delete_user',
-        targetUsername: targetUser.username
+        targetUsername: targetUser.username,
       },
       request
     )
 
     return NextResponse.json({
       success: true,
-      message: `用户 ${targetUser.displayName} 已被删除`
+      message: `用户 ${targetUser.displayName} 已被删除`,
     })
-
   } catch (error) {
     console.error('Delete user error:', error)
     return NextResponse.json(
       {
         success: false,
-        message: '删除用户失败'
+        message: '删除用户失败',
       },
       { status: 500 }
     )

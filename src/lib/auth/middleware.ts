@@ -18,11 +18,11 @@ export async function extractUserFromRequest(
   try {
     // 从Authorization头部或Cookie中获取令牌
     let token: string | null = null
-    
+
     // 优先从Authorization头部获取
     const authHeader = request.headers.get('Authorization')
     token = extractBearerToken(authHeader)
-    
+
     // 如果头部没有，尝试从Cookie获取
     if (!token) {
       token = request.cookies.get('family-learning-session')?.value || null
@@ -42,8 +42,8 @@ export async function extractUserFromRequest(
     const user = await prisma.user.findUnique({
       where: { id: payload.userId },
       include: {
-        family: true
-      }
+        family: true,
+      },
     })
 
     if (!user || !user.isActive) {
@@ -59,13 +59,13 @@ export async function extractUserFromRequest(
       role: user.role as UserRole,
       isActive: user.isActive,
       timezone: user.timezone,
-      yearLevel: user.yearLevel,
-      birthYear: user.birthYear,
-      parentalCode: user.parentalCode,
-      familyId: user.familyId,
-      lastLoginAt: user.lastLoginAt,
+      yearLevel: user.yearLevel || undefined,
+      birthYear: user.birthYear || undefined,
+      parentalCode: user.parentalCode || undefined,
+      familyId: user.familyId || undefined,
+      lastLoginAt: user.lastLoginAt || undefined,
       createdAt: user.createdAt,
-      updatedAt: user.updatedAt
+      updatedAt: user.updatedAt,
     }
 
     return { user: frontendUser }
@@ -86,19 +86,21 @@ export function checkPermission(
   permission: keyof typeof ROLE_PERMISSIONS.ADMIN
 ): PermissionCheck {
   const rolePermissions = ROLE_PERMISSIONS[user.role]
-  
+
   if (!rolePermissions) {
     return {
       hasPermission: false,
-      reason: `Invalid user role: ${user.role}`
+      reason: `Invalid user role: ${user.role}`,
     }
   }
 
   const hasPermission = rolePermissions[permission] === true
-  
+
   return {
     hasPermission,
-    reason: hasPermission ? undefined : `Insufficient permissions for ${permission}`
+    reason: hasPermission
+      ? undefined
+      : `Insufficient permissions for ${permission}`,
   }
 }
 
@@ -110,7 +112,11 @@ export function checkPermission(
  */
 export function canAccessRoute(user: User | null, pathname: string): boolean {
   // 检查是否为公开路由
-  if (PROTECTED_ROUTES.public.some(route => pathname === route || pathname.startsWith(route))) {
+  if (
+    PROTECTED_ROUTES.public.some(
+      route => pathname === route || pathname.startsWith(route)
+    )
+  ) {
     return true
   }
 
@@ -120,12 +126,18 @@ export function canAccessRoute(user: User | null, pathname: string): boolean {
   }
 
   // 检查管理员专用路由
-  if (PROTECTED_ROUTES.adminOnly.some(route => pathname.startsWith(route.replace('/*', '')))) {
+  if (
+    PROTECTED_ROUTES.adminOnly.some(route =>
+      pathname.startsWith(route.replace('/*', ''))
+    )
+  ) {
     return user.role === 'ADMIN'
   }
 
   // 检查家长和管理员路由
-  if (PROTECTED_ROUTES.parentOrAdmin.some(route => pathname.startsWith(route))) {
+  if (
+    PROTECTED_ROUTES.parentOrAdmin.some(route => pathname.startsWith(route))
+  ) {
     return user.role === 'PARENT' || user.role === 'ADMIN'
   }
 
@@ -217,12 +229,14 @@ export async function checkFamilyMemberAccess(
   if (currentUser.role === 'PARENT' && currentUser.familyId) {
     try {
       const targetUser = await prisma.user.findUnique({
-        where: { id: targetUserId }
+        where: { id: targetUserId },
       })
 
-      if (targetUser && 
-          targetUser.familyId === currentUser.familyId && 
-          targetUser.role === 'STUDENT') {
+      if (
+        targetUser &&
+        targetUser.familyId === currentUser.familyId &&
+        targetUser.role === 'STUDENT'
+      ) {
         return true
       }
     } catch (error) {
@@ -258,7 +272,7 @@ export function createRateLimitMiddleware(
     }
 
     const requestData = requestCounts.get(key)
-    
+
     if (!requestData) {
       // 首次请求
       requestCounts.set(key, { count: 1, resetTime: now + windowMs })
@@ -290,10 +304,13 @@ export function createRateLimitMiddleware(
  * @param allowedOrigins 允许的源
  * @returns 中间件函数
  */
-export function createCorsMiddleware(allowedOrigins: string[] = ['http://localhost:3000']) {
+export function createCorsMiddleware(
+  allowedOrigins: string[] = ['http://localhost:3000']
+) {
   return async (request: NextRequest) => {
     const origin = request.headers.get('origin')
-    const isAllowed = !origin || allowedOrigins.includes(origin) || allowedOrigins.includes('*')
+    const isAllowed =
+      !origin || allowedOrigins.includes(origin) || allowedOrigins.includes('*')
 
     if (!isAllowed) {
       return NextResponse.json(
@@ -303,13 +320,19 @@ export function createCorsMiddleware(allowedOrigins: string[] = ['http://localho
     }
 
     const response = NextResponse.next()
-    
+
     if (origin && allowedOrigins.includes(origin)) {
       response.headers.set('Access-Control-Allow-Origin', origin)
     }
-    
-    response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
-    response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+
+    response.headers.set(
+      'Access-Control-Allow-Methods',
+      'GET, POST, PUT, DELETE, OPTIONS'
+    )
+    response.headers.set(
+      'Access-Control-Allow-Headers',
+      'Content-Type, Authorization'
+    )
     response.headers.set('Access-Control-Allow-Credentials', 'true')
 
     return response

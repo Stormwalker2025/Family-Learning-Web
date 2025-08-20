@@ -4,19 +4,19 @@ import React, { useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { 
-  Image as ImageIcon, 
-  ChevronLeft, 
-  ChevronRight, 
-  ZoomIn, 
-  ZoomOut, 
+import {
+  Image as ImageIcon,
+  ChevronLeft,
+  ChevronRight,
+  ZoomIn,
+  ZoomOut,
   RotateCw,
   Download,
   Share2,
   X,
   Maximize2,
   Grid3X3,
-  List
+  List,
 } from 'lucide-react'
 
 interface ImageItem {
@@ -38,10 +38,10 @@ interface ImageGalleryProps {
 
 type ViewMode = 'grid' | 'list' | 'slideshow'
 
-export function ImageGallery({ 
-  images, 
-  title = "Image Gallery", 
-  description 
+export function ImageGallery({
+  images,
+  title = 'Image Gallery',
+  description,
 }: ImageGalleryProps) {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [viewMode, setViewMode] = useState<ViewMode>('grid')
@@ -53,11 +53,11 @@ export function ImageGallery({
   const currentImage = images[currentIndex]
 
   const nextImage = () => {
-    setCurrentIndex((prev) => (prev + 1) % images.length)
+    setCurrentIndex(prev => (prev + 1) % images.length)
   }
 
   const previousImage = () => {
-    setCurrentIndex((prev) => (prev - 1 + images.length) % images.length)
+    setCurrentIndex(prev => (prev - 1 + images.length) % images.length)
   }
 
   const openImage = (image: ImageItem, index: number) => {
@@ -84,7 +84,7 @@ export function ImageGallery({
       navigator.share({
         title: image.title,
         text: image.description,
-        url: image.src
+        url: image.src,
       })
     } else {
       navigator.clipboard.writeText(image.src)
@@ -107,7 +107,9 @@ export function ImageGallery({
             />
             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors" />
             <div className="absolute bottom-2 left-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
-              <p className="text-white text-sm font-medium truncate">{image.title}</p>
+              <p className="text-white text-sm font-medium truncate">
+                {image.title}
+              </p>
               {image.date && (
                 <p className="text-white/80 text-xs">{image.date}</p>
               )}
@@ -163,13 +165,16 @@ export function ImageGallery({
 
   const SlideshowView = () => (
     <div className="space-y-4">
-      <div className="relative bg-muted rounded-lg overflow-hidden" style={{ aspectRatio: '16/9' }}>
+      <div
+        className="relative bg-muted rounded-lg overflow-hidden"
+        style={{ aspectRatio: '16/9' }}
+      >
         <img
           src={currentImage.src}
           alt={currentImage.title}
           className="w-full h-full object-contain"
         />
-        
+
         {/* Navigation Arrows */}
         <Button
           variant="outline"
@@ -180,7 +185,7 @@ export function ImageGallery({
         >
           <ChevronLeft className="h-4 w-4" />
         </Button>
-        
+
         <Button
           variant="outline"
           size="sm"
@@ -214,10 +219,14 @@ export function ImageGallery({
             <div>
               <h4 className="font-semibold text-lg">{currentImage.title}</h4>
               {currentImage.description && (
-                <p className="text-muted-foreground mt-1">{currentImage.description}</p>
+                <p className="text-muted-foreground mt-1">
+                  {currentImage.description}
+                </p>
               )}
               {currentImage.date && (
-                <p className="text-sm text-muted-foreground mt-2">{currentImage.date}</p>
+                <p className="text-sm text-muted-foreground mt-2">
+                  {currentImage.date}
+                </p>
               )}
             </div>
             {currentImage.category && (
@@ -233,7 +242,9 @@ export function ImageGallery({
           <div
             key={image.id}
             className={`flex-shrink-0 w-16 h-16 rounded border-2 cursor-pointer overflow-hidden transition-colors ${
-              index === currentIndex ? 'border-primary' : 'border-transparent hover:border-muted-foreground'
+              index === currentIndex
+                ? 'border-primary'
+                : 'border-transparent hover:border-muted-foreground'
             }`}
             onClick={() => setCurrentIndex(index)}
           >
@@ -259,7 +270,9 @@ export function ImageGallery({
                 {title} ({images.length} images)
               </CardTitle>
               {description && (
-                <p className="text-sm text-muted-foreground mt-1">{description}</p>
+                <p className="text-sm text-muted-foreground mt-1">
+                  {description}
+                </p>
               )}
             </div>
 
@@ -299,12 +312,16 @@ export function ImageGallery({
 
       {/* Image Viewer Modal */}
       {selectedImage && (
-        <div className={`fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4 ${
-          isFullscreen ? 'bg-black' : ''
-        }`}>
-          <div className={`relative max-w-full max-h-full ${
-            isFullscreen ? 'w-full h-full' : 'w-auto h-auto'
-          }`}>
+        <div
+          className={`fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4 ${
+            isFullscreen ? 'bg-black' : ''
+          }`}
+        >
+          <div
+            className={`relative max-w-full max-h-full ${
+              isFullscreen ? 'w-full h-full' : 'w-auto h-auto'
+            }`}
+          >
             {/* Image */}
             <div className="relative overflow-auto">
               <img
@@ -313,7 +330,7 @@ export function ImageGallery({
                 className="max-w-full max-h-[80vh] object-contain mx-auto"
                 style={{
                   transform: `scale(${zoom}) rotate(${rotation}deg)`,
-                  transition: 'transform 0.3s ease'
+                  transition: 'transform 0.3s ease',
                 }}
               />
             </div>
@@ -328,7 +345,7 @@ export function ImageGallery({
               >
                 <ZoomOut className="h-4 w-4" />
               </Button>
-              
+
               <Button
                 size="sm"
                 variant="secondary"
@@ -370,11 +387,7 @@ export function ImageGallery({
                 <Share2 className="h-4 w-4" />
               </Button>
 
-              <Button
-                size="sm"
-                variant="secondary"
-                onClick={closeImage}
-              >
+              <Button size="sm" variant="secondary" onClick={closeImage}>
                 <X className="h-4 w-4" />
               </Button>
             </div>
@@ -388,12 +401,14 @@ export function ImageGallery({
                   className="absolute left-4 top-1/2 transform -translate-y-1/2"
                   onClick={() => {
                     previousImage()
-                    setSelectedImage(images[(currentIndex - 1 + images.length) % images.length])
+                    setSelectedImage(
+                      images[(currentIndex - 1 + images.length) % images.length]
+                    )
                   }}
                 >
                   <ChevronLeft className="h-4 w-4" />
                 </Button>
-                
+
                 <Button
                   variant="secondary"
                   size="sm"
@@ -412,11 +427,15 @@ export function ImageGallery({
             <div className="absolute bottom-4 left-4 right-4 bg-black/70 text-white p-4 rounded-lg">
               <h4 className="font-semibold text-lg">{selectedImage.title}</h4>
               {selectedImage.description && (
-                <p className="text-sm opacity-90 mt-1">{selectedImage.description}</p>
+                <p className="text-sm opacity-90 mt-1">
+                  {selectedImage.description}
+                </p>
               )}
               <div className="flex items-center justify-between mt-2">
                 {selectedImage.date && (
-                  <span className="text-xs opacity-75">{selectedImage.date}</span>
+                  <span className="text-xs opacity-75">
+                    {selectedImage.date}
+                  </span>
                 )}
                 <span className="text-xs opacity-75">
                   {currentIndex + 1} / {images.length}

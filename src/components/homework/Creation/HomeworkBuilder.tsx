@@ -9,29 +9,29 @@ import { Textarea } from '@/components/ui/textarea'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
-import { 
-  Save, 
-  Send, 
-  Clock, 
-  Users, 
-  BookOpen, 
+import {
+  Save,
+  Send,
+  Clock,
+  Users,
+  BookOpen,
   Plus,
   Trash2,
   ArrowUp,
   ArrowDown,
   Settings,
   Calendar,
-  Target
+  Target,
 } from 'lucide-react'
 import { useAuth } from '@/hooks/auth/useAuth'
-import { 
-  HomeworkAssignmentConfig, 
-  HomeworkExerciseConfig, 
+import {
+  HomeworkAssignmentConfig,
+  HomeworkExerciseConfig,
   NotificationConfig,
   Exercise,
   User,
   SubjectType,
-  PriorityType
+  PriorityType,
 } from '@/types'
 import QuestionSelector from './QuestionSelector'
 import TimeSettings from './TimeSettings'
@@ -43,19 +43,21 @@ interface HomeworkBuilderProps {
   onCancel?: () => void
 }
 
-export default function HomeworkBuilder({ 
-  assignmentId, 
-  onSave, 
-  onCancel 
+export default function HomeworkBuilder({
+  assignmentId,
+  onSave,
+  onCancel,
 }: HomeworkBuilderProps) {
   const { user } = useAuth()
   const [currentStep, setCurrentStep] = useState(0)
   const [loading, setLoading] = useState(false)
   const [availableStudents, setAvailableStudents] = useState<User[]>([])
   const [availableExercises, setAvailableExercises] = useState<Exercise[]>([])
-  
+
   // 作业配置状态
-  const [assignment, setAssignment] = useState<Partial<HomeworkAssignmentConfig>>({
+  const [assignment, setAssignment] = useState<
+    Partial<HomeworkAssignmentConfig>
+  >({
     title: '',
     description: '',
     instructions: '',
@@ -70,7 +72,7 @@ export default function HomeworkBuilder({
     lateSubmissionAllowed: true,
     latePenalty: 10,
     exercises: [],
-    notifications: []
+    notifications: [],
   })
 
   const steps = [
@@ -78,7 +80,7 @@ export default function HomeworkBuilder({
     { id: 'exercises', label: '选择练习', icon: Target },
     { id: 'students', label: '分配学生', icon: Users },
     { id: 'settings', label: '设置选项', icon: Settings },
-    { id: 'review', label: '预览确认', icon: Send }
+    { id: 'review', label: '预览确认', icon: Send },
   ]
 
   // 初始化数据
@@ -94,8 +96,8 @@ export default function HomeworkBuilder({
       // 获取可分配的学生
       const studentsResponse = await fetch('/api/users?role=STUDENT', {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
       })
       if (studentsResponse.ok) {
         const studentsData = await studentsResponse.json()
@@ -105,8 +107,8 @@ export default function HomeworkBuilder({
       // 获取可用练习
       const exercisesResponse = await fetch('/api/exercises', {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
       })
       if (exercisesResponse.ok) {
         const exercisesData = await exercisesResponse.json()
@@ -121,8 +123,8 @@ export default function HomeworkBuilder({
     try {
       const response = await fetch(`/api/homework/assignments/${id}`, {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
       })
       if (response.ok) {
         const data = await response.json()
@@ -176,48 +178,55 @@ export default function HomeworkBuilder({
       exerciseId: exercise.id,
       order: (assignment.exercises?.length || 0) + 1,
       isRequired: true,
-      weight: 1
+      weight: 1,
     }
-    
+
     setAssignment(prev => ({
       ...prev,
-      exercises: [...(prev.exercises || []), newExerciseConfig]
+      exercises: [...(prev.exercises || []), newExerciseConfig],
     }))
   }
 
   const removeExercise = (exerciseId: string) => {
     setAssignment(prev => ({
       ...prev,
-      exercises: prev.exercises?.filter(e => e.exerciseId !== exerciseId) || []
+      exercises: prev.exercises?.filter(e => e.exerciseId !== exerciseId) || [],
     }))
   }
 
   const moveExercise = (exerciseId: string, direction: 'up' | 'down') => {
     const exercises = [...(assignment.exercises || [])]
     const index = exercises.findIndex(e => e.exerciseId === exerciseId)
-    
+
     if (index === -1) return
-    
+
     const newIndex = direction === 'up' ? index - 1 : index + 1
     if (newIndex < 0 || newIndex >= exercises.length) return
-    
+
     // 交换位置
-    [exercises[index], exercises[newIndex]] = [exercises[newIndex], exercises[index]]
-    
+    ;[exercises[index], exercises[newIndex]] = [
+      exercises[newIndex],
+      exercises[index],
+    ]
+
     // 更新order
     exercises.forEach((exercise, idx) => {
       exercise.order = idx + 1
     })
-    
+
     setAssignment(prev => ({ ...prev, exercises }))
   }
 
-  const updateExerciseConfig = (exerciseId: string, updates: Partial<HomeworkExerciseConfig>) => {
+  const updateExerciseConfig = (
+    exerciseId: string,
+    updates: Partial<HomeworkExerciseConfig>
+  ) => {
     setAssignment(prev => ({
       ...prev,
-      exercises: prev.exercises?.map(e => 
-        e.exerciseId === exerciseId ? { ...e, ...updates } : e
-      ) || []
+      exercises:
+        prev.exercises?.map(e =>
+          e.exerciseId === exerciseId ? { ...e, ...updates } : e
+        ) || [],
     }))
   }
 
@@ -230,28 +239,28 @@ export default function HomeworkBuilder({
 
     try {
       setLoading(true)
-      
+
       const assignmentData = {
         ...assignment,
         assignedBy: user?.id,
         autoRelease: publish,
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
       }
 
-      const url = assignmentId 
+      const url = assignmentId
         ? `/api/homework/assignments/${assignmentId}`
         : '/api/homework/assignments'
-      
+
       const method = assignmentId ? 'PUT' : 'POST'
 
       const response = await fetch(url, {
         method,
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
-        body: JSON.stringify(assignmentData)
+        body: JSON.stringify(assignmentData),
       })
 
       if (response.ok) {
@@ -277,9 +286,11 @@ export default function HomeworkBuilder({
   // 计算总估计时间
   const getTotalEstimatedTime = (): number => {
     if (!assignment.exercises) return 0
-    
+
     return assignment.exercises.reduce((total, exerciseConfig) => {
-      const exercise = availableExercises.find(e => e.id === exerciseConfig.exerciseId)
+      const exercise = availableExercises.find(
+        e => e.id === exerciseConfig.exerciseId
+      )
       return total + (exercise?.timeLimit || 30) // 默认30分钟
     }, 0)
   }
@@ -297,7 +308,9 @@ export default function HomeworkBuilder({
               <Input
                 id="title"
                 value={assignment.title || ''}
-                onChange={(e) => setAssignment(prev => ({ ...prev, title: e.target.value }))}
+                onChange={e =>
+                  setAssignment(prev => ({ ...prev, title: e.target.value }))
+                }
                 placeholder="请输入作业标题"
                 className="mt-2"
               />
@@ -310,7 +323,12 @@ export default function HomeworkBuilder({
               <Textarea
                 id="description"
                 value={assignment.description || ''}
-                onChange={(e) => setAssignment(prev => ({ ...prev, description: e.target.value }))}
+                onChange={e =>
+                  setAssignment(prev => ({
+                    ...prev,
+                    description: e.target.value,
+                  }))
+                }
                 placeholder="描述作业的目标和要求"
                 rows={4}
                 className="mt-2"
@@ -324,7 +342,12 @@ export default function HomeworkBuilder({
               <Textarea
                 id="instructions"
                 value={assignment.instructions || ''}
-                onChange={(e) => setAssignment(prev => ({ ...prev, instructions: e.target.value }))}
+                onChange={e =>
+                  setAssignment(prev => ({
+                    ...prev,
+                    instructions: e.target.value,
+                  }))
+                }
                 placeholder="详细的作业完成指导"
                 rows={4}
                 className="mt-2"
@@ -339,10 +362,12 @@ export default function HomeworkBuilder({
                 <select
                   id="priority"
                   value={assignment.priority || 'medium'}
-                  onChange={(e) => setAssignment(prev => ({ 
-                    ...prev, 
-                    priority: e.target.value as PriorityType 
-                  }))}
+                  onChange={e =>
+                    setAssignment(prev => ({
+                      ...prev,
+                      priority: e.target.value as PriorityType,
+                    }))
+                  }
                   className="mt-2 w-full px-3 py-2 border border-gray-300 rounded-md"
                 >
                   <option value="low">低</option>
@@ -360,10 +385,12 @@ export default function HomeworkBuilder({
                   id="totalPoints"
                   type="number"
                   value={assignment.totalPoints || 100}
-                  onChange={(e) => setAssignment(prev => ({ 
-                    ...prev, 
-                    totalPoints: parseInt(e.target.value) || 100 
-                  }))}
+                  onChange={e =>
+                    setAssignment(prev => ({
+                      ...prev,
+                      totalPoints: parseInt(e.target.value) || 100,
+                    }))
+                  }
                   className="mt-2"
                 />
               </div>
@@ -388,7 +415,7 @@ export default function HomeworkBuilder({
           <AssignmentManager
             students={availableStudents}
             selectedStudents={assignment.assignedTo || []}
-            onUpdateSelection={(studentIds) => 
+            onUpdateSelection={studentIds =>
               setAssignment(prev => ({ ...prev, assignedTo: studentIds }))
             }
           />
@@ -398,7 +425,9 @@ export default function HomeworkBuilder({
         return (
           <TimeSettings
             assignment={assignment}
-            onUpdate={(updates) => setAssignment(prev => ({ ...prev, ...updates }))}
+            onUpdate={updates =>
+              setAssignment(prev => ({ ...prev, ...updates }))
+            }
           />
         )
 
@@ -407,7 +436,7 @@ export default function HomeworkBuilder({
           <div className="space-y-6">
             <Card className="p-6">
               <h3 className="text-lg font-semibold mb-4">作业预览</h3>
-              
+
               <div className="space-y-4">
                 <div>
                   <strong>标题:</strong> {assignment.title}
@@ -416,10 +445,12 @@ export default function HomeworkBuilder({
                   <strong>描述:</strong> {assignment.description || '无'}
                 </div>
                 <div>
-                  <strong>分配给:</strong> {assignment.assignedTo?.length || 0} 名学生
+                  <strong>分配给:</strong> {assignment.assignedTo?.length || 0}{' '}
+                  名学生
                 </div>
                 <div>
-                  <strong>练习数量:</strong> {assignment.exercises?.length || 0} 个
+                  <strong>练习数量:</strong> {assignment.exercises?.length || 0}{' '}
+                  个
                 </div>
                 <div>
                   <strong>预估时间:</strong> {getTotalEstimatedTime()} 分钟
@@ -431,11 +462,10 @@ export default function HomeworkBuilder({
                   <strong>及格分:</strong> {assignment.passingScore} 分
                 </div>
                 <div>
-                  <strong>截止日期:</strong> {
-                    assignment.dueDate 
-                      ? new Date(assignment.dueDate).toLocaleString('zh-CN')
-                      : '无限制'
-                  }
+                  <strong>截止日期:</strong>{' '}
+                  {assignment.dueDate
+                    ? new Date(assignment.dueDate).toLocaleString('zh-CN')
+                    : '无限制'}
                 </div>
               </div>
             </Card>
@@ -445,14 +475,23 @@ export default function HomeworkBuilder({
                 <h3 className="text-lg font-semibold mb-4">练习列表</h3>
                 <div className="space-y-2">
                   {assignment.exercises.map((exerciseConfig, index) => {
-                    const exercise = availableExercises.find(e => e.id === exerciseConfig.exerciseId)
+                    const exercise = availableExercises.find(
+                      e => e.id === exerciseConfig.exerciseId
+                    )
                     return (
-                      <div key={exerciseConfig.exerciseId} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                      <div
+                        key={exerciseConfig.exerciseId}
+                        className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                      >
                         <div>
-                          <span className="font-medium">{index + 1}. {exercise?.title}</span>
+                          <span className="font-medium">
+                            {index + 1}. {exercise?.title}
+                          </span>
                           <div className="text-sm text-gray-600">
                             {exercise?.subject} • {exercise?.difficulty}
-                            {exerciseConfig.isRequired && <Badge className="ml-2">必做</Badge>}
+                            {exerciseConfig.isRequired && (
+                              <Badge className="ml-2">必做</Badge>
+                            )}
                           </div>
                         </div>
                         <div className="text-sm text-gray-500">
@@ -486,7 +525,10 @@ export default function HomeworkBuilder({
         </div>
 
         {/* 进度条 */}
-        <Progress value={(currentStep / (steps.length - 1)) * 100} className="mb-6" />
+        <Progress
+          value={(currentStep / (steps.length - 1)) * 100}
+          className="mb-6"
+        />
 
         {/* 步骤标签 */}
         <div className="flex justify-between">
@@ -505,8 +547,8 @@ export default function HomeworkBuilder({
                   isActive
                     ? 'bg-blue-100 text-blue-700'
                     : isCompleted
-                    ? 'bg-green-100 text-green-700 hover:bg-green-200'
-                    : 'text-gray-400 cursor-not-allowed'
+                      ? 'bg-green-100 text-green-700 hover:bg-green-200'
+                      : 'text-gray-400 cursor-not-allowed'
                 }`}
               >
                 <Icon size={20} />
@@ -518,9 +560,7 @@ export default function HomeworkBuilder({
       </Card>
 
       {/* 步骤内容 */}
-      <Card className="p-6 min-h-[500px]">
-        {renderStepContent()}
-      </Card>
+      <Card className="p-6 min-h-[500px]">{renderStepContent()}</Card>
 
       {/* 操作按钮 */}
       <div className="flex justify-between">
@@ -541,10 +581,7 @@ export default function HomeworkBuilder({
           </Button>
 
           {currentStep < steps.length - 1 ? (
-            <Button
-              onClick={nextStep}
-              disabled={!validateStep(currentStep)}
-            >
+            <Button onClick={nextStep} disabled={!validateStep(currentStep)}>
               下一步
             </Button>
           ) : (

@@ -16,7 +16,11 @@ interface QuestionPanelProps {
   onAnswerChange: (questionId: string, answer: string | string[]) => void
 }
 
-export function QuestionPanel({ question, answer, onAnswerChange }: QuestionPanelProps) {
+export function QuestionPanel({
+  question,
+  answer,
+  onAnswerChange,
+}: QuestionPanelProps) {
   const handleAnswerChange = (newAnswer: string | string[]) => {
     onAnswerChange(question.id, newAnswer)
   }
@@ -24,27 +28,24 @@ export function QuestionPanel({ question, answer, onAnswerChange }: QuestionPane
   const renderQuestionComponent = () => {
     const commonProps = {
       answer: answer || '',
-      onAnswerChange: handleAnswerChange
+      onAnswerChange: handleAnswerChange,
     }
 
     switch (question.type) {
       case 'multiple-choice':
         return (
-          <MultipleChoice
-            {...commonProps}
-            options={question.options || []}
-          />
+          <MultipleChoice {...commonProps} options={question.options || []} />
         )
-      
+
       case 'true-false':
         return <TrueFalse {...commonProps} />
-      
+
       case 'short-answer':
         return <ShortAnswer {...commonProps} />
-      
+
       case 'sentence-completion':
         return <SentenceCompletion {...commonProps} />
-      
+
       case 'matching':
         return (
           <Matching
@@ -52,7 +53,7 @@ export function QuestionPanel({ question, answer, onAnswerChange }: QuestionPane
             matchingOptions={question.matchingOptions || []}
           />
         )
-      
+
       default:
         return (
           <div className="text-center text-muted-foreground py-8">
@@ -69,7 +70,7 @@ export function QuestionPanel({ question, answer, onAnswerChange }: QuestionPane
       'true-false': 'True/False/Not Given',
       'short-answer': 'Short Answer',
       'sentence-completion': 'Sentence Completion',
-      'matching': 'Matching'
+      matching: 'Matching',
     }
     return labels[type] || type
   }
@@ -96,15 +97,17 @@ export function QuestionPanel({ question, answer, onAnswerChange }: QuestionPane
               <Badge variant="outline" className="text-xs">
                 {getQuestionTypeLabel(question.type)}
               </Badge>
-              <Badge 
-                variant="outline" 
+              <Badge
+                variant="outline"
                 className={`text-xs ${getDifficultyColor(question.difficulty)}`}
               >
                 {question.difficulty}
               </Badge>
               <div className="flex items-center space-x-1 text-xs text-muted-foreground">
                 <Star className="h-3 w-3" />
-                <span>{question.points} point{question.points !== 1 ? 's' : ''}</span>
+                <span>
+                  {question.points} point{question.points !== 1 ? 's' : ''}
+                </span>
               </div>
             </div>
             <CardTitle className="text-lg leading-relaxed">
@@ -112,7 +115,7 @@ export function QuestionPanel({ question, answer, onAnswerChange }: QuestionPane
             </CardTitle>
           </div>
         </div>
-        
+
         {question.instructions && (
           <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-md">
             <p className="text-sm text-blue-800">
@@ -122,9 +125,7 @@ export function QuestionPanel({ question, answer, onAnswerChange }: QuestionPane
         )}
       </CardHeader>
 
-      <CardContent>
-        {renderQuestionComponent()}
-      </CardContent>
+      <CardContent>{renderQuestionComponent()}</CardContent>
     </Card>
   )
 }

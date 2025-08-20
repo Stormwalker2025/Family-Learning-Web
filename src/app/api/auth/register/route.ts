@@ -12,22 +12,21 @@ import { FAMILY_CONFIG } from '@/lib/auth/config'
 
 // 注册请求验证模式
 const registerSchema = z.object({
-  username: z.string()
+  username: z
+    .string()
     .min(3, '用户名至少需要3个字符')
     .max(50, '用户名不能超过50个字符')
     .regex(/^[a-zA-Z0-9_-]+$/, '用户名只能包含字母、数字、下划线和横线'),
   email: z.string().email('邮箱格式无效').optional(),
   password: z.string().min(6, '密码至少需要6个字符'),
-  displayName: z.string()
+  displayName: z
+    .string()
     .min(1, '显示名称不能为空')
     .max(100, '显示名称不能超过100个字符'),
   role: z.enum(['STUDENT', 'PARENT', 'ADMIN'] as const),
   yearLevel: z.number().min(1).max(12).optional(),
-  birthYear: z.number()
-    .min(1990)
-    .max(new Date().getFullYear())
-    .optional(),
-  familyId: z.string().cuid().optional()
+  birthYear: z.number().min(1990).max(new Date().getFullYear()).optional(),
+  familyId: z.string().cuid().optional(),
 })
 
 /**
@@ -35,7 +34,7 @@ const registerSchema = z.object({
  */
 async function checkUsernameAvailability(username: string): Promise<boolean> {
   const existingUser = await prisma.user.findUnique({
-    where: { username }
+    where: { username },
   })
   return !existingUser
 }
@@ -45,7 +44,7 @@ async function checkUsernameAvailability(username: string): Promise<boolean> {
  */
 async function checkEmailAvailability(email: string): Promise<boolean> {
   const existingUser = await prisma.user.findUnique({
-    where: { email }
+    where: { email },
   })
   return !existingUser
 }
@@ -56,7 +55,7 @@ async function checkEmailAvailability(email: string): Promise<boolean> {
 async function validateFamilyId(familyId: string): Promise<boolean> {
   const family = await prisma.family.findUnique({
     where: { id: familyId },
-    include: { members: true }
+    include: { members: true },
   })
 
   if (!family) return false
@@ -93,12 +92,13 @@ async function logUserCreation(
         details: JSON.stringify({
           action: 'create_user',
           targetUserId: newUserId,
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         }),
         resourceType: 'User',
         resourceId: newUserId,
-        ipAddress: request.ip || request.headers.get('x-forwarded-for') || 'unknown'
-      }
+        ipAddress:
+          request.ip || request.headers.get('x-forwarded-for') || 'unknown',
+      },
     })
   } catch (error) {
     console.error('Failed to log user creation:', error)
@@ -112,8 +112,9 @@ async function logUserCreation(
 export async function POST(request: NextRequest) {
   try {
     // 验证管理员权限
-    const { user: currentUser, error: authError } = await extractUserFromRequest(request)
-    
+    const { user: currentUser, error: authError } =
+      await extractUserFromRequest(request)
+
     if (!currentUser) {
       return NextResponse.json(
         { success: false, message: authError || '未授权访问' },
@@ -131,7 +132,7 @@ export async function POST(request: NextRequest) {
 
     // 解析请求数据
     const body = await request.json()
-    
+
     // 验证请求数据
     const validation = registerSchema.safeParse(body)
     if (!validation.success) {
@@ -139,7 +140,7 @@ export async function POST(request: NextRequest) {
         {
           success: false,
           message: '请求数据格式错误',
-          errors: validation.error.errors
+          errors: validation.error.issues,
         },
         { status: 400 }
       )
@@ -153,7 +154,7 @@ export async function POST(request: NextRequest) {
       role,
       yearLevel,
       birthYear,
-      familyId
+      familyId,
     } = validation.data
 
     // 验证密码强度
@@ -163,7 +164,7 @@ export async function POST(request: NextRequest) {
         {
           success: false,
           message: '密码不符合要求',
-          errors: passwordValidation.errors
+          errors: passwordValidation.errors,
         },
         { status: 400 }
       )
@@ -235,11 +236,11 @@ export async function POST(request: NextRequest) {
         familyId,
         parentalCode,
         timezone: FAMILY_CONFIG.defaultTimezone,
-        isActive: true
+        isActive: true,
       },
       include: {
-        family: true
-      }
+        family: true,
+      },
     })
 
     // 记录创建活动
@@ -259,21 +260,20 @@ export async function POST(request: NextRequest) {
       parentalCode: newUser.parentalCode,
       familyId: newUser.familyId,
       createdAt: newUser.createdAt,
-      updatedAt: newUser.updatedAt
+      updatedAt: newUser.updatedAt,
     }
 
     return NextResponse.json({
       success: true,
       message: '用户创建成功',
-      user: responseUser
+      user: responseUser,
     })
-
   } catch (error) {
     console.error('Registration error:', error)
     return NextResponse.json(
       {
         success: false,
-        message: '服务器内部错误，请稍后重试'
+        message: '服务器内部错误，请稍后重试',
       },
       { status: 500 }
     )
@@ -287,8 +287,9 @@ export async function POST(request: NextRequest) {
 export async function GET(request: NextRequest) {
   try {
     // 验证管理员权限
-    const { user: currentUser, error: authError } = await extractUserFromRequest(request)
-    
+    const { user: currentUser, error: authError } =
+      await extractUserFromRequest(request)
+
     if (!currentUser) {
       return NextResponse.json(
         { success: false, message: authError || '未授权访问' },
@@ -312,18 +313,18 @@ export async function GET(request: NextRequest) {
             id: true,
             username: true,
             displayName: true,
-            role: true
-          }
-        }
-      }
+            role: true,
+          },
+        },
+      },
     })
 
     // 获取用户统计信息
     const userStats = await prisma.user.groupBy({
       by: ['role'],
       _count: {
-        role: true
-      }
+        role: true,
+      },
     })
 
     return NextResponse.json({
@@ -334,17 +335,16 @@ export async function GET(request: NextRequest) {
         config: {
           maxFamilyMembers: FAMILY_CONFIG.maxMembersPerFamily,
           supportedRoles: ['STUDENT', 'PARENT', 'ADMIN'],
-          yearLevels: Array.from({ length: 12 }, (_, i) => i + 1)
-        }
-      }
+          yearLevels: Array.from({ length: 12 }, (_, i) => i + 1),
+        },
+      },
     })
-
   } catch (error) {
     console.error('Get registration info error:', error)
     return NextResponse.json(
       {
         success: false,
-        message: '服务器内部错误'
+        message: '服务器内部错误',
       },
       { status: 500 }
     )

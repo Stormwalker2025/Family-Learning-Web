@@ -4,19 +4,19 @@
  */
 
 export interface VocabularyData {
-  word: string;
-  definition: string;
-  chineseDefinition: string;
-  partOfSpeech: string;
-  pronunciation: string;
-  difficulty: number;
-  yearLevel: number;
-  category: string;
-  example: string;
-  synonyms: string[];
-  antonyms: string[];
-  tags: string[];
-  source: string;
+  word: string
+  definition: string
+  chineseDefinition: string
+  partOfSpeech: string
+  pronunciation: string
+  difficulty: number
+  yearLevel: number
+  category: string
+  example: string
+  synonyms: string[]
+  antonyms: string[]
+  tags: string[]
+  source: string
 }
 
 // Year 3 (8岁 August) 词汇数据
@@ -35,11 +35,12 @@ export const year3Vocabulary: VocabularyData[] = [
     synonyms: ['roo'],
     antonyms: [],
     tags: ['australian', 'marsupial', 'native'],
-    source: 'Queensland'
+    source: 'Queensland',
   },
   {
     word: 'koala',
-    definition: 'A small grey Australian animal that lives in trees and eats eucalyptus leaves',
+    definition:
+      'A small grey Australian animal that lives in trees and eats eucalyptus leaves',
     chineseDefinition: '考拉，生活在树上、吃桉树叶的小型灰色澳洲动物',
     partOfSpeech: 'NOUN',
     pronunciation: '/koʊˈɑːlə/',
@@ -50,11 +51,12 @@ export const year3Vocabulary: VocabularyData[] = [
     synonyms: ['koala bear'],
     antonyms: [],
     tags: ['australian', 'marsupial', 'eucalyptus'],
-    source: 'Queensland'
+    source: 'Queensland',
   },
   {
     word: 'wombat',
-    definition: 'A short-legged Australian animal that digs burrows in the ground',
+    definition:
+      'A short-legged Australian animal that digs burrows in the ground',
     chineseDefinition: '袋熊，一种短腿的澳洲动物，在地下挖掘洞穴',
     partOfSpeech: 'NOUN',
     pronunciation: '/ˈwɒmbæt/',
@@ -65,9 +67,9 @@ export const year3Vocabulary: VocabularyData[] = [
     synonyms: [],
     antonyms: [],
     tags: ['australian', 'marsupial', 'burrowing'],
-    source: 'Queensland'
+    source: 'Queensland',
   },
-  
+
   // 澳洲地理主题
   {
     word: 'outback',
@@ -82,7 +84,7 @@ export const year3Vocabulary: VocabularyData[] = [
     synonyms: ['bush', 'wilderness'],
     antonyms: ['city', 'town'],
     tags: ['australian', 'geography', 'remote'],
-    source: 'Queensland'
+    source: 'Queensland',
   },
   {
     word: 'billabong',
@@ -93,17 +95,19 @@ export const year3Vocabulary: VocabularyData[] = [
     difficulty: 3,
     yearLevel: 3,
     category: 'Geography',
-    example: 'The animals came to drink from the billabong during the dry season.',
+    example:
+      'The animals came to drink from the billabong during the dry season.',
     synonyms: ['waterhole'],
     antonyms: [],
     tags: ['australian', 'water', 'indigenous'],
-    source: 'Queensland'
+    source: 'Queensland',
   },
 
   // 学校生活主题
   {
     word: 'tuckshop',
-    definition: 'A small shop in an Australian school that sells food and drinks',
+    definition:
+      'A small shop in an Australian school that sells food and drinks',
     chineseDefinition: '学校小卖部，澳洲学校里售卖食物和饮料的小商店',
     partOfSpeech: 'NOUN',
     pronunciation: '/ˈtʌkʃɒp/',
@@ -114,7 +118,7 @@ export const year3Vocabulary: VocabularyData[] = [
     synonyms: ['canteen'],
     antonyms: [],
     tags: ['australian', 'school', 'food'],
-    source: 'Queensland'
+    source: 'Queensland',
   },
   {
     word: 'mate',
@@ -129,13 +133,14 @@ export const year3Vocabulary: VocabularyData[] = [
     synonyms: ['friend', 'buddy', 'pal'],
     antonyms: ['enemy'],
     tags: ['australian', 'friendship', 'colloquial'],
-    source: 'Queensland'
+    source: 'Queensland',
   },
 
   // 自然主题
   {
     word: 'eucalyptus',
-    definition: 'A type of tree native to Australia with strong-smelling leaves',
+    definition:
+      'A type of tree native to Australia with strong-smelling leaves',
     chineseDefinition: '桉树，澳洲本土树种，叶子有浓烈气味',
     partOfSpeech: 'NOUN',
     pronunciation: '/ˌjuːkəˈlɪptəs/',
@@ -146,16 +151,17 @@ export const year3Vocabulary: VocabularyData[] = [
     synonyms: ['gum tree'],
     antonyms: [],
     tags: ['australian', 'tree', 'native'],
-    source: 'Queensland'
-  }
-];
+    source: 'Queensland',
+  },
+]
 
 // Year 6 (11岁 Michael) 词汇数据
 export const year6Vocabulary: VocabularyData[] = [
   // 科学主题
   {
     word: 'ecosystem',
-    definition: 'A community of living organisms and their environment working together',
+    definition:
+      'A community of living organisms and their environment working together',
     chineseDefinition: '生态系统，生物群落及其环境相互作用的系统',
     partOfSpeech: 'NOUN',
     pronunciation: '/ˈiːkəʊˌsɪstəm/',
@@ -166,11 +172,12 @@ export const year6Vocabulary: VocabularyData[] = [
     synonyms: ['biome', 'habitat'],
     antonyms: [],
     tags: ['science', 'environment', 'biology'],
-    source: 'Queensland'
+    source: 'Queensland',
   },
   {
     word: 'biodiversity',
-    definition: 'The variety of different species of plants and animals in an area',
+    definition:
+      'The variety of different species of plants and animals in an area',
     chineseDefinition: '生物多样性，某一地区不同动植物物种的多样性',
     partOfSpeech: 'NOUN',
     pronunciation: '/ˌbaɪəʊdaɪˈvɜːsəti/',
@@ -181,7 +188,7 @@ export const year6Vocabulary: VocabularyData[] = [
     synonyms: ['biological diversity'],
     antonyms: ['monoculture'],
     tags: ['science', 'environment', 'conservation'],
-    source: 'Queensland'
+    source: 'Queensland',
   },
 
   // 澳洲历史主题
@@ -198,7 +205,7 @@ export const year6Vocabulary: VocabularyData[] = [
     synonyms: ['indigenous', 'native'],
     antonyms: ['foreign', 'introduced'],
     tags: ['australian', 'indigenous', 'culture'],
-    source: 'Queensland'
+    source: 'Queensland',
   },
   {
     word: 'federation',
@@ -213,7 +220,7 @@ export const year6Vocabulary: VocabularyData[] = [
     synonyms: ['union', 'confederation'],
     antonyms: ['separation', 'independence'],
     tags: ['australian', 'history', 'government'],
-    source: 'Queensland'
+    source: 'Queensland',
   },
 
   // 地理主题
@@ -230,7 +237,7 @@ export const year6Vocabulary: VocabularyData[] = [
     synonyms: ['dry spell', 'arid period'],
     antonyms: ['flood', 'deluge'],
     tags: ['weather', 'climate', 'farming'],
-    source: 'Queensland'
+    source: 'Queensland',
   },
   {
     word: 'continent',
@@ -245,7 +252,7 @@ export const year6Vocabulary: VocabularyData[] = [
     synonyms: ['landmass'],
     antonyms: ['island', 'ocean'],
     tags: ['geography', 'world', 'landform'],
-    source: 'Queensland'
+    source: 'Queensland',
   },
 
   // 学术词汇
@@ -262,7 +269,7 @@ export const year6Vocabulary: VocabularyData[] = [
     synonyms: ['examine', 'study', 'investigate'],
     antonyms: ['ignore', 'overlook'],
     tags: ['academic', 'thinking', 'study'],
-    source: 'Queensland'
+    source: 'Queensland',
   },
   {
     word: 'evidence',
@@ -277,30 +284,36 @@ export const year6Vocabulary: VocabularyData[] = [
     synonyms: ['proof', 'confirmation'],
     antonyms: ['speculation', 'assumption'],
     tags: ['academic', 'science', 'proof'],
-    source: 'Queensland'
-  }
-];
+    source: 'Queensland',
+  },
+]
 
 // 组合所有词汇
 export const allAustralianVocabulary: VocabularyData[] = [
   ...year3Vocabulary,
-  ...year6Vocabulary
-];
+  ...year6Vocabulary,
+]
 
 // 按主题分类的词汇
 export const vocabularyByCategory = {
-  'Animals': allAustralianVocabulary.filter(word => word.category === 'Animals'),
-  'Geography': allAustralianVocabulary.filter(word => word.category === 'Geography'),
-  'Science': allAustralianVocabulary.filter(word => word.category === 'Science'),
-  'History': allAustralianVocabulary.filter(word => word.category === 'History'),
-  'School': allAustralianVocabulary.filter(word => word.category === 'School'),
-  'Daily Life': allAustralianVocabulary.filter(word => word.category === 'Daily Life'),
-  'Nature': allAustralianVocabulary.filter(word => word.category === 'Nature'),
-  'Academic': allAustralianVocabulary.filter(word => word.category === 'Academic')
-};
+  Animals: allAustralianVocabulary.filter(word => word.category === 'Animals'),
+  Geography: allAustralianVocabulary.filter(
+    word => word.category === 'Geography'
+  ),
+  Science: allAustralianVocabulary.filter(word => word.category === 'Science'),
+  History: allAustralianVocabulary.filter(word => word.category === 'History'),
+  School: allAustralianVocabulary.filter(word => word.category === 'School'),
+  'Daily Life': allAustralianVocabulary.filter(
+    word => word.category === 'Daily Life'
+  ),
+  Nature: allAustralianVocabulary.filter(word => word.category === 'Nature'),
+  Academic: allAustralianVocabulary.filter(
+    word => word.category === 'Academic'
+  ),
+}
 
 // 按年级分类的词汇
 export const vocabularyByYearLevel = {
   3: year3Vocabulary,
-  6: year6Vocabulary
-};
+  6: year6Vocabulary,
+}

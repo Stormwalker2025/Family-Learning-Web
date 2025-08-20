@@ -3,103 +3,107 @@
  * 复习计划组件 - 基于遗忘曲线的复习安排展示
  */
 
-'use client';
+'use client'
 
-import React, { useState, useEffect } from 'react';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
-import { Badge } from '@/components/ui/badge';
-import { 
-  Calendar, 
-  Clock, 
-  AlertTriangle, 
+import React, { useState, useEffect } from 'react'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Progress } from '@/components/ui/progress'
+import { Badge } from '@/components/ui/badge'
+import {
+  Calendar,
+  Clock,
+  AlertTriangle,
   CheckCircle,
   Volume2,
   RefreshCw,
   ChevronLeft,
   ChevronRight,
-  Target
-} from 'lucide-react';
+  Target,
+} from 'lucide-react'
 
 interface ReviewWord {
-  id: string;
-  wordId: string;
+  id: string
+  wordId: string
   word: {
-    word: string;
-    definition: string;
-    chineseDefinition?: string;
-    pronunciation?: string;
-    partOfSpeech: string;
-    difficulty: number;
-    category?: string;
-  };
-  phase: string;
-  masteryLevel: number;
-  nextReviewDate: string;
-  priority: number;
-  status: 'pending' | 'overdue' | 'today';
+    word: string
+    definition: string
+    chineseDefinition?: string
+    pronunciation?: string
+    partOfSpeech: string
+    difficulty: number
+    category?: string
+  }
+  phase: string
+  masteryLevel: number
+  nextReviewDate: string
+  priority: number
+  status: 'pending' | 'overdue' | 'today'
 }
 
 interface ReviewScheduleData {
-  schedule: Record<string, ReviewWord[]>;
+  schedule: Record<string, ReviewWord[]>
   statistics: {
-    todayWords: number;
-    overdueWords: number;
-    tomorrowWords: number;
-    totalPending: number;
-  };
-  recommendations: string[];
+    todayWords: number
+    overdueWords: number
+    tomorrowWords: number
+    totalPending: number
+  }
+  recommendations: string[]
 }
 
 export function ReviewSchedule() {
-  const [scheduleData, setScheduleData] = useState<ReviewScheduleData | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [selectedDate, setSelectedDate] = useState<string>('');
-  const [currentWeekStart, setCurrentWeekStart] = useState<Date>(new Date());
+  const [scheduleData, setScheduleData] = useState<ReviewScheduleData | null>(
+    null
+  )
+  const [loading, setLoading] = useState(true)
+  const [selectedDate, setSelectedDate] = useState<string>('')
+  const [currentWeekStart, setCurrentWeekStart] = useState<Date>(new Date())
 
   // 初始化
   useEffect(() => {
-    const today = new Date();
-    setSelectedDate(today.toISOString().split('T')[0]);
-    setCurrentWeekStart(getWeekStart(today));
-    fetchScheduleData();
-  }, []);
+    const today = new Date()
+    setSelectedDate(today.toISOString().split('T')[0])
+    setCurrentWeekStart(getWeekStart(today))
+    fetchScheduleData()
+  }, [])
 
   // 获取复习计划数据
   const fetchScheduleData = async () => {
-    setLoading(true);
+    setLoading(true)
     try {
-      const response = await fetch('/api/vocabulary/review-schedule?days=14&includeOverdue=true');
+      const response = await fetch(
+        '/api/vocabulary/review-schedule?days=14&includeOverdue=true'
+      )
       if (response.ok) {
-        const data = await response.json();
-        setScheduleData(data);
+        const data = await response.json()
+        setScheduleData(data)
       }
     } catch (error) {
-      console.error('Failed to fetch review schedule:', error);
+      console.error('Failed to fetch review schedule:', error)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   // 获取一周的开始日期
   const getWeekStart = (date: Date): Date => {
-    const start = new Date(date);
-    const day = start.getDay();
-    const diff = start.getDate() - day + (day === 0 ? -6 : 1); // 周一为开始
-    return new Date(start.setDate(diff));
-  };
+    const start = new Date(date)
+    const day = start.getDay()
+    const diff = start.getDate() - day + (day === 0 ? -6 : 1) // 周一为开始
+    return new Date(start.setDate(diff))
+  }
 
   // 生成一周的日期
   const generateWeekDates = (startDate: Date): Date[] => {
-    const dates = [];
+    const dates = []
     for (let i = 0; i < 7; i++) {
-      const date = new Date(startDate);
-      date.setDate(startDate.getDate() + i);
-      dates.push(date);
+      const date = new Date(startDate)
+      date.setDate(startDate.getDate() + i)
+      dates.push(date)
     }
-    return dates;
-  };
+    return dates
+  }
 
   // 批量更新复习状态
   const batchUpdateReviews = async (wordIds: string[], action: string) => {
@@ -107,51 +111,55 @@ export function ReviewSchedule() {
       const response = await fetch('/api/vocabulary/review-schedule', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ wordIds, action })
-      });
+        body: JSON.stringify({ wordIds, action }),
+      })
 
       if (response.ok) {
-        await fetchScheduleData();
+        await fetchScheduleData()
       }
     } catch (error) {
-      console.error('Failed to update reviews:', error);
+      console.error('Failed to update reviews:', error)
     }
-  };
+  }
 
   // 文本转语音
   const handleSpeak = (text: string) => {
     if ('speechSynthesis' in window) {
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'en-AU';
-      utterance.rate = 0.8;
-      speechSynthesis.speak(utterance);
+      const utterance = new SpeechSynthesisUtterance(text)
+      utterance.lang = 'en-AU'
+      utterance.rate = 0.8
+      speechSynthesis.speak(utterance)
     }
-  };
+  }
 
   // 获取状态颜色
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'overdue': return 'bg-red-100 text-red-800 border-red-200';
-      case 'today': return 'bg-blue-100 text-blue-800 border-blue-200';
-      case 'pending': return 'bg-gray-100 text-gray-800 border-gray-200';
-      default: return 'bg-gray-100 text-gray-800 border-gray-200';
+      case 'overdue':
+        return 'bg-red-100 text-red-800 border-red-200'
+      case 'today':
+        return 'bg-blue-100 text-blue-800 border-blue-200'
+      case 'pending':
+        return 'bg-gray-100 text-gray-800 border-gray-200'
+      default:
+        return 'bg-gray-100 text-gray-800 border-gray-200'
     }
-  };
+  }
 
   // 获取优先级颜色
   const getPriorityColor = (priority: number) => {
-    if (priority >= 80) return 'bg-red-500';
-    if (priority >= 50) return 'bg-orange-500';
-    if (priority >= 20) return 'bg-yellow-500';
-    return 'bg-green-500';
-  };
+    if (priority >= 80) return 'bg-red-500'
+    if (priority >= 50) return 'bg-orange-500'
+    if (priority >= 20) return 'bg-yellow-500'
+    return 'bg-green-500'
+  }
 
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
       </div>
-    );
+    )
   }
 
   if (!scheduleData) {
@@ -164,11 +172,11 @@ export function ReviewSchedule() {
           刷新数据
         </Button>
       </div>
-    );
+    )
   }
 
-  const weekDates = generateWeekDates(currentWeekStart);
-  const selectedDateWords = scheduleData.schedule[selectedDate] || [];
+  const weekDates = generateWeekDates(currentWeekStart)
+  const selectedDateWords = scheduleData.schedule[selectedDate] || []
 
   return (
     <div className="max-w-6xl mx-auto space-y-6">
@@ -258,29 +266,30 @@ export function ReviewSchedule() {
               variant="ghost"
               size="sm"
               onClick={() => {
-                const newStart = new Date(currentWeekStart);
-                newStart.setDate(newStart.getDate() - 7);
-                setCurrentWeekStart(newStart);
+                const newStart = new Date(currentWeekStart)
+                newStart.setDate(newStart.getDate() - 7)
+                setCurrentWeekStart(newStart)
               }}
             >
               <ChevronLeft className="h-4 w-4" />
             </Button>
             <span className="text-sm text-gray-600 min-w-[100px] text-center">
-              {currentWeekStart.toLocaleDateString('zh-CN', { 
-                month: 'short', 
-                day: 'numeric' 
-              })} - {
-                new Date(currentWeekStart.getTime() + 6 * 24 * 60 * 60 * 1000)
-                  .toLocaleDateString('zh-CN', { month: 'short', day: 'numeric' })
-              }
+              {currentWeekStart.toLocaleDateString('zh-CN', {
+                month: 'short',
+                day: 'numeric',
+              })}{' '}
+              -{' '}
+              {new Date(
+                currentWeekStart.getTime() + 6 * 24 * 60 * 60 * 1000
+              ).toLocaleDateString('zh-CN', { month: 'short', day: 'numeric' })}
             </span>
             <Button
               variant="ghost"
               size="sm"
               onClick={() => {
-                const newStart = new Date(currentWeekStart);
-                newStart.setDate(newStart.getDate() + 7);
-                setCurrentWeekStart(newStart);
+                const newStart = new Date(currentWeekStart)
+                newStart.setDate(newStart.getDate() + 7)
+                setCurrentWeekStart(newStart)
               }}
             >
               <ChevronRight className="h-4 w-4" />
@@ -290,16 +299,18 @@ export function ReviewSchedule() {
 
         <div className="grid grid-cols-7 gap-2">
           {weekDates.map((date, index) => {
-            const dateKey = date.toISOString().split('T')[0];
-            const wordsForDate = scheduleData.schedule[dateKey] || [];
-            const isToday = dateKey === new Date().toISOString().split('T')[0];
-            const isSelected = dateKey === selectedDate;
+            const dateKey = date.toISOString().split('T')[0]
+            const wordsForDate = scheduleData.schedule[dateKey] || []
+            const isToday = dateKey === new Date().toISOString().split('T')[0]
+            const isSelected = dateKey === selectedDate
 
             return (
               <div
                 key={dateKey}
                 className={`p-3 border rounded-lg cursor-pointer transition-colors ${
-                  isSelected ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-gray-300'
+                  isSelected
+                    ? 'border-blue-500 bg-blue-50'
+                    : 'border-gray-200 hover:border-gray-300'
                 } ${isToday ? 'ring-2 ring-blue-200' : ''}`}
                 onClick={() => setSelectedDate(dateKey)}
               >
@@ -307,23 +318,31 @@ export function ReviewSchedule() {
                   <p className="text-xs text-gray-500 mb-1">
                     {date.toLocaleDateString('zh-CN', { weekday: 'short' })}
                   </p>
-                  <p className={`text-sm font-medium mb-2 ${isToday ? 'text-blue-600' : ''}`}>
+                  <p
+                    className={`text-sm font-medium mb-2 ${isToday ? 'text-blue-600' : ''}`}
+                  >
                     {date.getDate()}
                   </p>
-                  
+
                   {wordsForDate.length > 0 && (
                     <div className="space-y-1">
-                      <div className={`w-full h-1 rounded ${
-                        wordsForDate.some(w => w.status === 'overdue') ? 'bg-red-400' :
-                        wordsForDate.some(w => w.status === 'today') ? 'bg-blue-400' :
-                        'bg-gray-300'
-                      }`} />
-                      <p className="text-xs text-gray-600">{wordsForDate.length}</p>
+                      <div
+                        className={`w-full h-1 rounded ${
+                          wordsForDate.some(w => w.status === 'overdue')
+                            ? 'bg-red-400'
+                            : wordsForDate.some(w => w.status === 'today')
+                              ? 'bg-blue-400'
+                              : 'bg-gray-300'
+                        }`}
+                      />
+                      <p className="text-xs text-gray-600">
+                        {wordsForDate.length}
+                      </p>
                     </div>
                   )}
                 </div>
               </div>
-            );
+            )
           })}
         </div>
       </Card>
@@ -332,34 +351,38 @@ export function ReviewSchedule() {
       <Card className="p-6">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold">
-            {selectedDate === new Date().toISOString().split('T')[0] 
-              ? '今日复习 ' 
-              : `${new Date(selectedDate).toLocaleDateString('zh-CN', { 
-                  month: 'long', 
-                  day: 'numeric' 
+            {selectedDate === new Date().toISOString().split('T')[0]
+              ? '今日复习 '
+              : `${new Date(selectedDate).toLocaleDateString('zh-CN', {
+                  month: 'long',
+                  day: 'numeric',
                 })} 复习 `}
             ({selectedDateWords.length} 个词汇)
           </h3>
-          
+
           {selectedDateWords.length > 0 && (
             <div className="flex items-center space-x-2">
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => batchUpdateReviews(
-                  selectedDateWords.map(w => w.wordId),
-                  'mark_completed'
-                )}
+                onClick={() =>
+                  batchUpdateReviews(
+                    selectedDateWords.map(w => w.wordId),
+                    'mark_completed'
+                  )
+                }
               >
                 全部标记为已复习
               </Button>
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => batchUpdateReviews(
-                  selectedDateWords.map(w => w.wordId),
-                  'postpone'
-                )}
+                onClick={() =>
+                  batchUpdateReviews(
+                    selectedDateWords.map(w => w.wordId),
+                    'postpone'
+                  )
+                }
               >
                 推迟到明天
               </Button>
@@ -371,21 +394,25 @@ export function ReviewSchedule() {
           <div className="text-center py-8">
             <CheckCircle className="h-12 w-12 text-green-500 mx-auto mb-4" />
             <p className="text-gray-500">这一天没有需要复习的词汇</p>
-            <p className="text-sm text-gray-400 mt-2">可以学习新词汇或休息一下！</p>
+            <p className="text-sm text-gray-400 mt-2">
+              可以学习新词汇或休息一下！
+            </p>
           </div>
         ) : (
           <div className="space-y-3">
             {selectedDateWords
               .sort((a, b) => b.priority - a.priority) // 按优先级排序
-              .map((reviewWord) => (
-                <div 
+              .map(reviewWord => (
+                <div
                   key={reviewWord.id}
                   className={`p-4 border rounded-lg ${getStatusColor(reviewWord.status)}`}
                 >
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <div className="flex items-center space-x-3 mb-2">
-                        <h4 className="text-lg font-medium">{reviewWord.word.word}</h4>
+                        <h4 className="text-lg font-medium">
+                          {reviewWord.word.word}
+                        </h4>
                         <Button
                           variant="ghost"
                           size="sm"
@@ -394,24 +421,32 @@ export function ReviewSchedule() {
                         >
                           <Volume2 className="h-3 w-3" />
                         </Button>
-                        
+
                         {/* 优先级指示器 */}
-                        <div 
+                        <div
                           className={`w-2 h-2 rounded-full ${getPriorityColor(reviewWord.priority)}`}
                           title={`优先级: ${reviewWord.priority}`}
                         />
                       </div>
 
                       <div className="flex flex-wrap items-center gap-2 mb-2">
-                        <Badge variant="outline">{reviewWord.word.partOfSpeech}</Badge>
-                        <Badge variant="outline">难度 {reviewWord.word.difficulty}</Badge>
+                        <Badge variant="outline">
+                          {reviewWord.word.partOfSpeech}
+                        </Badge>
+                        <Badge variant="outline">
+                          难度 {reviewWord.word.difficulty}
+                        </Badge>
                         <Badge variant="outline">{reviewWord.phase}</Badge>
                         {reviewWord.word.category && (
-                          <Badge variant="secondary">{reviewWord.word.category}</Badge>
+                          <Badge variant="secondary">
+                            {reviewWord.word.category}
+                          </Badge>
                         )}
                       </div>
 
-                      <p className="text-sm mb-1">{reviewWord.word.definition}</p>
+                      <p className="text-sm mb-1">
+                        {reviewWord.word.definition}
+                      </p>
                       {reviewWord.word.chineseDefinition && (
                         <p className="text-sm text-gray-600 mb-2">
                           {reviewWord.word.chineseDefinition}
@@ -431,7 +466,10 @@ export function ReviewSchedule() {
 
                     {/* 掌握度进度条 */}
                     <div className="w-24 ml-4">
-                      <Progress value={reviewWord.masteryLevel} className="h-2 mb-2" />
+                      <Progress
+                        value={reviewWord.masteryLevel}
+                        className="h-2 mb-2"
+                      />
                       <p className="text-xs text-gray-500 text-center">
                         {reviewWord.masteryLevel}%
                       </p>
@@ -443,5 +481,5 @@ export function ReviewSchedule() {
         )}
       </Card>
     </div>
-  );
+  )
 }

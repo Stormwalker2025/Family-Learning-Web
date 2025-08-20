@@ -5,11 +5,13 @@ This module provides a comprehensive English reading comprehension system design
 ## Features
 
 ### 📚 Reading Comprehension
+
 - Article display with vocabulary highlighting
 - Adjustable reading difficulty (Year 3 and Year 6)
 - Australian-themed content (animals, culture, geography, etc.)
 
 ### 🎯 Question Types
+
 1. **Multiple Choice** - Select the correct answer from 4 options
 2. **True/False/Not Given** - IELTS-style judgment questions
 3. **Short Answer** - Write brief responses based on the text
@@ -17,12 +19,14 @@ This module provides a comprehensive English reading comprehension system design
 5. **Matching** - Connect statements with correct options
 
 ### 📊 Progress Tracking
+
 - Real-time progress indicators
 - Time tracking with warnings
 - Detailed performance analytics
 - Comprehensive feedback system
 
 ### 🎨 User Experience
+
 - Responsive design for all devices
 - Clean, accessible interface
 - Vocabulary assistance tools
@@ -33,32 +37,38 @@ This module provides a comprehensive English reading comprehension system design
 ### Core Components
 
 #### `ReadingExercise`
+
 Main container component that orchestrates the entire reading exercise flow.
 
 ```tsx
 import { ReadingExercise } from '@/components/exercises/english'
 
-<ReadingExercise 
+;<ReadingExercise
   exerciseId="year3-animals-1"
-  onComplete={(submission) => console.log('Completed!', submission)}
+  onComplete={submission => console.log('Completed!', submission)}
 />
 ```
 
 #### `ArticleDisplay`
+
 Displays the reading article with vocabulary highlighting and metadata.
 
 #### `QuestionPanel`
+
 Renders questions based on their type with appropriate UI components.
 
 #### `ProgressBar`
+
 Shows exercise progress, time elapsed, and completion status.
 
 #### `ResultsSummary`
+
 Comprehensive results display with feedback and recommendations.
 
 ### Question Type Components
 
 Located in `./QuestionTypes/`:
+
 - `MultipleChoice.tsx` - Radio button selection
 - `TrueFalse.tsx` - Three-option judgment questions
 - `ShortAnswer.tsx` - Text area for written responses
@@ -74,9 +84,9 @@ import { ReadingExercise } from '@/components/exercises/english'
 
 function MyReadingPage() {
   return (
-    <ReadingExercise 
+    <ReadingExercise
       exerciseId="year6-history-1"
-      onComplete={(submission) => {
+      onComplete={submission => {
         // Handle completion
         console.log('Score:', submission.score)
         console.log('Feedback:', submission.feedback)
@@ -115,11 +125,13 @@ interface ReadingExercise {
 ## Content Examples
 
 ### Year 3 Level
+
 - **Australian Animals** - Introduction to native wildlife
 - **My Australian Family** - Daily life and culture
 - **My School Day** - Education system and routines
 
 ### Year 6 Level
+
 - **The First Australians** - Aboriginal and Torres Strait Islander history
 - **Protecting the Great Barrier Reef** - Environmental conservation
 - **Renewable Energy in Australia** - Science and sustainability
@@ -173,6 +185,7 @@ npm test -- exercises/english
 ```
 
 Key test areas:
+
 - Question type rendering
 - Answer validation
 - Progress tracking

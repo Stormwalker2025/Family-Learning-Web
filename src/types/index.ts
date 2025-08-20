@@ -95,32 +95,32 @@ export type SubjectType = 'english' | 'maths' | 'hass'
 // ========== HASS (Humanities and Social Sciences) 相关类型 ==========
 
 // HASS学科枚举
-export type HassSubject = 
-  | 'history'           // 历史
-  | 'geography'         // 地理  
-  | 'civics'           // 公民教育
-  | 'economics'        // 经济商业
+export type HassSubject =
+  | 'history' // 历史
+  | 'geography' // 地理
+  | 'civics' // 公民教育
+  | 'economics' // 经济商业
 
 // HASS题型枚举
-export type HassQuestionType = 
-  | 'comprehension'     // 理解题
-  | 'analysis'          // 分析题
-  | 'evaluation'        // 评价题  
-  | 'application'       // 应用题
-  | 'creative'          // 创造题
-  | 'multiple-choice'   // 选择题
-  | 'true-false'        // 判断题
-  | 'short-answer'      // 简答题
-  | 'essay'             // 论述题
-  | 'source-analysis'   // 史料分析
-  | 'map-skills'        // 地图技能
+export type HassQuestionType =
+  | 'comprehension' // 理解题
+  | 'analysis' // 分析题
+  | 'evaluation' // 评价题
+  | 'application' // 应用题
+  | 'creative' // 创造题
+  | 'multiple-choice' // 选择题
+  | 'true-false' // 判断题
+  | 'short-answer' // 简答题
+  | 'essay' // 论述题
+  | 'source-analysis' // 史料分析
+  | 'map-skills' // 地图技能
   | 'data-interpretation' // 数据解读
 
 // 多媒体类型
-export type MediaType = 
+export type MediaType =
   | 'image'
   | 'video'
-  | 'audio' 
+  | 'audio'
   | 'interactive-map'
   | 'timeline'
   | 'chart'
@@ -149,21 +149,25 @@ export interface HassArticle {
   difficulty: 'foundation' | 'developing' | 'proficient' | 'advanced'
   readingTime: number // 预估阅读时间(分钟)
   wordCount: number
-  
+
   // 澳洲特色内容
   topics: string[] // 主题标签，如['aboriginal-culture', 'federation', 'climate-change']
-  culturalContext: 'indigenous' | 'multicultural' | 'contemporary' | 'historical'[]
+  culturalContext:
+    | 'indigenous'
+    | 'multicultural'
+    | 'contemporary'
+    | 'historical'[]
   australianCurriculum: string[] // 对应的课程标准代码
-  
+
   // 多媒体支持
   mediaResources: MediaResource[]
   interactiveElements: string[] // 交互元素ID列表
-  
+
   // 学习支持
   keyVocabulary: HassVocabulary[]
   backgroundInfo: string // 背景知识介绍
   discussionPrompts: string[] // 讨论话题
-  
+
   createdAt: Date
   updatedAt: Date
 }
@@ -191,29 +195,35 @@ export interface HassQuestion {
   articleId: string
   type: HassQuestionType
   subject: HassSubject
-  
+
   // 问题内容
   question: string
   instructions?: string
   context?: string // 问题背景
-  
+
   // 答案选项(选择题用)
   options?: string[]
-  
+
   // 评分标准
   correctAnswer?: string | string[]
   sampleAnswers?: string[] // 示例答案
   rubric?: HassRubric // 评分细则
-  
+
   // 技能评估
   skillsAssessed: string[] // 评估的技能，如['analysis', 'critical-thinking', 'source-evaluation']
-  bloomsTaxonomy: 'remember' | 'understand' | 'apply' | 'analyze' | 'evaluate' | 'create'
-  
+  bloomsTaxonomy:
+    | 'remember'
+    | 'understand'
+    | 'apply'
+    | 'analyze'
+    | 'evaluate'
+    | 'create'
+
   // 学习支持
   hints?: string[]
   scaffolding?: string[] // 脚手架提示
   resources?: MediaResource[] // 相关资源
-  
+
   points: number
   order: number
   difficulty: 'foundation' | 'developing' | 'proficient' | 'advanced'
@@ -255,23 +265,23 @@ export interface HassExercise {
   subject: HassSubject
   yearLevel: number
   difficulty: 'foundation' | 'developing' | 'proficient' | 'advanced'
-  
+
   // 练习内容
   article: HassArticle
   questions: HassQuestion[]
-  
+
   // 学习目标
   learningObjectives: string[]
   assessmentCriteria: string[]
   crossCurricularLinks?: string[] // 跨学科链接
-  
+
   // 时间管理
   estimatedDuration: number // 预估完成时间(分钟)
   timeLimit?: number // 时间限制(分钟)
-  
+
   // 扩展活动
   extensionActivities?: ExtensionActivity[]
-  
+
   // 元数据
   tags: string[]
   totalPoints: number
@@ -296,27 +306,27 @@ export interface HassSubmission {
   id: string
   userId: string
   exerciseId: string
-  
+
   // 答案内容
   answers: Record<string, HassAnswer> // questionId -> answer
   notes?: Record<string, string> // 用户笔记
   bookmarks?: string[] // 书签的段落ID
-  
+
   // 评分结果
   score: number
   maxScore: number
   rubricScores?: Record<string, number> // 各评分标准得分
-  
+
   // 统计信息
   timeSpent: number // 实际用时(分钟)
   startedAt: Date
   submittedAt: Date
-  
+
   // 学习分析
   readingTime: number // 阅读用时
   questionTime: Record<string, number> // 各题用时
   mediaInteractions: Record<string, number> // 多媒体交互次数
-  
+
   feedback?: HassFeedback
 }
 
@@ -335,21 +345,21 @@ export interface HassFeedback {
   overallScore: number
   subjectMastery: Record<HassSubject, number>
   skillsAnalysis: SkillAssessment[]
-  
+
   // 内容掌握
   conceptUnderstanding: ConceptAssessment[]
   criticalThinking: number // 批判性思维得分
   sourceAnalysis: number // 史料分析能力
-  
+
   // 学习建议
   strengths: string[]
   improvements: string[]
   recommendations: LearningRecommendation[]
   nextSteps: string[]
-  
+
   // 问题分析
   questionAnalysis: HassQuestionAnalysis[]
-  
+
   // 澳洲课程标准对接
   curriculumAlignment: CurriculumAlignment[]
 }
@@ -385,15 +395,15 @@ export interface HassQuestionAnalysis {
   questionType: HassQuestionType
   subject: HassSubject
   skillsAssessed: string[]
-  
+
   isCorrect: boolean
   userAnswer: HassAnswer
   correctAnswer?: string | string[]
-  
+
   rubricScores?: Record<string, number>
   strengths: string[]
   improvements: string[]
-  
+
   timeEfficiency: 'efficient' | 'adequate' | 'needs-improvement'
   thinkingDepth: 'surface' | 'developing' | 'deep'
 }
@@ -424,7 +434,13 @@ export interface InteractiveMapData {
 export interface MapLayer {
   id: string
   name: string
-  type: 'political' | 'physical' | 'climate' | 'population' | 'economic' | 'historical'
+  type:
+    | 'political'
+    | 'physical'
+    | 'climate'
+    | 'population'
+    | 'economic'
+    | 'historical'
   visible: boolean
   opacity: number
   data?: any
@@ -499,7 +515,14 @@ export interface Exercise {
 export interface Question {
   id: string
   exerciseId: string
-  type: 'multiple-choice' | 'short-answer' | 'essay' | 'calculation' | 'true-false' | 'sentence-completion' | 'matching'
+  type:
+    | 'multiple-choice'
+    | 'short-answer'
+    | 'essay'
+    | 'calculation'
+    | 'true-false'
+    | 'sentence-completion'
+    | 'matching'
   question: string
   options?: string[] // For multiple choice
   correctAnswer: string
@@ -511,12 +534,12 @@ export interface Question {
 // ========== 英语阅读练习相关类型 ==========
 
 // 雅思GT风格题型枚举
-export type ReadingQuestionType = 
-  | 'multiple-choice'     // 选择题
-  | 'true-false'          // 判断题 (True/False/Not Given)
-  | 'short-answer'        // 简答题
+export type ReadingQuestionType =
+  | 'multiple-choice' // 选择题
+  | 'true-false' // 判断题 (True/False/Not Given)
+  | 'short-answer' // 简答题
   | 'sentence-completion' // 完形填空
-  | 'matching'            // 配对题
+  | 'matching' // 配对题
 
 // 判断题的答案选项
 export type TrueFalseAnswer = 'true' | 'false' | 'not-given'
@@ -735,38 +758,42 @@ export interface IpadUnlockConfiguration {
 // ========== 数学练习相关类型 ==========
 
 // 数学主题枚举
-export type MathTopic = 
-  | 'place-value'        // 位值
-  | 'fractions'          // 分数
-  | 'area'               // 面积
-  | 'perimeter'          // 周长
-  | 'decimals'           // 小数
-  | 'measurement'        // 测量
-  | 'money'              // 货币
+export type MathTopic =
+  | 'place-value' // 位值
+  | 'fractions' // 分数
+  | 'area' // 面积
+  | 'perimeter' // 周长
+  | 'decimals' // 小数
+  | 'measurement' // 测量
+  | 'money' // 货币
 
 // 数学练习题型
-export type MathQuestionType = 
-  | 'multiple-choice'     // 选择题
-  | 'input-answer'        // 输入答案
-  | 'drag-drop'           // 拖拽操作
-  | 'true-false'          // 判断题
-  | 'drawing'             // 绘图题
-  | 'calculation'         // 计算题
-  | 'unit-conversion'     // 单位转换
+export type MathQuestionType =
+  | 'multiple-choice' // 选择题
+  | 'input-answer' // 输入答案
+  | 'drag-drop' // 拖拽操作
+  | 'true-false' // 判断题
+  | 'drawing' // 绘图题
+  | 'calculation' // 计算题
+  | 'unit-conversion' // 单位转换
   | 'place-value-builder' // 位值构建
-  | 'fraction-visual'     // 分数可视化
+  | 'fraction-visual' // 分数可视化
 
 // 数学工具类型
-export type MathToolType = 
-  | 'calculator'          // 计算器
-  | 'number-line'         // 数轴
-  | 'fraction-bar'        // 分数条
-  | 'shape-drawer'        // 几何绘图
-  | 'measurement-tool'    // 测量工具
-  | 'place-value-chart'   // 位值表
+export type MathToolType =
+  | 'calculator' // 计算器
+  | 'number-line' // 数轴
+  | 'fraction-bar' // 分数条
+  | 'shape-drawer' // 几何绘图
+  | 'measurement-tool' // 测量工具
+  | 'place-value-chart' // 位值表
 
 // 数学概念难度
-export type MathDifficulty = 'foundation' | 'developing' | 'proficient' | 'advanced'
+export type MathDifficulty =
+  | 'foundation'
+  | 'developing'
+  | 'proficient'
+  | 'advanced'
 
 // 数学单位类型
 export interface MathUnit {
@@ -870,7 +897,13 @@ export interface MathQuestion {
 // 位值题目数据
 export interface PlaceValueData {
   number: number
-  targetPlace?: 'ones' | 'tens' | 'hundreds' | 'thousands' | 'ten-thousands' | 'hundred-thousands'
+  targetPlace?:
+    | 'ones'
+    | 'tens'
+    | 'hundreds'
+    | 'thousands'
+    | 'ten-thousands'
+    | 'hundred-thousands'
   expanded?: boolean // 是否要求展开形式
   compareNumbers?: number[] // 比较数字
 }
@@ -879,7 +912,13 @@ export interface PlaceValueData {
 export interface FractionData {
   numerator: number
   denominator: number
-  operation?: 'add' | 'subtract' | 'multiply' | 'divide' | 'compare' | 'simplify'
+  operation?:
+    | 'add'
+    | 'subtract'
+    | 'multiply'
+    | 'divide'
+    | 'compare'
+    | 'simplify'
   secondFraction?: { numerator: number; denominator: number }
   visualType?: 'circle' | 'rectangle' | 'number-line' | 'bar'
   mixedNumber?: boolean
@@ -958,28 +997,56 @@ export interface MathQuestionAnalysis {
 // ========== 作业管理系统类型定义 ==========
 
 // 作业状态枚举
-export type HomeworkStatusType = 'assigned' | 'in-progress' | 'completed' | 'overdue' | 'reviewed'
+export type HomeworkStatusType =
+  | 'assigned'
+  | 'in-progress'
+  | 'completed'
+  | 'overdue'
+  | 'reviewed'
 
 // 作业提交状态
-export type HomeworkSubmissionStatusType = 'not-started' | 'in-progress' | 'completed' | 'submitted' | 'late-submit'
+export type HomeworkSubmissionStatusType =
+  | 'not-started'
+  | 'in-progress'
+  | 'completed'
+  | 'submitted'
+  | 'late-submit'
 
 // 作业优先级
 export type PriorityType = 'low' | 'medium' | 'high' | 'urgent'
 
 // 批改状态
-export type GradingStatus = 'pending' | 'auto-graded' | 'manual-grading' | 'completed' | 'reviewed'
+export type GradingStatus =
+  | 'pending'
+  | 'auto-graded'
+  | 'manual-grading'
+  | 'completed'
+  | 'reviewed'
 
 // 批改类型
 export type GradingType = 'automatic' | 'manual' | 'hybrid'
 
 // 通知类型
-export type NotificationType = 'homework-assigned' | 'homework-due' | 'homework-completed' | 'homework-graded' | 'reminder'
+export type NotificationType =
+  | 'homework-assigned'
+  | 'homework-due'
+  | 'homework-completed'
+  | 'homework-graded'
+  | 'reminder'
 
 // 作业模板类型
-export type HomeworkTemplateType = 'quick-assignment' | 'weekly-plan' | 'exam-prep' | 'custom'
+export type HomeworkTemplateType =
+  | 'quick-assignment'
+  | 'weekly-plan'
+  | 'exam-prep'
+  | 'custom'
 
 // 评分标准类型
-export type ScoringCriteriaType = 'percentage' | 'points' | 'rubric' | 'competency'
+export type ScoringCriteriaType =
+  | 'percentage'
+  | 'points'
+  | 'rubric'
+  | 'competency'
 
 // 作业分配配置
 export interface HomeworkAssignmentConfig {
@@ -987,35 +1054,35 @@ export interface HomeworkAssignmentConfig {
   title: string
   description?: string
   instructions?: string
-  
+
   // 分配信息
   assignedBy: string
   assignedTo: string[] // 学生ID数组
   dueDate?: Date
   estimatedTime?: number // 预估完成时间（分钟）
-  
+
   // 优先级和可见性
   priority: PriorityType
   isVisible: boolean
-  
+
   // 评分设置
   totalPoints: number
   passingScore: number
   allowMultipleAttempts: boolean
   maxAttempts?: number
-  
+
   // 时间设置
   autoRelease?: boolean
   releaseDate?: Date
   lateSubmissionAllowed: boolean
   latePenalty?: number // 迟交扣分百分比
-  
+
   // 练习组合
   exercises: HomeworkExerciseConfig[]
-  
+
   // 通知设置
   notifications: NotificationConfig[]
-  
+
   createdAt: Date
   updatedAt: Date
 }
@@ -1069,30 +1136,30 @@ export interface HomeworkSubmissionFull {
   homeworkId: string
   userId: string
   status: HomeworkSubmissionStatusType
-  
+
   // 分数统计
   totalScore?: number
   maxPossibleScore: number
   percentage?: number
   completedExercises: number
   totalExercises: number
-  
+
   // 时间追踪
   startedAt?: Date
   submittedAt?: Date
   lastWorkedAt?: Date
   totalTimeSpent: number // 秒
-  
+
   // 练习详情
   exerciseSubmissions: ExerciseSubmissionDetail[]
-  
+
   // 评价反馈
   feedback?: HomeworkFeedback
   gradingStatus: GradingStatus
   gradedBy?: string
   gradedAt?: Date
   isLate: boolean
-  
+
   createdAt: Date
   updatedAt: Date
 }
@@ -1160,36 +1227,36 @@ export interface TimeManagementAnalysis {
 // 作业分析统计
 export interface HomeworkAnalytics {
   assignmentId: string
-  
+
   // 整体统计
   totalStudents: number
   submittedCount: number
   completedCount: number
   overdueCount: number
-  
+
   // 分数统计
   averageScore: number
   medianScore: number
   highestScore: number
   lowestScore: number
   scoreDistribution: ScoreDistribution[]
-  
+
   // 时间统计
   averageTimeSpent: number
   timeDistribution: TimeDistribution[]
-  
+
   // 题目分析
   questionAnalytics: QuestionAnalyticsItem[]
-  
+
   // 学科掌握度
   subjectMastery: Record<SubjectType, SubjectMasteryData>
-  
+
   // 趋势分析
   trends: TrendAnalysis
-  
+
   // 需要关注的学生
   studentsNeedAttention: StudentAttentionItem[]
-  
+
   generatedAt: Date
 }
 
@@ -1214,18 +1281,18 @@ export interface QuestionAnalyticsItem {
   questionText: string
   type: string
   subject: SubjectType
-  
+
   // 统计数据
   totalAttempts: number
   correctAnswers: number
   successRate: number
   averageTimeSpent: number
-  
+
   // 分析结果
   difficulty: 'easy' | 'medium' | 'hard'
   discrimination: number // 区分度
   commonMistakes: CommonMistake[]
-  
+
   // 建议
   teachingPoints: string[]
   needsReview: boolean
@@ -1261,7 +1328,11 @@ export interface TrendAnalysis {
 export interface StudentAttentionItem {
   userId: string
   userName: string
-  reason: 'low-score' | 'not-submitted' | 'time-management' | 'struggling-concepts'
+  reason:
+    | 'low-score'
+    | 'not-submitted'
+    | 'time-management'
+    | 'struggling-concepts'
   details: string
   urgency: 'low' | 'medium' | 'high'
   suggestedActions: string[]
@@ -1285,7 +1356,12 @@ export interface SubjectGradingConfig {
 
 // 题目批改配置
 export interface QuestionGradingConfig {
-  method: 'exact-match' | 'fuzzy-match' | 'keyword-match' | 'numeric-tolerance' | 'manual'
+  method:
+    | 'exact-match'
+    | 'fuzzy-match'
+    | 'keyword-match'
+    | 'numeric-tolerance'
+    | 'manual'
   tolerance?: number // 数值题容差
   keyWords?: string[] // 关键词匹配
   fuzzyThreshold?: number // 模糊匹配阈值
@@ -1327,25 +1403,25 @@ export interface GeneralGradingSettings {
 export interface GradingResult {
   submissionId: string
   gradingType: GradingType
-  
+
   // 分数信息
   totalScore: number
   maxScore: number
   percentage: number
-  
+
   // 题目结果
   questionResults: QuestionGradingResult[]
-  
+
   // 批改统计
   autoGradedQuestions: number
   manualGradedQuestions: number
   flaggedForReview: number
-  
+
   // 质量指标
   confidence: number // 批改置信度 0-100
   needsReview: boolean
   reviewReason?: string
-  
+
   // 时间信息
   gradedAt: Date
   gradingDuration: number // 批改用时（毫秒）
@@ -1360,16 +1436,16 @@ export interface QuestionGradingResult {
   isCorrect: boolean
   gradingMethod: string
   confidence: number
-  
+
   // 错误分析
   mistakeType?: string
   feedback?: string
   explanation?: string
-  
+
   // 学习建议
   suggestions?: string[]
   relatedTopics?: string[]
-  
+
   // 人工批改标记
   needsManualReview: boolean
   reviewReason?: string
@@ -1382,24 +1458,24 @@ export interface HomeworkTemplate {
   name: string
   description?: string
   type: HomeworkTemplateType
-  
+
   // 适用范围
   yearLevels: number[]
   subjects: SubjectType[]
-  
+
   // 模板配置
   exerciseSelectionRules: ExerciseSelectionRule[]
   defaultSettings: Partial<HomeworkAssignmentConfig>
-  
+
   // 使用统计
   usageCount: number
   averageScore?: number
   estimatedTime: number
-  
+
   // 自适应设置
   adaptiveDifficulty: boolean
   personalizedContent: boolean
-  
+
   createdBy: string
   createdAt: Date
   updatedAt: Date
@@ -1441,21 +1517,21 @@ export interface BatchOperationConfig {
 export interface LearningPathRecommendation {
   studentId: string
   currentLevel: number
-  
+
   // 推荐内容
   recommendedExercises: ExerciseRecommendation[]
   skillsToFocus: string[]
   estimatedTimeToMastery: number // 预估掌握时间（天）
-  
+
   // 个性化设置
   learningStyle: 'visual' | 'auditory' | 'kinesthetic' | 'mixed'
   pacePreference: 'slow' | 'normal' | 'fast'
   challengeLevel: 'comfort' | 'stretch' | 'challenge'
-  
+
   // 进度预测
   projectedGrowth: GrowthProjection[]
   milestones: LearningMilestone[]
-  
+
   generatedAt: Date
   validUntil: Date
 }

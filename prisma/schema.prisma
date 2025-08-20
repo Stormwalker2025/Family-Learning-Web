@@ -817,6 +817,7 @@ enum UnlockStatus {
 
 enum ActivityType {
   LOGIN               // 登录
+  LOGIN_FAILED        // 登录失败
   LOGOUT              // 登出
   EXERCISE_START      // 开始练习
   EXERCISE_SUBMIT     // 提交练习

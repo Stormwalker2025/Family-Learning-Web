@@ -7,7 +7,7 @@ import { year6MathExercises } from '@/data/math-exercises/year6-examples'
 // Combined mock data for demonstration
 const mockMathExercises: MathExercise[] = [
   ...year3MathExercises,
-  ...year6MathExercises
+  ...year6MathExercises,
 ]
 
 // GET /api/exercises/maths/[id] - Get specific math exercise
@@ -38,9 +38,8 @@ export async function GET(
 
     return NextResponse.json({
       success: true,
-      exercise
+      exercise,
     })
-
   } catch (error) {
     console.error('Error fetching math exercise:', error)
     return NextResponse.json(
@@ -64,7 +63,10 @@ export async function PUT(
 
     const decoded = await verifyToken(token)
     if (!decoded || decoded.role !== 'ADMIN') {
-      return NextResponse.json({ error: 'Admin access required' }, { status: 403 })
+      return NextResponse.json(
+        { error: 'Admin access required' },
+        { status: 403 }
+      )
     }
 
     const body = await request.json()
@@ -81,14 +83,13 @@ export async function PUT(
     mockMathExercises[exerciseIndex] = {
       ...mockMathExercises[exerciseIndex],
       ...body,
-      updatedAt: new Date()
+      updatedAt: new Date(),
     }
 
     return NextResponse.json({
       success: true,
-      exercise: mockMathExercises[exerciseIndex]
+      exercise: mockMathExercises[exerciseIndex],
     })
-
   } catch (error) {
     console.error('Error updating math exercise:', error)
     return NextResponse.json(
@@ -112,7 +113,10 @@ export async function DELETE(
 
     const decoded = await verifyToken(token)
     if (!decoded || decoded.role !== 'ADMIN') {
-      return NextResponse.json({ error: 'Admin access required' }, { status: 403 })
+      return NextResponse.json(
+        { error: 'Admin access required' },
+        { status: 403 }
+      )
     }
 
     const exerciseIndex = mockMathExercises.findIndex(ex => ex.id === params.id)
@@ -129,9 +133,8 @@ export async function DELETE(
 
     return NextResponse.json({
       success: true,
-      message: 'Math exercise deleted successfully'
+      message: 'Math exercise deleted successfully',
     })
-
   } catch (error) {
     console.error('Error deleting math exercise:', error)
     return NextResponse.json(

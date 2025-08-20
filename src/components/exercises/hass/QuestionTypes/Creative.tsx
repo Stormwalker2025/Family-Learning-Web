@@ -19,7 +19,7 @@ export function CreativeQuestion({
   question,
   answer,
   onAnswerChange,
-  onComplete
+  onComplete,
 }: CreativeQuestionProps) {
   const [currentAnswer, setCurrentAnswer] = useState(answer?.content || '')
   const [confidence, setConfidence] = useState(answer?.confidence || 3)
@@ -29,12 +29,15 @@ export function CreativeQuestion({
     onAnswerChange({
       content: value,
       confidence,
-      timeSpent: answer?.timeSpent || 0
+      timeSpent: answer?.timeSpent || 0,
     })
   }
 
   const getWordCount = (text: string) => {
-    return text.trim().split(/\s+/).filter(word => word.length > 0).length
+    return text
+      .trim()
+      .split(/\s+/)
+      .filter(word => word.length > 0).length
   }
 
   const wordCount = getWordCount(currentAnswer)
@@ -53,10 +56,10 @@ export function CreativeQuestion({
             <Badge variant="secondary">{question.bloomsTaxonomy}</Badge>
           </div>
         </CardHeader>
-        
+
         <CardContent>
           <p className="text-base leading-relaxed">{question.question}</p>
-          
+
           {question.hints && question.hints.length > 0 && (
             <div className="mt-4 p-3 bg-purple-50 dark:bg-purple-950/20 rounded-lg">
               <p className="text-sm font-medium mb-2">Creative prompts:</p>
@@ -74,12 +77,12 @@ export function CreativeQuestion({
         <CardHeader>
           <CardTitle>Your Creative Response ({wordCount} words)</CardTitle>
         </CardHeader>
-        
+
         <CardContent>
           <Textarea
             placeholder="Be creative! Design, imagine, propose, or create something new based on what you've learned..."
             value={currentAnswer}
-            onChange={(e) => handleAnswerChange(e.target.value)}
+            onChange={e => handleAnswerChange(e.target.value)}
             className="min-h-40"
           />
         </CardContent>
@@ -93,10 +96,12 @@ export function CreativeQuestion({
             <AlertCircle className="h-5 w-5 text-yellow-600" />
           )}
           <span className="text-sm font-medium">
-            {hasMinimumAnswer ? 'Creative response ready' : 'Need more creative detail (40+ words)'}
+            {hasMinimumAnswer
+              ? 'Creative response ready'
+              : 'Need more creative detail (40+ words)'}
           </span>
         </div>
-        
+
         <Button onClick={onComplete} disabled={!hasMinimumAnswer}>
           Complete Creative Task
         </Button>

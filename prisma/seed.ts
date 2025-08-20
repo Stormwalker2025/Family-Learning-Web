@@ -14,30 +14,31 @@ async function main() {
     // 1. 创建认证系统数据
     console.log('1. 创建认证系统数据')
     const authData = await seedAuthData()
-    
+
     // 2. 创建示例学习内容（如果需要）
     console.log('\n2. 创建示例学习内容')
-    
+
     // 创建示例课程
     let sampleCourse = await prisma.course.findFirst({
-      where: { 
+      where: {
         title: 'English Reading Comprehension',
         subject: 'ENGLISH',
-        yearLevel: 3
-      }
+        yearLevel: 3,
+      },
     })
-    
+
     if (!sampleCourse) {
       sampleCourse = await prisma.course.create({
         data: {
           title: 'English Reading Comprehension',
-          description: 'Basic reading comprehension exercises for Year 3 students',
+          description:
+            'Basic reading comprehension exercises for Year 3 students',
           subject: 'ENGLISH',
           yearLevel: 3,
           isActive: true,
           order: 1,
-          createdBy: authData.users.admin.id
-        }
+          createdBy: authData.users.admin.id,
+        },
       })
     }
 
@@ -45,13 +46,13 @@ async function main() {
 
     // 创建示例练习
     let sampleExercise = await prisma.exercise.findFirst({
-      where: { 
+      where: {
         title: 'Simple Story Reading',
         subject: 'ENGLISH',
-        yearLevel: 3
-      }
+        yearLevel: 3,
+      },
     })
-    
+
     if (!sampleExercise) {
       sampleExercise = await prisma.exercise.create({
         data: {
@@ -67,11 +68,13 @@ async function main() {
           courseId: sampleCourse.id,
           createdBy: authData.users.admin.id,
           content: JSON.stringify({
-            story: 'Once upon a time, there was a little cat named Whiskers. Whiskers loved to play in the garden.',
-            type: 'story'
+            story:
+              'Once upon a time, there was a little cat named Whiskers. Whiskers loved to play in the garden.',
+            type: 'story',
           }),
-          instructions: 'Read the story carefully and answer the questions below.'
-        }
+          instructions:
+            'Read the story carefully and answer the questions below.',
+        },
       })
     }
 
@@ -81,10 +84,10 @@ async function main() {
     const existingQuestion = await prisma.question.findFirst({
       where: {
         exerciseId: sampleExercise.id,
-        order: 1
-      }
+        order: 1,
+      },
     })
-    
+
     if (!existingQuestion) {
       await prisma.question.create({
         data: {
@@ -93,10 +96,11 @@ async function main() {
           question: 'What is the name of the cat in the story?',
           options: JSON.stringify(['Fluffy', 'Whiskers', 'Shadow', 'Tiger']),
           correctAnswer: 'Whiskers',
-          explanation: 'The story clearly states that the cat\'s name is Whiskers.',
+          explanation:
+            "The story clearly states that the cat's name is Whiskers.",
           points: 1,
-          order: 1
-        }
+          order: 1,
+        },
       })
     }
 
@@ -104,41 +108,41 @@ async function main() {
 
     // 3. 创建示例词汇
     console.log('\n3. 创建示例词汇')
-    
+
     const sampleWords = [
       {
         word: 'happy',
         definition: 'feeling joy or pleasure',
-        partOfSpeech: 'ADJECTIVE',
+        partOfSpeech: 'ADJECTIVE' as const,
         example: 'She was happy to see her friends.',
         chineseDefinition: '快乐的，高兴的',
         difficulty: 1,
         frequency: 5,
         yearLevel: 3,
-        category: 'Emotions'
+        category: 'Emotions',
       },
       {
         word: 'beautiful',
         definition: 'pleasing to look at; attractive',
-        partOfSpeech: 'ADJECTIVE',
+        partOfSpeech: 'ADJECTIVE' as const,
         example: 'The sunset was beautiful.',
         chineseDefinition: '美丽的，漂亮的',
         difficulty: 2,
         frequency: 4,
         yearLevel: 3,
-        category: 'Descriptive'
+        category: 'Descriptive',
       },
       {
         word: 'adventure',
         definition: 'an exciting or dangerous experience',
-        partOfSpeech: 'NOUN',
+        partOfSpeech: 'NOUN' as const,
         example: 'They went on an adventure in the forest.',
         chineseDefinition: '冒险，历险',
         difficulty: 3,
         frequency: 3,
         yearLevel: 6,
-        category: 'Story'
-      }
+        category: 'Story',
+      },
     ]
 
     for (const wordData of sampleWords) {
@@ -148,8 +152,8 @@ async function main() {
         create: {
           ...wordData,
           source: 'Seed Data',
-          importBatch: 'initial_seed'
-        }
+          importBatch: 'initial_seed',
+        },
       })
     }
 
@@ -157,14 +161,14 @@ async function main() {
 
     // 4. 创建学生的学习进度记录
     console.log('\n4. 创建示例学习进度')
-    
+
     // August的学习进度
     await prisma.learningProgress.upsert({
       where: {
         userId_exerciseId: {
           userId: authData.users.augustStudent.id,
-          exerciseId: sampleExercise.id
-        }
+          exerciseId: sampleExercise.id,
+        },
       },
       update: {},
       create: {
@@ -173,8 +177,8 @@ async function main() {
         subject: 'ENGLISH',
         status: 'NOT_STARTED',
         attempts: 0,
-        masteryLevel: 0
-      }
+        masteryLevel: 0,
+      },
     })
 
     // Michael的学习进度
@@ -182,8 +186,8 @@ async function main() {
       where: {
         userId_exerciseId: {
           userId: authData.users.michaelStudent.id,
-          exerciseId: sampleExercise.id
-        }
+          exerciseId: sampleExercise.id,
+        },
       },
       update: {},
       create: {
@@ -196,17 +200,17 @@ async function main() {
         bestPercentage: 100.0,
         avgScore: 1.0,
         masteryLevel: 80,
-        lastAttempt: new Date()
-      }
+        lastAttempt: new Date(),
+      },
     })
 
     console.log('✓ 创建示例学习进度记录')
 
     // 5. 创建示例词汇学习进度
     console.log('\n5. 创建示例词汇学习进度')
-    
+
     const happyWord = await prisma.vocabularyWord.findUnique({
-      where: { word: 'happy' }
+      where: { word: 'happy' },
     })
 
     if (happyWord) {
@@ -214,8 +218,8 @@ async function main() {
         where: {
           userId_wordId: {
             userId: authData.users.augustStudent.id,
-            wordId: happyWord.id
-          }
+            wordId: happyWord.id,
+          },
         },
         update: {},
         create: {
@@ -225,8 +229,8 @@ async function main() {
           masteryLevel: 60,
           attempts: 5,
           correctAttempts: 3,
-          streakCount: 2
-        }
+          streakCount: 2,
+        },
       })
     }
 
@@ -236,10 +240,9 @@ async function main() {
     console.log('数据库种子数据初始化完成！')
     console.log('\n可以使用以下账户登录测试:')
     console.log('- 管理员: dan / admin123')
-    console.log('- 家长: grace / password123')  
+    console.log('- 家长: grace / password123')
     console.log('- 学生: august / password123 (Year 3)')
     console.log('- 学生: michael / password123 (Year 6)')
-
   } catch (error) {
     console.error('种子数据创建失败:', error)
     throw error
@@ -247,7 +250,7 @@ async function main() {
 }
 
 main()
-  .catch((e) => {
+  .catch(e => {
     console.error(e)
     process.exit(1)
   })

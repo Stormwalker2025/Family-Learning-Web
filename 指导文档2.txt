@@ -1,0 +1,166 @@
+Office — 好的 Dan！下面给你一套**可直接复制进 Claude Code** 的“自动化多代理（agents）”指令包，用来：①批量修复 bug、②优化项目设置与 CI、③按成熟教育网站范式美化 UI（对标 Google Classroom/Seesaw/IXL/Prodigy + M3 设计体系 + 无障碍标准）。关键引用我已标注，便于你或 Orchestrator 查阅。([Google Sites][1], [seesaw.com][2], [IXL Learning][3], [prodigygame.zendesk.com][4], [Material Design][5], [W3C][6], [MDN Web Docs][7], [Edinburgh Research][8])
+
+---
+
+# 0) 先给 Orchestrator 的“总控任务”
+
+把这段粘到 `claude` 里作为第一条：
+
+```
+你是 Orchestrator。目标：在不破坏主分支的前提下，自动协调多个专家代理（BugTriage、SettingsOps、UIDesign、A11y, VisualQA, PerfOps），完成：
+1) Bug 扫描→复现→单测/修复→回归；
+2) 设置优化（lint/test/e2e/CI/权限/MCP 白名单/数据库脚本）；
+3) UI 美化与设计系统统一（对标成熟教育网站：Google Classroom、Seesaw、IXL、Prodigy；遵循 Material Design 3；对齐 A11y/WAI-ARIA）。
+硬约束：
+- 仅在 feature/* 分支动手；每个主题单独分支和 PR；
+- 变更需附：单测/E2E、截图基线（Playwright）、A11y 检查结论；
+- 只执行 MCP 白名单命令。
+请先输出：分支计划、PR 列表、看板（docs/bug_board.md 与 docs/ui_board.md）。
+```
+
+> 设计参考说明：教育类仪表盘常见“卡片式班级/作业、进度/分析、师生沟通、轻量化布局”，可参考 Google Classroom 的班级卡片与作业流、Seesaw 的家校沟通与隐私边界、IXL/Prodigy 的进度分析面板、以及 Dashboard 设计模式论文中的布局/筛选/层次化信息卡片。([Google Sites][1], [seesaw.com][2], [IXL Learning][3], [prodigygame.zendesk.com][4], [arXiv][9], [GitHub][10])
+> 设计体系与文案风格以 **Material Design 3** 为底；UI 文案与组件语义遵循 **WAI-ARIA/MDN** 最佳实践。([Material Design][5], [W3C][6], [MDN Web Docs][7])
+
+---
+
+# 1) BugTriage Agent（缺陷扫描→复现→修复）
+
+发给 Claude：
+
+```
+/goal 你是 BugTriage。创建分支：feature/bugfix-sprint-01
+任务：
+1) 静态检查：npm run lint；类型：tsc --noEmit；修复 ≥ 10 个显性问题；
+2) 运行单测与 e2e：npm run test && npm run e2e（若未建，先生成最小套件）；
+3) 新建 tests/regressions/ 下对已复现 bug 写最小复现实例；
+4) 修复后提交补丁；更新 CHANGELOG 与 docs/bug_board.md。
+输出：修复点列表（根因、修改文件、影响面）、回归测试清单。
+```
+
+---
+
+# 2) SettingsOps Agent（工程与 CI/安全/脚本 优化）
+
+```
+/goal 你是 SettingsOps。分支：feature/project-settings-optim
+任务：
+- ESLint/Prettier 统一、lint-staged + pre-commit；
+- Playwright 视觉回归基线：引入 expect(page).toHaveScreenshot()，并配置 --update-snapshots 更新路径与阈值；写 5 条关键页面基线（登录/作业列表/做题/结果/家长面板）。 
+- GitHub Actions：安装、构建、lint、test、e2e、上传 Playwright 报告与截图工件；
+- MCP 白名单补充：仅允许 npm run dev/build/test/e2e、prisma 脚本、基础 git 命令；
+- .env.example 与脚本：db:push、db:seed、dev、e2e。
+完成后开 PR，并在 docs/devops.md 写明“如何更新视觉基线与阈值”。
+```
+
+> Playwright 视觉回归与截图基线配置要点见官方/最佳实践。([Playwright][11], [Checkly][12])
+
+---
+
+# 3) UIDesign Agent（设计系统与主题美化）
+
+```
+/goal 你是 UIDesign。分支：feature/ui-design-pass-01
+设计目标：
+- 参考 Google Classroom：班级/作业卡片网格、作业流信息密度与轻量卡片；参考 Seesaw：家校沟通入口与“仅可见自己孩子”的边界提示；参考 IXL/Prodigy：进度/分析概览卡片（完成率、正确率、学习时长）。以 M3 为设计规范，组件命名遵循 shadcn/ui。
+交付：
+1) 设计 tokens（src/styles/tokens.css）：色板、半径、阴影、间距、字体阶梯；浅/深色模式；
+2) 布局与卡片：Dashboard 网格、AssignmentCard、ProgressCard、RuleCard；
+3) 题目组件统一皮肤（MCQ/TF/Matching/Fill-in）：状态色、可达性焦点、错误提示；
+4) 文案风格指南（docs/ux/copy.md）：面向 K-12 的“清晰、短句、动作动词”（参考 M3 文案指南）；
+5) 无障碍：语义标签、label+aria-describedby、键盘序；为关键组件加 ARIA role 示例。
+输出：对比前后截图集（/tests/__screenshots__/ui-pass-01），以及 docs/ui_board.md 更新。
+```
+
+> 参考与要点：Classroom/Seesaw/IXL/Prodigy 的卡片式信息、家校沟通与分析面板，M3 的排版与组件风格，ARIA/MDN 的语义与键盘操作。([Google Sites][1], [seesaw.com][2], [IXL Learning][3], [prodigygame.zendesk.com][4], [Material Design][5], [W3C][6], [MDN Web Docs][7])
+
+---
+
+# 4) A11y Agent（可访问性加固）
+
+```
+/goal 你是 A11y。分支：feature/a11y-hardening
+任务：
+- 为表单/列表/对话框/选项卡等组件补充 ARIA 模式与 label/描述； 
+- 焦点可见性与跳转链接（skip to content）；
+- Axe 自动检查脚本（CI 阶段跑），修复所有严重问题；
+- 为做题页提供屏幕阅读器顺序（题干→选项→提交→反馈）；
+- docs/a11y.md：列出采用的 ARIA 模式与可复用示例。
+```
+
+> 参照 **WAI-ARIA APG** 与 **MDN** 的最新实践，特别是“ARIA 不改变 DOM 行为，仅暴露语义”的注意事项。([W3C][6], [MDN Web Docs][7])
+
+---
+
+# 5) VisualQA Agent（视觉回归与回归面管理）
+
+```
+/goal 你是 VisualQA。分支：feature/visual-regression-guard
+任务：
+- Playwright 为关键流（学生、家长、管理员）各录 3 帧：入口/中间态/完成态；
+- 配置快照阈值与像素差（maxDiffPixels/ratio），在 CI 内对比；
+- 提供“批准基线更新”的 npm 脚本与文档（docs/visualqa.md）。
+```
+
+> 用例组织与快照路径约束按 Playwright 文档。([Playwright][11])
+
+---
+
+# 6) PerfOps Agent（性能与加载体验）
+
+```
+/goal 你是 PerfOps。分支：feature/perf-improvements
+任务：
+- Next.js 层面：路由级动态导入、组件级懒加载、关键资源预取；
+- 题库页：首屏仅加载当前作业与必要题干；图片/音频懒加载；
+- 分析：记录 TTFB/CLS/LCP（web-vitals），输出到本地日志；
+- docs/perf.md：指标阈值、采集与优化建议。
+```
+
+---
+
+# 7) 统一“PR 模板 + DoD”强约束（让 Orchestrator 下发）
+
+```
+/goal 为所有分支添加 .github/pull_request_template.md，内容含：动机/实现/测试(含视觉/E2E)/A11y 检查/风险与回滚/影响面截图。
+更新 docs/DoD.md：测试≥80%覆盖、关键流 E2E、Axe 无严重项、视觉基线稳定、文档更新。
+```
+
+---
+
+## 可选：灵感板（让 UIDesign 生成）
+
+```
+/goal 生成 docs/ux/inspiration.md：收集参考站点的布局要点与截图标注（文字描述即可）： 
+- Google Classroom：班级卡片、作业流、评分分类； 
+- Seesaw：家校沟通与“仅看自己孩子”隐私提示；
+- IXL/Prodigy：进度曲线/目标/时间、老师视角的概览卡；
+- Dashboard 设计模式（卡片分组/筛选/层级）。
+```
+
+> 以上内容对应的公开资料与“模式库/指南”，可供设计理由引用。([The Tech Edvocate][13], [Google Sites][1], [seesaw.com][2], [IXL Learning][3], [prodigygame.zendesk.com][4], [arXiv][9])
+
+---
+
+## 小提示（你这边的动作）
+
+* 直接把上述 **7 段 agent 指令** 按顺序发给 `claude`；
+* 每个 PR 出来后，回一句「按 DoD 自检；未过项请补」；
+* UI 通过后，再让 VisualQA 更新快照基线；
+* 若要跟随教育产品的最新趋势，可提示 Orchestrator 定期检索“教育套件更新”（如 Classroom 新的 Analytics/AI tab），同步到 docs/ux/notes.md。([The Verge][14])
+
+需要的话，我也可以**把这些指令落库**（`docs/agent-scripts.md` + PR 模板 + CI 工作流）并触发第一轮 Sprint 的 6 个 PR 骨架。你只要说一声用 npm 还是 pnpm，以及是否优先 Year 6 端到端流。
+
+[1]: https://sites.google.com/view/classrooms-workspace/classroom-basics/interface-guide?utm_source=chatgpt.com "Google Classroom - Interface Guide"
+[2]: https://seesaw.com/features/family-communication/?utm_source=chatgpt.com "Parent Teacher Communication App for Families | Seesaw"
+[3]: https://uk.ixl.com/membership/teachers/analytics?utm_source=chatgpt.com "IXL - Analytics"
+[4]: https://prodigygame.zendesk.com/hc/en-us/articles/204968639-Overview-Math-Dashboard?utm_source=chatgpt.com "Overview: Math Dashboard – Prodigy Education"
+[5]: https://m3.material.io/?utm_source=chatgpt.com "Material Design"
+[6]: https://www.w3.org/WAI/ARIA/apg/?utm_source=chatgpt.com "ARIA Authoring Practices Guide | APG | WAI | W3C"
+[7]: https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Accessibility/WAI-ARIA_basics?utm_source=chatgpt.com "WAI-ARIA basics - Learn web development | MDN"
+[8]: https://www.research.ed.ac.uk/en/publications/dashboard-design-patterns?utm_source=chatgpt.com "Dashboard design patterns - University of Edinburgh Research Explorer"
+[9]: https://arxiv.org/abs/2205.00757?utm_source=chatgpt.com "Dashboard Design Patterns"
+[10]: https://github.com/dashboarddesignpatterns/dashboarddesignpatterns.github.io?utm_source=chatgpt.com "GitHub - dashboarddesignpatterns/dashboarddesignpatterns.github.io"
+[11]: https://playwright.dev/docs/test-snapshots?utm_source=chatgpt.com "Visual comparisons | Playwright"
+[12]: https://www.checklyhq.com/blog/screenshot-monitoring-with-playwright/?utm_source=chatgpt.com "Screenshot Testing with Playwright: Beginner's Guide - Checkly"
+[13]: https://www.thetechedvocate.org/what-are-the-best-features-of-google-classroom/?utm_source=chatgpt.com "What are the Best Features of Google Classroom?"
+[14]: https://www.theverge.com/news/694917/google-classroom-gemini-ai-notebooklm-education-chromeos-updates?utm_source=chatgpt.com "Google is opening its NotebookLM AI tools to students under 18"

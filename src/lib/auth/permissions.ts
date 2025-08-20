@@ -105,7 +105,10 @@ export class PermissionChecker {
   /**
    * 检查是否可以访问特定用户的数据
    */
-  canAccessUserData(targetUserId: string, targetUserFamilyId?: string): boolean {
+  canAccessUserData(
+    targetUserId: string,
+    targetUserFamilyId?: string
+  ): boolean {
     // 用户总是可以访问自己的数据
     if (this.user.id === targetUserId) {
       return true
@@ -254,7 +257,7 @@ export function canAccessAtTime(user: User, currentTime: Date): boolean {
   // 学生的时间限制可以在这里实现
   // 例如：学习时间段限制、iPad使用时间等
   const hour = currentTime.getHours()
-  
+
   // 假设学生只能在 6:00-22:00 之间使用系统
   if (user.role === 'STUDENT') {
     return hour >= 6 && hour < 22
@@ -300,7 +303,7 @@ export const API_PERMISSIONS = {
   '/api/homework': 'canAccessHomework',
   '/api/homework/assign': 'canAssignHomework',
   '/api/admin': 'canManageSystem',
-  '/api/vocabulary': 'canViewVocabulary'
+  '/api/vocabulary': 'canViewVocabulary',
 } as const
 
 /**
@@ -312,7 +315,7 @@ export function checkApiPermission(
   method: string = 'GET'
 ): boolean {
   const checker = createPermissionChecker(user)
-  
+
   // 特殊处理某些端点
   if (endpoint.startsWith('/api/users/') && method === 'GET') {
     const userId = endpoint.split('/').pop()
@@ -321,7 +324,7 @@ export function checkApiPermission(
 
   // 检查通用权限
   const permission = API_PERMISSIONS[endpoint as keyof typeof API_PERMISSIONS]
-  
+
   if (permission === null) {
     return true // 公开或需要特殊检查的端点
   }

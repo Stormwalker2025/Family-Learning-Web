@@ -1,7 +1,7 @@
 {
   "navigation": {
     "home": "Home",
-    "dashboard": "Dashboard", 
+    "dashboard": "Dashboard",
     "exercises": "Exercises",
     "vocabulary": "Vocabulary",
     "homework": "Homework",
@@ -34,7 +34,7 @@
     "viewResults": "View Results",
     "difficulty": {
       "easy": "Easy",
-      "medium": "Medium", 
+      "medium": "Medium",
       "hard": "Hard"
     }
   },
@@ -61,7 +61,7 @@
   },
   "progress": {
     "overallProgress": "Overall Progress",
-    "subjectProgress": "Subject Progress", 
+    "subjectProgress": "Subject Progress",
     "streakDays": "Day Streak",
     "iPadUnlockTime": "iPad Unlock Time",
     "minutesEarned": "{minutes} minutes earned"
@@ -86,7 +86,7 @@
   },
   "subjects": {
     "english": "English",
-    "mathematics": "Mathematics", 
+    "mathematics": "Mathematics",
     "hass": "Humanities and Social Sciences"
   },
   "currency": {

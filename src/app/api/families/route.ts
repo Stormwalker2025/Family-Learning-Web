@@ -10,8 +10,11 @@ import { FAMILY_CONFIG } from '@/lib/auth/config'
 
 // 创建家庭请求验证模式
 const createFamilySchema = z.object({
-  name: z.string().min(1, '家庭名称不能为空').max(100, '家庭名称不能超过100个字符'),
-  timezone: z.string().optional().default(FAMILY_CONFIG.defaultTimezone)
+  name: z
+    .string()
+    .min(1, '家庭名称不能为空')
+    .max(100, '家庭名称不能超过100个字符'),
+  timezone: z.string().optional().default(FAMILY_CONFIG.defaultTimezone),
 })
 
 /**
@@ -22,7 +25,7 @@ export async function GET(request: NextRequest) {
   try {
     // 验证用户权限
     const { user: currentUser, error } = await extractUserFromRequest(request)
-    
+
     if (!currentUser) {
       return NextResponse.json(
         { success: false, message: error || '未授权访问' },
@@ -34,7 +37,7 @@ export async function GET(request: NextRequest) {
 
     // 构建查询条件
     let where = {}
-    
+
     if (currentUser.role === 'ADMIN') {
       // 管理员可以查看所有家庭
     } else if (currentUser.role === 'PARENT') {
@@ -45,7 +48,7 @@ export async function GET(request: NextRequest) {
         // 如果家长没有家庭，返回空列表
         return NextResponse.json({
           success: true,
-          data: { families: [] }
+          data: { families: [] },
         })
       }
     } else {
@@ -55,7 +58,7 @@ export async function GET(request: NextRequest) {
       } else {
         return NextResponse.json({
           success: true,
-          data: { families: [] }
+          data: { families: [] },
         })
       }
     }
@@ -72,35 +75,31 @@ export async function GET(request: NextRequest) {
             role: true,
             isActive: true,
             yearLevel: true,
-            lastLoginAt: true
+            lastLoginAt: true,
           },
-          orderBy: [
-            { role: 'asc' },
-            { createdAt: 'asc' }
-          ]
+          orderBy: [{ role: 'asc' }, { createdAt: 'asc' }],
         },
         _count: {
           select: {
-            members: true
-          }
-        }
+            members: true,
+          },
+        },
       },
       orderBy: {
-        createdAt: 'desc'
-      }
+        createdAt: 'desc',
+      },
     })
 
     return NextResponse.json({
       success: true,
-      data: { families }
+      data: { families },
     })
-
   } catch (error) {
     console.error('Get families error:', error)
     return NextResponse.json(
       {
         success: false,
-        message: '获取家庭列表失败'
+        message: '获取家庭列表失败',
       },
       { status: 500 }
     )
@@ -115,7 +114,7 @@ export async function POST(request: NextRequest) {
   try {
     // 验证用户权限
     const { user: currentUser, error } = await extractUserFromRequest(request)
-    
+
     if (!currentUser) {
       return NextResponse.json(
         { success: false, message: error || '未授权访问' },
@@ -132,7 +131,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json()
-    
+
     // 验证请求数据
     const validation = createFamilySchema.safeParse(body)
     if (!validation.success) {
@@ -140,7 +139,7 @@ export async function POST(request: NextRequest) {
         {
           success: false,
           message: '请求数据格式错误',
-          errors: validation.error.errors
+          errors: validation.error.errors,
         },
         { status: 400 }
       )
@@ -150,7 +149,7 @@ export async function POST(request: NextRequest) {
 
     // 检查家庭名称唯一性
     const existingFamily = await prisma.family.findFirst({
-      where: { name }
+      where: { name },
     })
 
     if (existingFamily) {
@@ -174,8 +173,8 @@ export async function POST(request: NextRequest) {
     const newFamily = await prisma.family.create({
       data: {
         name,
-        timezone
-      }
+        timezone,
+      },
     })
 
     // 记录创建活动
@@ -188,12 +187,13 @@ export async function POST(request: NextRequest) {
             action: 'create_family',
             familyId: newFamily.id,
             familyName: name,
-            timestamp: new Date().toISOString()
+            timestamp: new Date().toISOString(),
           }),
           resourceType: 'Family',
           resourceId: newFamily.id,
-          ipAddress: request.ip || request.headers.get('x-forwarded-for') || 'unknown'
-        }
+          ipAddress:
+            request.ip || request.headers.get('x-forwarded-for') || 'unknown',
+        },
       })
     } catch (logError) {
       console.error('Failed to log family creation:', logError)
@@ -202,15 +202,14 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: true,
       message: '家庭创建成功',
-      data: { family: newFamily }
+      data: { family: newFamily },
     })
-
   } catch (error) {
     console.error('Create family error:', error)
     return NextResponse.json(
       {
         success: false,
-        message: '创建家庭失败'
+        message: '创建家庭失败',
       },
       { status: 500 }
     )

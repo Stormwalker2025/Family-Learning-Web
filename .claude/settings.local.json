@@ -63,7 +63,9 @@
       "Bash(mv:*)",
       "Bash(find:*)",
       "Bash(sed:*)",
-      "Bash(npx playwright:*)"
+      "Bash(npx playwright:*)",
+      "Bash(git checkout:*)",
+      "Bash(npx tsc:*)"
     ],
     "deny": []
   }

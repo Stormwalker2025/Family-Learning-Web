@@ -54,14 +54,17 @@ export default function RegisterPage() {
     role: 'STUDENT',
     yearLevel: '',
     birthYear: '',
-    familyId: ''
+    familyId: '',
   })
   const [registerData, setRegisterData] = useState<RegisterData | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string>('')
   const [success, setSuccess] = useState<string>('')
   const [showPassword, setShowPassword] = useState(false)
-  const [passwordStrength, setPasswordStrength] = useState({ score: 0, errors: [] as string[] })
+  const [passwordStrength, setPasswordStrength] = useState({
+    score: 0,
+    errors: [] as string[],
+  })
 
   // 检查管理员权限并获取注册相关数据
   useEffect(() => {
@@ -85,9 +88,11 @@ export default function RegisterPage() {
     fetchRegisterData()
   }, [router])
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target
-    
+
     let processedValue: any = value
     if (name === 'yearLevel' || name === 'birthYear') {
       processedValue = value === '' ? '' : parseInt(value)
@@ -95,14 +100,14 @@ export default function RegisterPage() {
 
     setFormData(prev => ({
       ...prev,
-      [name]: processedValue
+      [name]: processedValue,
     }))
-    
+
     // 实时密码强度检查
     if (name === 'password') {
       checkPasswordStrength(value)
     }
-    
+
     // 清除错误和成功信息
     if (error) setError('')
     if (success) setSuccess('')
@@ -161,7 +166,10 @@ export default function RegisterPage() {
       return
     }
 
-    if (formData.role === 'STUDENT' && (!formData.yearLevel || !formData.birthYear)) {
+    if (
+      formData.role === 'STUDENT' &&
+      (!formData.yearLevel || !formData.birthYear)
+    ) {
       setError('学生用户必须填写年级和出生年份')
       setLoading(false)
       return
@@ -178,15 +186,15 @@ export default function RegisterPage() {
         ...formData,
         yearLevel: formData.yearLevel === '' ? undefined : formData.yearLevel,
         birthYear: formData.birthYear === '' ? undefined : formData.birthYear,
-        familyId: formData.familyId === '' ? undefined : formData.familyId
+        familyId: formData.familyId === '' ? undefined : formData.familyId,
       }
 
       const response = await fetch('/api/auth/register', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify(submitData)
+        body: JSON.stringify(submitData),
       })
 
       const data = await response.json()
@@ -203,7 +211,7 @@ export default function RegisterPage() {
           role: 'STUDENT',
           yearLevel: '',
           birthYear: '',
-          familyId: ''
+          familyId: '',
         })
         setPasswordStrength({ score: 0, errors: [] })
       } else {
@@ -233,9 +241,7 @@ export default function RegisterPage() {
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
               创建新用户
             </h1>
-            <p className="text-gray-600">
-              管理员创建用户账户
-            </p>
+            <p className="text-gray-600">管理员创建用户账户</p>
             <Link
               href="/dashboard"
               className="text-blue-600 hover:text-blue-500 text-sm"
@@ -259,7 +265,10 @@ export default function RegisterPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-2">
+                <label
+                  htmlFor="username"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
                   用户名 *
                 </label>
                 <input
@@ -275,7 +284,10 @@ export default function RegisterPage() {
               </div>
 
               <div>
-                <label htmlFor="displayName" className="block text-sm font-medium text-gray-700 mb-2">
+                <label
+                  htmlFor="displayName"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
                   显示名称 *
                 </label>
                 <input
@@ -292,7 +304,10 @@ export default function RegisterPage() {
             </div>
 
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 邮箱地址
               </label>
               <input
@@ -308,7 +323,10 @@ export default function RegisterPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+                <label
+                  htmlFor="password"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
                   密码 *
                 </label>
                 <div className="relative">
@@ -347,7 +365,10 @@ export default function RegisterPage() {
               </div>
 
               <div>
-                <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-2">
+                <label
+                  htmlFor="confirmPassword"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
                   确认密码 *
                 </label>
                 <input
@@ -364,7 +385,10 @@ export default function RegisterPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div>
-                <label htmlFor="role" className="block text-sm font-medium text-gray-700 mb-2">
+                <label
+                  htmlFor="role"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
                   用户角色 *
                 </label>
                 <select
@@ -384,7 +408,10 @@ export default function RegisterPage() {
               {formData.role === 'STUDENT' && (
                 <>
                   <div>
-                    <label htmlFor="yearLevel" className="block text-sm font-medium text-gray-700 mb-2">
+                    <label
+                      htmlFor="yearLevel"
+                      className="block text-sm font-medium text-gray-700 mb-2"
+                    >
                       年级 *
                     </label>
                     <select
@@ -397,13 +424,18 @@ export default function RegisterPage() {
                     >
                       <option value="">选择年级</option>
                       {registerData.config.yearLevels.map(level => (
-                        <option key={level} value={level}>Year {level}</option>
+                        <option key={level} value={level}>
+                          Year {level}
+                        </option>
                       ))}
                     </select>
                   </div>
 
                   <div>
-                    <label htmlFor="birthYear" className="block text-sm font-medium text-gray-700 mb-2">
+                    <label
+                      htmlFor="birthYear"
+                      className="block text-sm font-medium text-gray-700 mb-2"
+                    >
                       出生年份 *
                     </label>
                     <input
@@ -423,7 +455,10 @@ export default function RegisterPage() {
             </div>
 
             <div>
-              <label htmlFor="familyId" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="familyId"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 所属家庭
               </label>
               <select
@@ -470,7 +505,7 @@ export default function RegisterPage() {
                     role: 'STUDENT',
                     yearLevel: '',
                     birthYear: '',
-                    familyId: ''
+                    familyId: '',
                   })
                   setPasswordStrength({ score: 0, errors: [] })
                 }}
@@ -483,14 +518,21 @@ export default function RegisterPage() {
 
           {/* 用户统计信息 */}
           <div className="mt-8 pt-6 border-t border-gray-200">
-            <h3 className="text-lg font-medium text-gray-900 mb-4">系统用户统计</h3>
+            <h3 className="text-lg font-medium text-gray-900 mb-4">
+              系统用户统计
+            </h3>
             <div className="grid grid-cols-3 gap-4">
               {registerData.userStats.map(stat => (
                 <div key={stat.role} className="text-center">
-                  <div className="text-2xl font-bold text-blue-600">{stat._count.role}</div>
+                  <div className="text-2xl font-bold text-blue-600">
+                    {stat._count.role}
+                  </div>
                   <div className="text-sm text-gray-600">
-                    {stat.role === 'STUDENT' ? '学生' : 
-                     stat.role === 'PARENT' ? '家长' : '管理员'}
+                    {stat.role === 'STUDENT'
+                      ? '学生'
+                      : stat.role === 'PARENT'
+                        ? '家长'
+                        : '管理员'}
                   </div>
                 </div>
               ))}

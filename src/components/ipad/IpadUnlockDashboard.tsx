@@ -5,17 +5,17 @@ import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
-import { 
-  Tablet, 
-  Clock, 
-  Trophy, 
+import {
+  Tablet,
+  Clock,
+  Trophy,
   Target,
   CheckCircle,
   Calendar,
   TrendingUp,
   Gift,
   Lock,
-  Unlock
+  Unlock,
 } from 'lucide-react'
 import { useAuth } from '@/hooks/auth/useAuth'
 import { IpadUnlockStatus, IpadUnlockRecord } from '@/types'
@@ -25,12 +25,14 @@ interface IpadUnlockDashboardProps {
   isParentView?: boolean
 }
 
-export default function IpadUnlockDashboard({ 
+export default function IpadUnlockDashboard({
   userId,
-  isParentView = false 
+  isParentView = false,
 }: IpadUnlockDashboardProps) {
   const { user } = useAuth()
-  const [unlockStatus, setUnlockStatus] = useState<IpadUnlockStatus | null>(null)
+  const [unlockStatus, setUnlockStatus] = useState<IpadUnlockStatus | null>(
+    null
+  )
   const [loading, setLoading] = useState(true)
 
   const targetUserId = userId || user?.id
@@ -48,8 +50,8 @@ export default function IpadUnlockDashboard({
         `/api/ipad-unlock?action=status&userId=${targetUserId}`,
         {
           headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-          }
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
         }
       )
 
@@ -65,18 +67,18 @@ export default function IpadUnlockDashboard({
   }
 
   // 使用iPad时间
-  const useIpadTime = async (minutes: number) => {
+  const handleUseTime = async (minutes: number) => {
     try {
       const response = await fetch('/api/ipad-unlock/use', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
         body: JSON.stringify({
           userId: targetUserId,
-          minutes
-        })
+          minutes,
+        }),
       })
 
       if (response.ok) {
@@ -92,12 +94,12 @@ export default function IpadUnlockDashboard({
     const now = new Date()
     const expires = new Date(expiresAt)
     const diff = expires.getTime() - now.getTime()
-    
+
     if (diff <= 0) return '已过期'
-    
+
     const hours = Math.floor(diff / (1000 * 60 * 60))
     const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60))
-    
+
     if (hours > 0) {
       return `${hours}小时${minutes}分钟后过期`
     }
@@ -106,10 +108,10 @@ export default function IpadUnlockDashboard({
 
   const getSubjectColor = (subject: string) => {
     const colors = {
-      'ENGLISH': 'bg-blue-100 text-blue-800',
-      'MATHS': 'bg-green-100 text-green-800', 
-      'HASS': 'bg-purple-100 text-purple-800',
-      'VOCABULARY': 'bg-orange-100 text-orange-800'
+      ENGLISH: 'bg-blue-100 text-blue-800',
+      MATHS: 'bg-green-100 text-green-800',
+      HASS: 'bg-purple-100 text-purple-800',
+      VOCABULARY: 'bg-orange-100 text-orange-800',
     }
     return colors[subject as keyof typeof colors] || 'bg-gray-100 text-gray-800'
   }
@@ -126,7 +128,9 @@ export default function IpadUnlockDashboard({
     return (
       <Card className="p-8 text-center">
         <Tablet size={48} className="mx-auto text-gray-400 mb-4" />
-        <h3 className="text-lg font-medium text-gray-900 mb-2">无法加载iPad解锁状态</h3>
+        <h3 className="text-lg font-medium text-gray-900 mb-2">
+          无法加载iPad解锁状态
+        </h3>
         <p className="text-gray-600">请稍后重试或联系管理员。</p>
       </Card>
     )
@@ -142,9 +146,7 @@ export default function IpadUnlockDashboard({
             <div className="p-3 bg-green-100 rounded-lg">
               <Unlock className="h-6 w-6 text-green-600" />
             </div>
-            <Badge className="bg-green-100 text-green-800">
-              可用
-            </Badge>
+            <Badge className="bg-green-100 text-green-800">可用</Badge>
           </div>
           <div>
             <p className="text-2xl font-bold text-gray-900 mb-1">
@@ -160,9 +162,7 @@ export default function IpadUnlockDashboard({
             <div className="p-3 bg-blue-100 rounded-lg">
               <Trophy className="h-6 w-6 text-blue-600" />
             </div>
-            <Badge className="bg-blue-100 text-blue-800">
-              本周
-            </Badge>
+            <Badge className="bg-blue-100 text-blue-800">本周</Badge>
           </div>
           <div>
             <p className="text-2xl font-bold text-gray-900 mb-1">
@@ -196,10 +196,14 @@ export default function IpadUnlockDashboard({
           </div>
           <div>
             <p className="text-2xl font-bold text-gray-900 mb-1">
-              {unlockStatus.totalEarnedMinutes > 0 
-                ? Math.round((unlockStatus.totalUsedMinutes / unlockStatus.totalEarnedMinutes) * 100)
-                : 0
-              }%
+              {unlockStatus.totalEarnedMinutes > 0
+                ? Math.round(
+                    (unlockStatus.totalUsedMinutes /
+                      unlockStatus.totalEarnedMinutes) *
+                      100
+                  )
+                : 0}
+              %
             </p>
             <p className="text-sm text-gray-600">使用率</p>
           </div>
@@ -213,10 +217,13 @@ export default function IpadUnlockDashboard({
             <Gift size={20} />
             当前可用的iPad时间
           </h3>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {unlockStatus.activeUnlocks.map((unlock) => (
-              <Card key={unlock.id} className="p-4 bg-green-50 border-green-200">
+            {unlockStatus.activeUnlocks.map(unlock => (
+              <Card
+                key={unlock.id}
+                className="p-4 bg-green-50 border-green-200"
+              >
                 <div className="flex justify-between items-start mb-3">
                   <div>
                     <p className="font-medium text-green-900">
@@ -230,15 +237,15 @@ export default function IpadUnlockDashboard({
                     {Object.keys(JSON.parse(unlock.subjectScores as any))[0]}
                   </Badge>
                 </div>
-                
+
                 <p className="text-xs text-green-600 mb-3">
                   {formatTimeRemaining(unlock.expiresAt.toString())}
                 </p>
-                
+
                 {!isParentView && (
                   <Button
                     size="sm"
-                    onClick={() => useIpadTime(unlock.unlockedMinutes)}
+                    onClick={() => handleUseTime(unlock.unlockedMinutes)}
                     className="w-full bg-green-600 hover:bg-green-700"
                   >
                     <Tablet size={14} className="mr-2" />
@@ -258,7 +265,7 @@ export default function IpadUnlockDashboard({
             <Target size={20} />
             下次解锁目标
           </h3>
-          
+
           <div className="space-y-4">
             {unlockStatus.nextUnlockRequirements.map((requirement, index) => (
               <Card key={index} className="p-4 bg-gray-50">
@@ -273,20 +280,24 @@ export default function IpadUnlockDashboard({
                   </div>
                   <Lock size={16} className="text-gray-400" />
                 </div>
-                
+
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
                     <span>当前分数: {requirement.currentScore}%</span>
                     <span>目标分数: {requirement.requiredScore}%</span>
                   </div>
-                  
-                  <Progress 
-                    value={(requirement.currentScore / requirement.requiredScore) * 100}
+
+                  <Progress
+                    value={
+                      (requirement.currentScore / requirement.requiredScore) *
+                      100
+                    }
                     className="h-2"
                   />
-                  
+
                   <p className="text-xs text-gray-500">
-                    还需要 {requirement.requiredScore - requirement.currentScore}% 
+                    还需要{' '}
+                    {requirement.requiredScore - requirement.currentScore}%
                     就可以解锁 {requirement.potentialMinutes} 分钟iPad时间
                   </p>
                 </div>
@@ -303,10 +314,13 @@ export default function IpadUnlockDashboard({
             <Trophy size={20} />
             最近成就
           </h3>
-          
+
           <div className="space-y-3">
-            {unlockStatus.recentAchievements.slice(0, 5).map((achievement) => (
-              <div key={achievement.id} className="flex items-center justify-between p-3 bg-yellow-50 rounded-lg">
+            {unlockStatus.recentAchievements.slice(0, 5).map(achievement => (
+              <div
+                key={achievement.id}
+                className="flex items-center justify-between p-3 bg-yellow-50 rounded-lg"
+              >
                 <div className="flex items-center gap-3">
                   <CheckCircle size={16} className="text-yellow-600" />
                   <div>
@@ -314,19 +328,27 @@ export default function IpadUnlockDashboard({
                       获得 {achievement.unlockedMinutes} 分钟iPad时间
                     </p>
                     <p className="text-sm text-yellow-700">
-                      {Object.entries(JSON.parse(achievement.subjectScores as any))
+                      {Object.entries(
+                        JSON.parse(achievement.subjectScores as any)
+                      )
                         .map(([subject, score]) => `${subject}: ${score}%`)
                         .join(', ')}
                     </p>
                   </div>
                 </div>
-                
+
                 <div className="text-right">
                   <p className="text-sm text-yellow-600">
-                    {new Date(achievement.unlockedAt).toLocaleDateString('zh-CN')}
+                    {new Date(achievement.unlockedAt).toLocaleDateString(
+                      'zh-CN'
+                    )}
                   </p>
-                  <Badge 
-                    className={achievement.used ? 'bg-gray-100 text-gray-600' : 'bg-green-100 text-green-600'}
+                  <Badge
+                    className={
+                      achievement.used
+                        ? 'bg-gray-100 text-gray-600'
+                        : 'bg-green-100 text-green-600'
+                    }
                   >
                     {achievement.used ? '已使用' : '未使用'}
                   </Badge>
@@ -338,19 +360,19 @@ export default function IpadUnlockDashboard({
       )}
 
       {/* 空状态 */}
-      {unlockStatus.currentUnlockedMinutes === 0 && 
-       unlockStatus.recentAchievements.length === 0 && (
-        <Card className="p-8 text-center">
-          <Tablet size={48} className="mx-auto text-gray-400 mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 mb-2">还没有iPad时间</h3>
-          <p className="text-gray-600 mb-4">
-            完成作业和练习，获得好成绩来解锁iPad使用时间！
-          </p>
-          <Button onClick={fetchUnlockStatus}>
-            刷新状态
-          </Button>
-        </Card>
-      )}
+      {unlockStatus.currentUnlockedMinutes === 0 &&
+        unlockStatus.recentAchievements.length === 0 && (
+          <Card className="p-8 text-center">
+            <Tablet size={48} className="mx-auto text-gray-400 mb-4" />
+            <h3 className="text-lg font-medium text-gray-900 mb-2">
+              还没有iPad时间
+            </h3>
+            <p className="text-gray-600 mb-4">
+              完成作业和练习，获得好成绩来解锁iPad使用时间！
+            </p>
+            <Button onClick={fetchUnlockStatus}>刷新状态</Button>
+          </Card>
+        )}
     </div>
   )
 }

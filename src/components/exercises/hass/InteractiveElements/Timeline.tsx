@@ -4,16 +4,16 @@ import React, { useState, useMemo } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { 
-  Clock, 
-  Calendar, 
-  ChevronLeft, 
-  ChevronRight, 
-  ZoomIn, 
+import {
+  Clock,
+  Calendar,
+  ChevronLeft,
+  ChevronRight,
+  ZoomIn,
   ZoomOut,
   Play,
   Pause,
-  RotateCcw
+  RotateCcw,
 } from 'lucide-react'
 import { TimelineData, TimelineEvent } from '@/types'
 
@@ -31,79 +31,87 @@ const getMockTimelineData = (timelineId: string): TimelineData => {
       scale: 'year' as const,
       dateRange: {
         start: new Date('1850-01-01'),
-        end: new Date('1910-01-01')
+        end: new Date('1910-01-01'),
       },
       events: [
         {
           id: 'gold-rush',
           title: 'Gold Rush Begins',
           date: new Date('1851-01-01'),
-          description: 'The discovery of gold in Victoria and NSW leads to massive population growth and economic development.',
+          description:
+            'The discovery of gold in Victoria and NSW leads to massive population growth and economic development.',
           significance: 'major' as const,
           category: 'Economic',
           images: ['/images/gold-rush.jpg'],
-          sources: ['Australian Dictionary of Biography']
+          sources: ['Australian Dictionary of Biography'],
         },
         {
           id: 'eureka-stockade',
           title: 'Eureka Stockade',
           date: new Date('1854-12-03'),
-          description: 'Miners revolt against government authority at Ballarat goldfields, becoming a symbol of Australian democracy.',
+          description:
+            'Miners revolt against government authority at Ballarat goldfields, becoming a symbol of Australian democracy.',
           significance: 'major' as const,
           category: 'Political',
-          images: ['/images/eureka-stockade.jpg']
+          images: ['/images/eureka-stockade.jpg'],
         },
         {
           id: 'parkes-speech',
-          title: 'Henry Parkes\' Tenterfield Speech',
+          title: "Henry Parkes' Tenterfield Speech",
           date: new Date('1889-10-24'),
-          description: 'Sir Henry Parkes delivers his famous speech calling for the federation of the Australian colonies.',
+          description:
+            'Sir Henry Parkes delivers his famous speech calling for the federation of the Australian colonies.',
           significance: 'major' as const,
           category: 'Political',
           images: ['/images/parkes-speech.jpg'],
-          sources: ['National Library of Australia']
+          sources: ['National Library of Australia'],
         },
         {
           id: 'constitutional-conventions',
           title: 'Constitutional Conventions Begin',
           date: new Date('1891-03-02'),
-          description: 'The first National Australasian Convention meets in Sydney to draft a constitution.',
+          description:
+            'The first National Australasian Convention meets in Sydney to draft a constitution.',
           significance: 'important' as const,
-          category: 'Political'
+          category: 'Political',
         },
         {
           id: 'peoples-conventions',
-          title: 'People\'s Constitutional Conventions',
+          title: "People's Constitutional Conventions",
           date: new Date('1897-03-22'),
-          description: 'Second series of conventions with elected delegates to refine the constitution.',
+          description:
+            'Second series of conventions with elected delegates to refine the constitution.',
           significance: 'important' as const,
-          category: 'Political'
+          category: 'Political',
         },
         {
           id: 'referendums',
           title: 'Federation Referendums',
           date: new Date('1899-07-31'),
-          description: 'Referendums held in all colonies except Western Australia to approve the Constitution.',
+          description:
+            'Referendums held in all colonies except Western Australia to approve the Constitution.',
           significance: 'major' as const,
-          category: 'Political'
+          category: 'Political',
         },
         {
           id: 'commonwealth-bill',
           title: 'Commonwealth of Australia Constitution Act',
           date: new Date('1900-07-09'),
-          description: 'British Parliament passes the act creating the Commonwealth of Australia.',
+          description:
+            'British Parliament passes the act creating the Commonwealth of Australia.',
           significance: 'major' as const,
-          category: 'Legal'
+          category: 'Legal',
         },
         {
           id: 'federation-day',
           title: 'Federation Day',
           date: new Date('1901-01-01'),
-          description: 'The Commonwealth of Australia comes into being with Edmund Barton as first Prime Minister.',
+          description:
+            'The Commonwealth of Australia comes into being with Edmund Barton as first Prime Minister.',
           significance: 'major' as const,
           category: 'Political',
           images: ['/images/federation-ceremony.jpg'],
-          sources: ['National Archives of Australia']
+          sources: ['National Archives of Australia'],
         },
         {
           id: 'first-parliament',
@@ -111,13 +119,16 @@ const getMockTimelineData = (timelineId: string): TimelineData => {
           date: new Date('1901-05-09'),
           description: 'The first Parliament of Australia opens in Melbourne.',
           significance: 'important' as const,
-          category: 'Political'
-        }
-      ]
-    }
+          category: 'Political',
+        },
+      ],
+    },
   }
 
-  return timelineConfigs[timelineId as keyof typeof timelineConfigs] || timelineConfigs['federation-timeline']
+  return (
+    timelineConfigs[timelineId as keyof typeof timelineConfigs] ||
+    timelineConfigs['federation-timeline']
+  )
 }
 
 export function Timeline({ timelineId }: TimelineProps) {
@@ -152,17 +163,24 @@ export function Timeline({ timelineId }: TimelineProps) {
 
   const sortedEvents = useMemo(() => {
     if (!timelineData) return []
-    return [...timelineData.events].sort((a, b) => a.date.getTime() - b.date.getTime())
+    return [...timelineData.events].sort(
+      (a, b) => a.date.getTime() - b.date.getTime()
+    )
   }, [timelineData])
 
   const getEventPosition = (event: TimelineEvent) => {
     if (!timelineData) return 0
-    const totalRange = timelineData.dateRange.end.getTime() - timelineData.dateRange.start.getTime()
-    const eventPosition = event.date.getTime() - timelineData.dateRange.start.getTime()
+    const totalRange =
+      timelineData.dateRange.end.getTime() -
+      timelineData.dateRange.start.getTime()
+    const eventPosition =
+      event.date.getTime() - timelineData.dateRange.start.getTime()
     return (eventPosition / totalRange) * 100
   }
 
-  const getSignificanceColor = (significance: TimelineEvent['significance']) => {
+  const getSignificanceColor = (
+    significance: TimelineEvent['significance']
+  ) => {
     switch (significance) {
       case 'major':
         return 'bg-red-500 border-red-600'
@@ -177,10 +195,13 @@ export function Timeline({ timelineId }: TimelineProps) {
 
   const getCategoryColor = (category: string) => {
     const colors = {
-      'Political': 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200',
-      'Economic': 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
-      'Legal': 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
-      'Social': 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200'
+      Political:
+        'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200',
+      Economic:
+        'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
+      Legal: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
+      Social:
+        'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200',
     }
     return colors[category as keyof typeof colors] || colors.Political
   }
@@ -250,7 +271,7 @@ export function Timeline({ timelineId }: TimelineProps) {
             >
               <ZoomOut className="h-4 w-4" />
             </Button>
-            
+
             <Button
               size="sm"
               variant="outline"
@@ -265,14 +286,14 @@ export function Timeline({ timelineId }: TimelineProps) {
               variant="outline"
               onClick={() => setIsPlaying(!isPlaying)}
             >
-              {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+              {isPlaying ? (
+                <Pause className="h-4 w-4" />
+              ) : (
+                <Play className="h-4 w-4" />
+              )}
             </Button>
 
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={resetTimeline}
-            >
+            <Button size="sm" variant="outline" onClick={resetTimeline}>
               <RotateCcw className="h-4 w-4" />
             </Button>
           </div>
@@ -312,28 +333,32 @@ export function Timeline({ timelineId }: TimelineProps) {
           {/* Timeline Line */}
           <div className="relative h-24 bg-muted rounded-lg overflow-hidden">
             <div className="absolute top-1/2 left-4 right-4 h-1 bg-primary transform -translate-y-1/2" />
-            
+
             {/* Events */}
             {sortedEvents.map((event, index) => (
               <div
                 key={event.id}
                 className="absolute top-1/2 transform -translate-y-1/2 cursor-pointer hover:scale-110 transition-transform"
-                style={{ 
-                  left: `${4 + (getEventPosition(event) * 0.92)}%`,
-                  transform: `translateY(-50%) scale(${zoom})`
+                style={{
+                  left: `${4 + getEventPosition(event) * 0.92}%`,
+                  transform: `translateY(-50%) scale(${zoom})`,
                 }}
                 onClick={() => goToEvent(index)}
               >
                 <div
                   className={`w-4 h-4 rounded-full border-2 ${getSignificanceColor(event.significance)} ${
-                    index === currentIndex ? 'ring-2 ring-primary ring-offset-2' : ''
+                    index === currentIndex
+                      ? 'ring-2 ring-primary ring-offset-2'
+                      : ''
                   }`}
                 />
-                
+
                 {/* Event Label */}
                 <div
                   className={`absolute top-6 left-1/2 transform -translate-x-1/2 text-xs font-medium px-2 py-1 rounded whitespace-nowrap ${
-                    index === currentIndex ? 'bg-primary text-primary-foreground' : 'bg-background border'
+                    index === currentIndex
+                      ? 'bg-primary text-primary-foreground'
+                      : 'bg-background border'
                   }`}
                 >
                   {event.date.getFullYear()}
@@ -346,7 +371,7 @@ export function Timeline({ timelineId }: TimelineProps) {
               className="absolute top-0 bottom-0 bg-primary/20 transition-all duration-500"
               style={{
                 left: '4%',
-                width: `${(currentIndex + 1) / sortedEvents.length * 92}%`
+                width: `${((currentIndex + 1) / sortedEvents.length) * 92}%`,
               }}
             />
           </div>
@@ -364,21 +389,30 @@ export function Timeline({ timelineId }: TimelineProps) {
             <CardHeader>
               <div className="flex items-start justify-between">
                 <div>
-                  <CardTitle className="text-xl">{currentEvent.title}</CardTitle>
+                  <CardTitle className="text-xl">
+                    {currentEvent.title}
+                  </CardTitle>
                   <div className="flex items-center gap-2 mt-2">
                     <Badge className={getCategoryColor(currentEvent.category)}>
                       {currentEvent.category}
                     </Badge>
-                    <Badge variant="outline" className="flex items-center gap-1">
+                    <Badge
+                      variant="outline"
+                      className="flex items-center gap-1"
+                    >
                       <Calendar className="h-3 w-3" />
                       {currentEvent.date.toLocaleDateString('en-AU', {
                         year: 'numeric',
                         month: 'long',
-                        day: 'numeric'
+                        day: 'numeric',
                       })}
                     </Badge>
                     <Badge
-                      variant={currentEvent.significance === 'major' ? 'destructive' : 'secondary'}
+                      variant={
+                        currentEvent.significance === 'major'
+                          ? 'destructive'
+                          : 'secondary'
+                      }
                     >
                       {currentEvent.significance}
                     </Badge>
@@ -386,7 +420,7 @@ export function Timeline({ timelineId }: TimelineProps) {
                 </div>
               </div>
             </CardHeader>
-            
+
             <CardContent>
               <p className="text-muted-foreground leading-relaxed">
                 {currentEvent.description}
@@ -405,30 +439,37 @@ export function Timeline({ timelineId }: TimelineProps) {
               )}
 
               {/* Related Events */}
-              {currentEvent.relatedEvents && currentEvent.relatedEvents.length > 0 && (
-                <div className="mt-4">
-                  <h5 className="font-medium text-sm mb-2">Related Events:</h5>
-                  <div className="flex flex-wrap gap-2">
-                    {currentEvent.relatedEvents.map((relatedId) => {
-                      const relatedEvent = sortedEvents.find(e => e.id === relatedId)
-                      const relatedIndex = sortedEvents.findIndex(e => e.id === relatedId)
-                      if (!relatedEvent) return null
-                      
-                      return (
-                        <Button
-                          key={relatedId}
-                          size="sm"
-                          variant="outline"
-                          onClick={() => goToEvent(relatedIndex)}
-                          className="text-xs"
-                        >
-                          {relatedEvent.title}
-                        </Button>
-                      )
-                    })}
+              {currentEvent.relatedEvents &&
+                currentEvent.relatedEvents.length > 0 && (
+                  <div className="mt-4">
+                    <h5 className="font-medium text-sm mb-2">
+                      Related Events:
+                    </h5>
+                    <div className="flex flex-wrap gap-2">
+                      {currentEvent.relatedEvents.map(relatedId => {
+                        const relatedEvent = sortedEvents.find(
+                          e => e.id === relatedId
+                        )
+                        const relatedIndex = sortedEvents.findIndex(
+                          e => e.id === relatedId
+                        )
+                        if (!relatedEvent) return null
+
+                        return (
+                          <Button
+                            key={relatedId}
+                            size="sm"
+                            variant="outline"
+                            onClick={() => goToEvent(relatedIndex)}
+                            className="text-xs"
+                          >
+                            {relatedEvent.title}
+                          </Button>
+                        )
+                      })}
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
             </CardContent>
           </Card>
         )}
@@ -444,8 +485,8 @@ export function Timeline({ timelineId }: TimelineProps) {
                 <div
                   key={event.id}
                   className={`flex items-center justify-between p-2 rounded-lg cursor-pointer transition-colors ${
-                    index === currentIndex 
-                      ? 'bg-primary/10 border border-primary/20' 
+                    index === currentIndex
+                      ? 'bg-primary/10 border border-primary/20'
                       : 'hover:bg-muted/50'
                   }`}
                   onClick={() => goToEvent(index)}
@@ -456,7 +497,7 @@ export function Timeline({ timelineId }: TimelineProps) {
                       {event.date.toLocaleDateString('en-AU', {
                         year: 'numeric',
                         month: 'short',
-                        day: 'numeric'
+                        day: 'numeric',
                       })}
                     </p>
                   </div>

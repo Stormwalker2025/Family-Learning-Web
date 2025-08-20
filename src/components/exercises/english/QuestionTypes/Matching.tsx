@@ -12,12 +12,18 @@ interface MatchingProps {
   onAnswerChange: (answer: string) => void
 }
 
-export function Matching({ matchingOptions, answer, onAnswerChange }: MatchingProps) {
+export function Matching({
+  matchingOptions,
+  answer,
+  onAnswerChange,
+}: MatchingProps) {
   const currentAnswer = typeof answer === 'string' ? answer : ''
   const [matches, setMatches] = useState<Record<string, string>>({})
 
   // Separate statements and options
-  const statements = matchingOptions.filter(option => option.type === 'statement')
+  const statements = matchingOptions.filter(
+    option => option.type === 'statement'
+  )
   const options = matchingOptions.filter(option => option.type === 'option')
 
   // Parse current answer into matches object
@@ -35,22 +41,22 @@ export function Matching({ matchingOptions, answer, onAnswerChange }: MatchingPr
 
   const handleMatch = (statementId: string, optionId: string) => {
     const newMatches = { ...matches }
-    
+
     // Remove any existing match for this statement
     if (newMatches[statementId]) {
       delete newMatches[statementId]
     }
-    
+
     // Remove this option from any other statement
     Object.keys(newMatches).forEach(key => {
       if (newMatches[key] === optionId) {
         delete newMatches[key]
       }
     })
-    
+
     // Add new match
     newMatches[statementId] = optionId
-    
+
     setMatches(newMatches)
     onAnswerChange(JSON.stringify(newMatches))
   }
@@ -84,8 +90,9 @@ export function Matching({ matchingOptions, answer, onAnswerChange }: MatchingPr
       {/* Instructions */}
       <div className="p-3 bg-blue-50 border border-blue-200 rounded-md">
         <p className="text-sm text-blue-800">
-          <strong>Instructions:</strong> Match each statement on the left with the correct option on the right. 
-          Click on a statement, then click on the option you want to match it with.
+          <strong>Instructions:</strong> Match each statement on the left with
+          the correct option on the right. Click on a statement, then click on
+          the option you want to match it with.
         </p>
       </div>
 
@@ -114,7 +121,7 @@ export function Matching({ matchingOptions, answer, onAnswerChange }: MatchingPr
           <h3 className="font-semibold text-sm">Statements</h3>
           {statements.map((statement, index) => {
             const matchedOption = getMatchedOption(statement.id)
-            
+
             return (
               <Card key={statement.id} className="relative">
                 <CardContent className="p-3">
@@ -155,23 +162,33 @@ export function Matching({ matchingOptions, answer, onAnswerChange }: MatchingPr
             const optionLabel = String.fromCharCode(65 + index) // A, B, C, D
 
             return (
-              <Card key={option.id} className={`cursor-pointer transition-colors ${
-                isUsed ? 'bg-gray-100 border-gray-300' : 'hover:bg-blue-50 border-blue-200'
-              }`}>
+              <Card
+                key={option.id}
+                className={`cursor-pointer transition-colors ${
+                  isUsed
+                    ? 'bg-gray-100 border-gray-300'
+                    : 'hover:bg-blue-50 border-blue-200'
+                }`}
+              >
                 <CardContent className="p-3">
                   <div className="flex items-center space-x-3">
-                    <div className={`
+                    <div
+                      className={`
                       flex items-center justify-center w-6 h-6 rounded-full text-xs font-semibold
-                      ${isUsed 
-                        ? 'bg-gray-300 text-gray-600' 
-                        : 'bg-blue-100 text-blue-700'
+                      ${
+                        isUsed
+                          ? 'bg-gray-300 text-gray-600'
+                          : 'bg-blue-100 text-blue-700'
                       }
-                    `}>
+                    `}
+                    >
                       {optionLabel}
                     </div>
-                    <span className={`text-sm ${
-                      isUsed ? 'text-gray-500 line-through' : 'text-gray-900'
-                    }`}>
+                    <span
+                      className={`text-sm ${
+                        isUsed ? 'text-gray-500 line-through' : 'text-gray-900'
+                      }`}
+                    >
                       {option.content}
                     </span>
                   </div>
@@ -193,7 +210,10 @@ export function Matching({ matchingOptions, answer, onAnswerChange }: MatchingPr
                 if (!matchedOption) return null
 
                 return (
-                  <div key={statement.id} className="text-xs flex items-center space-x-2">
+                  <div
+                    key={statement.id}
+                    className="text-xs flex items-center space-x-2"
+                  >
                     <span className="font-medium">{index + 1}.</span>
                     <span className="flex-1">{statement.content}</span>
                     <ArrowRight className="h-3 w-3" />

@@ -14,26 +14,38 @@ export const year6Templates: HomeworkTemplate[] = [
         subject: 'ENGLISH',
         minCount: 2,
         maxCount: 3,
-        difficultyDistribution: { 'MEDIUM': 50, 'HARD': 40, 'ADVANCED': 10 },
-        topicCoverage: ['advanced-reading', 'persuasive-writing', 'literary-analysis'],
-        adaptToStudentLevel: true
+        difficultyDistribution: { MEDIUM: 50, HARD: 40, ADVANCED: 10 },
+        topicCoverage: [
+          'advanced-reading',
+          'persuasive-writing',
+          'literary-analysis',
+        ],
+        adaptToStudentLevel: true,
       },
       {
         subject: 'MATHS',
         minCount: 2,
         maxCount: 3,
-        difficultyDistribution: { 'MEDIUM': 40, 'HARD': 50, 'ADVANCED': 10 },
-        topicCoverage: ['fractions-decimals', 'algebra-basics', 'geometry-advanced'],
-        adaptToStudentLevel: true
+        difficultyDistribution: { MEDIUM: 40, HARD: 50, ADVANCED: 10 },
+        topicCoverage: [
+          'fractions-decimals',
+          'algebra-basics',
+          'geometry-advanced',
+        ],
+        adaptToStudentLevel: true,
       },
       {
         subject: 'HASS',
         minCount: 1,
         maxCount: 2,
-        difficultyDistribution: { 'MEDIUM': 60, 'HARD': 40 },
-        topicCoverage: ['australian-government', 'world-geography', 'economic-concepts'],
-        adaptToStudentLevel: true
-      }
+        difficultyDistribution: { MEDIUM: 60, HARD: 40 },
+        topicCoverage: [
+          'australian-government',
+          'world-geography',
+          'economic-concepts',
+        ],
+        adaptToStudentLevel: true,
+      },
     ],
     defaultSettings: {
       estimatedTime: 75,
@@ -42,7 +54,7 @@ export const year6Templates: HomeworkTemplate[] = [
       passingScore: 75,
       allowMultipleAttempts: true,
       autoRelease: true,
-      lateSubmissionAllowed: true
+      lateSubmissionAllowed: true,
     },
     usageCount: 0,
     estimatedTime: 75,
@@ -51,7 +63,7 @@ export const year6Templates: HomeworkTemplate[] = [
     createdBy: 'system',
     createdAt: new Date(),
     updatedAt: new Date(),
-    isActive: true
+    isActive: true,
   },
 
   {
@@ -66,34 +78,42 @@ export const year6Templates: HomeworkTemplate[] = [
         subject: 'ENGLISH',
         minCount: 3,
         maxCount: 4,
-        difficultyDistribution: { 'HARD': 60, 'ADVANCED': 40 },
+        difficultyDistribution: { HARD: 60, ADVANCED: 40 },
         topicCoverage: ['complex-texts', 'essay-writing', 'critical-thinking'],
-        adaptToStudentLevel: true
+        adaptToStudentLevel: true,
       },
       {
         subject: 'MATHS',
         minCount: 3,
         maxCount: 4,
-        difficultyDistribution: { 'HARD': 50, 'ADVANCED': 50 },
-        topicCoverage: ['problem-solving', 'mathematical-reasoning', 'data-analysis'],
-        adaptToStudentLevel: true
+        difficultyDistribution: { HARD: 50, ADVANCED: 50 },
+        topicCoverage: [
+          'problem-solving',
+          'mathematical-reasoning',
+          'data-analysis',
+        ],
+        adaptToStudentLevel: true,
       },
       {
         subject: 'HASS',
         minCount: 2,
         maxCount: 3,
-        difficultyDistribution: { 'HARD': 70, 'ADVANCED': 30 },
-        topicCoverage: ['research-skills', 'source-analysis', 'argumentative-writing'],
-        adaptToStudentLevel: true
+        difficultyDistribution: { HARD: 70, ADVANCED: 30 },
+        topicCoverage: [
+          'research-skills',
+          'source-analysis',
+          'argumentative-writing',
+        ],
+        adaptToStudentLevel: true,
       },
       {
         subject: 'VOCABULARY',
         minCount: 1,
         maxCount: 2,
-        difficultyDistribution: { 'HARD': 60, 'ADVANCED': 40 },
+        difficultyDistribution: { HARD: 60, ADVANCED: 40 },
         topicCoverage: ['academic-vocabulary', 'subject-specific-terms'],
-        adaptToStudentLevel: true
-      }
+        adaptToStudentLevel: true,
+      },
     ],
     defaultSettings: {
       estimatedTime: 120,
@@ -102,7 +122,7 @@ export const year6Templates: HomeworkTemplate[] = [
       passingScore: 80,
       allowMultipleAttempts: true,
       autoRelease: true,
-      lateSubmissionAllowed: false
+      lateSubmissionAllowed: false,
     },
     usageCount: 0,
     estimatedTime: 120,
@@ -111,7 +131,7 @@ export const year6Templates: HomeworkTemplate[] = [
     createdBy: 'system',
     createdAt: new Date(),
     updatedAt: new Date(),
-    isActive: true
+    isActive: true,
   },
 
   {
@@ -126,26 +146,34 @@ export const year6Templates: HomeworkTemplate[] = [
         subject: 'ENGLISH',
         minCount: 2,
         maxCount: 3,
-        difficultyDistribution: { 'HARD': 40, 'ADVANCED': 60 },
-        topicCoverage: ['research-writing', 'presentation-skills', 'media-literacy'],
-        adaptToStudentLevel: true
+        difficultyDistribution: { HARD: 40, ADVANCED: 60 },
+        topicCoverage: [
+          'research-writing',
+          'presentation-skills',
+          'media-literacy',
+        ],
+        adaptToStudentLevel: true,
       },
       {
         subject: 'HASS',
         minCount: 2,
         maxCount: 3,
-        difficultyDistribution: { 'HARD': 50, 'ADVANCED': 50 },
-        topicCoverage: ['historical-inquiry', 'geographical-investigation', 'civic-engagement'],
-        adaptToStudentLevel: true
+        difficultyDistribution: { HARD: 50, ADVANCED: 50 },
+        topicCoverage: [
+          'historical-inquiry',
+          'geographical-investigation',
+          'civic-engagement',
+        ],
+        adaptToStudentLevel: true,
       },
       {
         subject: 'VOCABULARY',
         minCount: 1,
         maxCount: 1,
-        difficultyDistribution: { 'ADVANCED': 100 },
+        difficultyDistribution: { ADVANCED: 100 },
         topicCoverage: ['academic-discourse', 'specialized-terminology'],
-        adaptToStudentLevel: true
-      }
+        adaptToStudentLevel: true,
+      },
     ],
     defaultSettings: {
       estimatedTime: 150,
@@ -154,7 +182,7 @@ export const year6Templates: HomeworkTemplate[] = [
       passingScore: 85,
       allowMultipleAttempts: false,
       autoRelease: true,
-      lateSubmissionAllowed: true
+      lateSubmissionAllowed: true,
     },
     usageCount: 0,
     estimatedTime: 150,
@@ -163,7 +191,7 @@ export const year6Templates: HomeworkTemplate[] = [
     createdBy: 'system',
     createdAt: new Date(),
     updatedAt: new Date(),
-    isActive: true
+    isActive: true,
   },
 
   {
@@ -178,26 +206,38 @@ export const year6Templates: HomeworkTemplate[] = [
         subject: 'ENGLISH',
         minCount: 2,
         maxCount: 2,
-        difficultyDistribution: { 'ADVANCED': 100 },
-        topicCoverage: ['argument-analysis', 'bias-detection', 'evidence-evaluation'],
-        adaptToStudentLevel: true
+        difficultyDistribution: { ADVANCED: 100 },
+        topicCoverage: [
+          'argument-analysis',
+          'bias-detection',
+          'evidence-evaluation',
+        ],
+        adaptToStudentLevel: true,
       },
       {
         subject: 'MATHS',
         minCount: 2,
         maxCount: 2,
-        difficultyDistribution: { 'HARD': 30, 'ADVANCED': 70 },
-        topicCoverage: ['mathematical-proof', 'pattern-recognition', 'logical-reasoning'],
-        adaptToStudentLevel: true
+        difficultyDistribution: { HARD: 30, ADVANCED: 70 },
+        topicCoverage: [
+          'mathematical-proof',
+          'pattern-recognition',
+          'logical-reasoning',
+        ],
+        adaptToStudentLevel: true,
       },
       {
         subject: 'HASS',
         minCount: 2,
         maxCount: 2,
-        difficultyDistribution: { 'HARD': 40, 'ADVANCED': 60 },
-        topicCoverage: ['source-credibility', 'multiple-perspectives', 'cause-effect-analysis'],
-        adaptToStudentLevel: true
-      }
+        difficultyDistribution: { HARD: 40, ADVANCED: 60 },
+        topicCoverage: [
+          'source-credibility',
+          'multiple-perspectives',
+          'cause-effect-analysis',
+        ],
+        adaptToStudentLevel: true,
+      },
     ],
     defaultSettings: {
       estimatedTime: 90,
@@ -206,7 +246,7 @@ export const year6Templates: HomeworkTemplate[] = [
       passingScore: 80,
       allowMultipleAttempts: true,
       autoRelease: true,
-      lateSubmissionAllowed: true
+      lateSubmissionAllowed: true,
     },
     usageCount: 0,
     estimatedTime: 90,
@@ -215,8 +255,8 @@ export const year6Templates: HomeworkTemplate[] = [
     createdBy: 'system',
     createdAt: new Date(),
     updatedAt: new Date(),
-    isActive: true
-  }
+    isActive: true,
+  },
 ]
 
 // Year 6 示例作业内容
@@ -256,7 +296,7 @@ export const year6ExampleAssignments: Partial<HomeworkAssignmentConfig>[] = [
     allowMultipleAttempts: true,
     autoRelease: true,
     lateSubmissionAllowed: true,
-    latePenalty: 5
+    latePenalty: 5,
   },
 
   {
@@ -294,7 +334,7 @@ export const year6ExampleAssignments: Partial<HomeworkAssignmentConfig>[] = [
     allowMultipleAttempts: true,
     autoRelease: true,
     lateSubmissionAllowed: true,
-    latePenalty: 10
+    latePenalty: 10,
   },
 
   {
@@ -335,7 +375,7 @@ export const year6ExampleAssignments: Partial<HomeworkAssignmentConfig>[] = [
     allowMultipleAttempts: true,
     autoRelease: true,
     lateSubmissionAllowed: true,
-    latePenalty: 8
+    latePenalty: 8,
   },
 
   {
@@ -378,8 +418,8 @@ export const year6ExampleAssignments: Partial<HomeworkAssignmentConfig>[] = [
     allowMultipleAttempts: false,
     autoRelease: true,
     lateSubmissionAllowed: true,
-    latePenalty: 15
-  }
+    latePenalty: 15,
+  },
 ]
 
 // Year 6 快速分配选项
@@ -391,8 +431,8 @@ export const year6QuickAssignments = [
       timeframe: 'daily' as const,
       difficultyLevel: 'hard' as const,
       includeReview: true,
-      priority: 'MEDIUM' as const
-    }
+      priority: 'MEDIUM' as const,
+    },
   },
   {
     name: '周末深度学习 (90分钟)',
@@ -401,8 +441,8 @@ export const year6QuickAssignments = [
       timeframe: 'weekend' as const,
       difficultyLevel: 'advanced' as const,
       includeReview: true,
-      priority: 'HIGH' as const
-    }
+      priority: 'HIGH' as const,
+    },
   },
   {
     name: '数学专项训练 (60分钟)',
@@ -413,8 +453,8 @@ export const year6QuickAssignments = [
       subjectFocus: 'MATHS' as const,
       difficultyLevel: 'hard' as const,
       includeReview: false,
-      priority: 'HIGH' as const
-    }
+      priority: 'HIGH' as const,
+    },
   },
   {
     name: '英语写作专项 (75分钟)',
@@ -425,8 +465,8 @@ export const year6QuickAssignments = [
       subjectFocus: 'ENGLISH' as const,
       difficultyLevel: 'advanced' as const,
       includeReview: false,
-      priority: 'HIGH' as const
-    }
+      priority: 'HIGH' as const,
+    },
   },
   {
     name: '中学预备综合练习 (120分钟)',
@@ -436,7 +476,7 @@ export const year6QuickAssignments = [
       customDuration: 120,
       difficultyLevel: 'advanced' as const,
       includeReview: true,
-      priority: 'HIGH' as const
-    }
-  }
+      priority: 'HIGH' as const,
+    },
+  },
 ]

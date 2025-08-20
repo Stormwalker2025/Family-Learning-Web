@@ -6,26 +6,33 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Progress } from '@/components/ui/progress'
-import { 
-  Plus, 
-  Clock, 
-  CheckCircle, 
-  AlertCircle, 
+import {
+  Plus,
+  Clock,
+  CheckCircle,
+  AlertCircle,
   Calendar,
   Users,
   BookOpen,
   BarChart3,
   Filter,
-  Search
+  Search,
 } from 'lucide-react'
 import { useAuth } from '@/hooks/auth/useAuth'
-import { HomeworkAssignmentFull, HomeworkSubmissionSummary, HomeworkStatusType, PriorityType } from '@/types'
+import {
+  HomeworkAssignmentFull,
+  HomeworkSubmissionSummary,
+  HomeworkStatusType,
+  PriorityType,
+} from '@/types'
 
 interface HomeworkDashboardProps {
   className?: string
 }
 
-export default function HomeworkDashboard({ className }: HomeworkDashboardProps) {
+export default function HomeworkDashboard({
+  className,
+}: HomeworkDashboardProps) {
   const { user } = useAuth()
   const [assignments, setAssignments] = useState<HomeworkAssignmentFull[]>([])
   const [loading, setLoading] = useState(true)
@@ -34,7 +41,7 @@ export default function HomeworkDashboard({ className }: HomeworkDashboardProps)
     status: '',
     subject: '',
     priority: '',
-    search: ''
+    search: '',
   })
 
   // 获取作业列表
@@ -46,15 +53,15 @@ export default function HomeworkDashboard({ className }: HomeworkDashboardProps)
     try {
       setLoading(true)
       const queryParams = new URLSearchParams()
-      
+
       if (filters.status) queryParams.append('status', filters.status)
       if (filters.subject) queryParams.append('subject', filters.subject)
       if (filters.search) queryParams.append('search', filters.search)
 
       const response = await fetch(`/api/homework/assignments?${queryParams}`, {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
       })
 
       if (response.ok) {
@@ -75,7 +82,7 @@ export default function HomeworkDashboard({ className }: HomeworkDashboardProps)
       assigned: 0,
       inProgress: 0,
       completed: 0,
-      overdue: 0
+      overdue: 0,
     }
 
     assignments.forEach(assignment => {
@@ -136,12 +143,18 @@ export default function HomeworkDashboard({ className }: HomeworkDashboardProps)
 
   // 渲染作业卡片
   const renderAssignmentCard = (assignment: HomeworkAssignmentFull) => {
-    const completionRate = assignment.statistics.totalStudents > 0 
-      ? (assignment.statistics.completedCount / assignment.statistics.totalStudents) * 100 
-      : 0
+    const completionRate =
+      assignment.statistics.totalStudents > 0
+        ? (assignment.statistics.completedCount /
+            assignment.statistics.totalStudents) *
+          100
+        : 0
 
     return (
-      <Card key={assignment.id} className="p-6 hover:shadow-md transition-shadow">
+      <Card
+        key={assignment.id}
+        className="p-6 hover:shadow-md transition-shadow"
+      >
         <div className="flex justify-between items-start mb-4">
           <div className="flex-1">
             <h3 className="text-lg font-semibold text-gray-900 mb-2">
@@ -183,10 +196,9 @@ export default function HomeworkDashboard({ className }: HomeworkDashboardProps)
           <div className="flex items-center gap-2">
             <Calendar size={16} className="text-gray-500" />
             <span className="text-sm text-gray-600">
-              {assignment.dueDate 
+              {assignment.dueDate
                 ? new Date(assignment.dueDate).toLocaleDateString('zh-CN')
-                : '无截止日期'
-              }
+                : '无截止日期'}
             </span>
           </div>
         </div>
@@ -195,13 +207,18 @@ export default function HomeworkDashboard({ className }: HomeworkDashboardProps)
           <div className="flex justify-between items-center">
             <span className="text-sm text-gray-600">完成进度</span>
             <span className="text-sm font-medium">
-              {assignment.statistics.completedCount}/{assignment.statistics.totalStudents}
+              {assignment.statistics.completedCount}/
+              {assignment.statistics.totalStudents}
             </span>
           </div>
           <Progress value={completionRate} className="h-2" />
           <div className="flex justify-between text-xs text-gray-500">
             <span>已完成: {assignment.statistics.completedCount}</span>
-            <span>进行中: {assignment.statistics.submittedCount - assignment.statistics.completedCount}</span>
+            <span>
+              进行中:{' '}
+              {assignment.statistics.submittedCount -
+                assignment.statistics.completedCount}
+            </span>
             <span>逾期: {assignment.statistics.overdueCount}</span>
           </div>
         </div>
@@ -211,8 +228,8 @@ export default function HomeworkDashboard({ className }: HomeworkDashboardProps)
             创建于 {new Date(assignment.createdAt).toLocaleDateString('zh-CN')}
           </span>
           <div className="flex gap-2">
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               size="sm"
               onClick={() => handleViewAssignment(assignment.id)}
             >
@@ -220,15 +237,15 @@ export default function HomeworkDashboard({ className }: HomeworkDashboardProps)
             </Button>
             {(user?.role === 'ADMIN' || assignment.assignedBy === user?.id) && (
               <>
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   size="sm"
                   onClick={() => handleEditAssignment(assignment.id)}
                 >
                   编辑
                 </Button>
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   size="sm"
                   onClick={() => handleViewAnalytics(assignment.id)}
                 >
@@ -278,7 +295,10 @@ export default function HomeworkDashboard({ className }: HomeworkDashboardProps)
           <p className="text-gray-600">管理和监控学生作业完成情况</p>
         </div>
         {(user?.role === 'ADMIN' || user?.role === 'PARENT') && (
-          <Button onClick={handleCreateAssignment} className="flex items-center gap-2">
+          <Button
+            onClick={handleCreateAssignment}
+            className="flex items-center gap-2"
+          >
             <Plus size={20} />
             创建作业
           </Button>
@@ -306,7 +326,9 @@ export default function HomeworkDashboard({ className }: HomeworkDashboardProps)
             </div>
             <div>
               <p className="text-sm text-gray-600">进行中</p>
-              <p className="text-2xl font-bold text-gray-900">{stats.inProgress}</p>
+              <p className="text-2xl font-bold text-gray-900">
+                {stats.inProgress}
+              </p>
             </div>
           </div>
         </Card>
@@ -318,7 +340,9 @@ export default function HomeworkDashboard({ className }: HomeworkDashboardProps)
             </div>
             <div>
               <p className="text-sm text-gray-600">已完成</p>
-              <p className="text-2xl font-bold text-gray-900">{stats.completed}</p>
+              <p className="text-2xl font-bold text-gray-900">
+                {stats.completed}
+              </p>
             </div>
           </div>
         </Card>
@@ -330,7 +354,9 @@ export default function HomeworkDashboard({ className }: HomeworkDashboardProps)
             </div>
             <div>
               <p className="text-sm text-gray-600">逾期</p>
-              <p className="text-2xl font-bold text-gray-900">{stats.overdue}</p>
+              <p className="text-2xl font-bold text-gray-900">
+                {stats.overdue}
+              </p>
             </div>
           </div>
         </Card>
@@ -343,10 +369,12 @@ export default function HomeworkDashboard({ className }: HomeworkDashboardProps)
             <Filter size={16} className="text-gray-500" />
             <span className="text-sm text-gray-600">过滤:</span>
           </div>
-          
-          <select 
+
+          <select
             value={filters.status}
-            onChange={(e) => setFilters(prev => ({ ...prev, status: e.target.value }))}
+            onChange={e =>
+              setFilters(prev => ({ ...prev, status: e.target.value }))
+            }
             className="px-3 py-1 border border-gray-300 rounded-md text-sm"
           >
             <option value="">所有状态</option>
@@ -356,9 +384,11 @@ export default function HomeworkDashboard({ className }: HomeworkDashboardProps)
             <option value="overdue">逾期</option>
           </select>
 
-          <select 
+          <select
             value={filters.subject}
-            onChange={(e) => setFilters(prev => ({ ...prev, subject: e.target.value }))}
+            onChange={e =>
+              setFilters(prev => ({ ...prev, subject: e.target.value }))
+            }
             className="px-3 py-1 border border-gray-300 rounded-md text-sm"
           >
             <option value="">所有学科</option>
@@ -368,9 +398,11 @@ export default function HomeworkDashboard({ className }: HomeworkDashboardProps)
             <option value="VOCABULARY">词汇</option>
           </select>
 
-          <select 
+          <select
             value={filters.priority}
-            onChange={(e) => setFilters(prev => ({ ...prev, priority: e.target.value }))}
+            onChange={e =>
+              setFilters(prev => ({ ...prev, priority: e.target.value }))
+            }
             className="px-3 py-1 border border-gray-300 rounded-md text-sm"
           >
             <option value="">所有优先级</option>
@@ -386,7 +418,9 @@ export default function HomeworkDashboard({ className }: HomeworkDashboardProps)
               type="text"
               placeholder="搜索作业..."
               value={filters.search}
-              onChange={(e) => setFilters(prev => ({ ...prev, search: e.target.value }))}
+              onChange={e =>
+                setFilters(prev => ({ ...prev, search: e.target.value }))
+              }
               className="px-3 py-1 border border-gray-300 rounded-md text-sm w-64"
             />
           </div>
@@ -400,15 +434,12 @@ export default function HomeworkDashboard({ className }: HomeworkDashboardProps)
             <BookOpen size={48} className="mx-auto text-gray-400 mb-4" />
             <h3 className="text-lg font-medium text-gray-900 mb-2">暂无作业</h3>
             <p className="text-gray-600 mb-4">
-              {user?.role === 'STUDENT' 
-                ? '目前没有分配给您的作业' 
-                : '开始创建第一个作业吧！'
-              }
+              {user?.role === 'STUDENT'
+                ? '目前没有分配给您的作业'
+                : '开始创建第一个作业吧！'}
             </p>
             {(user?.role === 'ADMIN' || user?.role === 'PARENT') && (
-              <Button onClick={handleCreateAssignment}>
-                创建第一个作业
-              </Button>
+              <Button onClick={handleCreateAssignment}>创建第一个作业</Button>
             )}
           </Card>
         ) : (

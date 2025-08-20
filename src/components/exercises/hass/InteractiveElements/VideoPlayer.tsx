@@ -5,10 +5,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Slider } from '@/components/ui/slider'
-import { 
-  Play, 
-  Pause, 
-  Volume2, 
+import {
+  Play,
+  Pause,
+  Volume2,
   VolumeX,
   Maximize2,
   Minimize2,
@@ -19,7 +19,7 @@ import {
   Download,
   Share2,
   Bookmark,
-  MessageSquare
+  MessageSquare,
 } from 'lucide-react'
 
 interface VideoPlayerProps {
@@ -55,7 +55,7 @@ export function VideoPlayer({
   thumbnail,
   chapters = [],
   transcript = [],
-  relatedVideos = []
+  relatedVideos = [],
 }: VideoPlayerProps) {
   const [isPlaying, setIsPlaying] = useState(false)
   const [currentTime, setCurrentTime] = useState(0)
@@ -69,7 +69,7 @@ export function VideoPlayer({
   const [activeChapter, setActiveChapter] = useState<VideoChapter | null>(null)
   const [showTranscript, setShowTranscript] = useState(false)
   const [bookmarks, setBookmarks] = useState<number[]>([])
-  
+
   const videoRef = useRef<HTMLVideoElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const controlsTimeoutRef = useRef<NodeJS.Timeout>()
@@ -167,7 +167,10 @@ export function VideoPlayer({
     const video = videoRef.current
     if (!video) return
 
-    video.currentTime = Math.max(0, Math.min(duration, video.currentTime + seconds))
+    video.currentTime = Math.max(
+      0,
+      Math.min(duration, video.currentTime + seconds)
+    )
   }
 
   const changePlaybackRate = (rate: number) => {
@@ -255,10 +258,11 @@ export function VideoPlayer({
             />
 
             {/* Video Controls Overlay */}
-            <div className={`absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent transition-opacity ${
-              showControls ? 'opacity-100' : 'opacity-0'
-            }`}>
-              
+            <div
+              className={`absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent transition-opacity ${
+                showControls ? 'opacity-100' : 'opacity-0'
+              }`}
+            >
               {/* Center Play Button */}
               {!isPlaying && (
                 <div className="absolute inset-0 flex items-center justify-center">
@@ -281,7 +285,7 @@ export function VideoPlayer({
                     className="absolute h-1 bg-white/30 rounded-full"
                     style={{ width: `${buffered}%` }}
                   />
-                  
+
                   {/* Progress Bar */}
                   <Slider
                     value={[currentTime]}
@@ -290,34 +294,45 @@ export function VideoPlayer({
                     onValueChange={handleSeek}
                     className="relative"
                   />
-                  
+
                   {/* Chapter Markers */}
                   {chapters.map(chapter => (
                     <div
                       key={chapter.id}
                       className="absolute w-2 h-2 bg-yellow-500 rounded-full transform -translate-x-1/2 cursor-pointer"
-                      style={{ left: `${(chapter.startTime / duration) * 100}%`, top: '-2px' }}
+                      style={{
+                        left: `${(chapter.startTime / duration) * 100}%`,
+                        top: '-2px',
+                      }}
                       onClick={() => jumpToChapter(chapter)}
                       title={chapter.title}
                     />
                   ))}
-                  
+
                   {/* Bookmarks */}
                   {bookmarks.map(time => (
                     <div
                       key={time}
                       className="absolute w-2 h-2 bg-red-500 rounded-full transform -translate-x-1/2 cursor-pointer"
-                      style={{ left: `${(time / duration) * 100}%`, top: '-6px' }}
+                      style={{
+                        left: `${(time / duration) * 100}%`,
+                        top: '-6px',
+                      }}
                       onClick={() => jumpToBookmark(time)}
                       title={`Bookmark at ${formatTime(time)}`}
                     />
                   ))}
                 </div>
-                
+
                 <div className="flex items-center justify-between mt-2 text-white text-sm">
-                  <span>{formatTime(currentTime)} / {formatTime(duration)}</span>
+                  <span>
+                    {formatTime(currentTime)} / {formatTime(duration)}
+                  </span>
                   {activeChapter && (
-                    <Badge variant="secondary" className="bg-black/50 text-white">
+                    <Badge
+                      variant="secondary"
+                      className="bg-black/50 text-white"
+                    >
                       {activeChapter.title}
                     </Badge>
                   )}
@@ -334,7 +349,11 @@ export function VideoPlayer({
                       onClick={togglePlayPause}
                       className="text-white hover:bg-white/20"
                     >
-                      {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+                      {isPlaying ? (
+                        <Pause className="h-4 w-4" />
+                      ) : (
+                        <Play className="h-4 w-4" />
+                      )}
                     </Button>
 
                     <Button
@@ -393,7 +412,7 @@ export function VideoPlayer({
                     {/* Playback Speed */}
                     <select
                       value={playbackRate}
-                      onChange={(e) => changePlaybackRate(Number(e.target.value))}
+                      onChange={e => changePlaybackRate(Number(e.target.value))}
                       className="bg-black/50 text-white text-sm rounded px-2 py-1 border-0"
                     >
                       <option value={0.5}>0.5x</option>
@@ -435,7 +454,6 @@ export function VideoPlayer({
 
       {/* Additional Features */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        
         {/* Chapters */}
         {chapters.length > 0 && (
           <Card>
@@ -542,7 +560,9 @@ export function VideoPlayer({
                     </div>
                   </div>
                   <div className="p-3">
-                    <h4 className="font-medium text-sm line-clamp-2">{video.title}</h4>
+                    <h4 className="font-medium text-sm line-clamp-2">
+                      {video.title}
+                    </h4>
                   </div>
                 </div>
               ))}

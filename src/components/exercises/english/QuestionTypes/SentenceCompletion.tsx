@@ -11,7 +11,10 @@ interface SentenceCompletionProps {
   onAnswerChange: (answer: string) => void
 }
 
-export function SentenceCompletion({ answer, onAnswerChange }: SentenceCompletionProps) {
+export function SentenceCompletion({
+  answer,
+  onAnswerChange,
+}: SentenceCompletionProps) {
   const currentAnswer = typeof answer === 'string' ? answer : ''
   const [blanks, setBlanks] = useState<string[]>([])
 
@@ -24,21 +27,21 @@ export function SentenceCompletion({ answer, onAnswerChange }: SentenceCompletio
   }, [currentAnswer])
 
   // Determine number of blanks based on question format
-  // This is a simplified approach - in a real implementation, 
+  // This is a simplified approach - in a real implementation,
   // you might parse the question to count underscore patterns
   const numberOfBlanks = 3 // Default for the example question
 
   const handleBlankChange = (index: number, value: string) => {
     const newBlanks = [...blanks]
     newBlanks[index] = value.trim()
-    
+
     // Pad array if necessary
     while (newBlanks.length < numberOfBlanks) {
       newBlanks.push('')
     }
-    
+
     setBlanks(newBlanks)
-    
+
     // Convert back to comma-separated string
     const answerString = newBlanks.slice(0, numberOfBlanks).join(', ')
     onAnswerChange(answerString)
@@ -49,15 +52,18 @@ export function SentenceCompletion({ answer, onAnswerChange }: SentenceCompletio
     onAnswerChange('')
   }
 
-  const isComplete = blanks.slice(0, numberOfBlanks).every(blank => blank.length > 0)
+  const isComplete = blanks
+    .slice(0, numberOfBlanks)
+    .every(blank => blank.length > 0)
 
   return (
     <div className="space-y-4">
       {/* Instructions */}
       <div className="p-3 bg-blue-50 border border-blue-200 rounded-md">
         <p className="text-sm text-blue-800">
-          <strong>Instructions:</strong> Fill in the blanks using words from the text. 
-          Each blank should be filled with one or more words that complete the sentence correctly.
+          <strong>Instructions:</strong> Fill in the blanks using words from the
+          text. Each blank should be filled with one or more words that complete
+          the sentence correctly.
         </p>
       </div>
 
@@ -92,7 +98,7 @@ export function SentenceCompletion({ answer, onAnswerChange }: SentenceCompletio
                   </span>
                   <Input
                     value={blanks[index] || ''}
-                    onChange={(e) => handleBlankChange(index, e.target.value)}
+                    onChange={e => handleBlankChange(index, e.target.value)}
                     placeholder={`Enter word(s) for blank ${index + 1}`}
                     className="flex-1"
                   />
@@ -111,12 +117,16 @@ export function SentenceCompletion({ answer, onAnswerChange }: SentenceCompletio
               <strong>Your answer:</strong> {currentAnswer}
             </p>
             <div className="mt-2">
-              <div className={`inline-flex items-center px-2 py-1 rounded text-xs ${
-                isComplete 
-                  ? 'bg-green-100 text-green-800' 
-                  : 'bg-yellow-100 text-yellow-800'
-              }`}>
-                {isComplete ? 'Complete' : `${blanks.filter(b => b.length > 0).length}/${numberOfBlanks} filled`}
+              <div
+                className={`inline-flex items-center px-2 py-1 rounded text-xs ${
+                  isComplete
+                    ? 'bg-green-100 text-green-800'
+                    : 'bg-yellow-100 text-yellow-800'
+                }`}
+              >
+                {isComplete
+                  ? 'Complete'
+                  : `${blanks.filter(b => b.length > 0).length}/${numberOfBlanks} filled`}
               </div>
             </div>
           </CardContent>

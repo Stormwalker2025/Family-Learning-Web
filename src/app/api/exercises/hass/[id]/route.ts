@@ -7,7 +7,7 @@ import { year6HassExercises } from '@/data/hass-exercises/year6-examples'
 // Combined mock data for demonstration - in production this would come from database
 const mockHassExercises: HassExercise[] = [
   ...year3HassExercises,
-  ...year6HassExercises
+  ...year6HassExercises,
 ]
 
 // GET /api/exercises/hass/[id] - Get specific HASS exercise
@@ -31,7 +31,7 @@ export async function GET(
 
     // Find the exercise by ID
     const exercise = mockHassExercises.find(ex => ex.id === id)
-    
+
     if (!exercise) {
       return NextResponse.json(
         { error: 'HASS exercise not found' },
@@ -43,7 +43,7 @@ export async function GET(
     // For students, check year level compatibility
     if (decoded.role === 'STUDENT') {
       const userYearLevel = decoded.yearLevel || 3
-      
+
       // Allow access to exercises at or below user's year level
       if (exercise.yearLevel > userYearLevel + 1) {
         return NextResponse.json(
@@ -55,9 +55,8 @@ export async function GET(
 
     return NextResponse.json({
       success: true,
-      exercise: exercise
+      exercise: exercise,
     })
-
   } catch (error) {
     console.error('Error fetching HASS exercise:', error)
     return NextResponse.json(
@@ -81,7 +80,10 @@ export async function PUT(
 
     const decoded = await verifyToken(token)
     if (!decoded || decoded.role !== 'ADMIN') {
-      return NextResponse.json({ error: 'Admin access required' }, { status: 403 })
+      return NextResponse.json(
+        { error: 'Admin access required' },
+        { status: 403 }
+      )
     }
 
     const { id } = params
@@ -101,16 +103,15 @@ export async function PUT(
       ...mockHassExercises[exerciseIndex],
       ...body,
       id, // Ensure ID doesn't change
-      updatedAt: new Date()
+      updatedAt: new Date(),
     }
 
     mockHassExercises[exerciseIndex] = updatedExercise
 
     return NextResponse.json({
       success: true,
-      exercise: updatedExercise
+      exercise: updatedExercise,
     })
-
   } catch (error) {
     console.error('Error updating HASS exercise:', error)
     return NextResponse.json(
@@ -134,7 +135,10 @@ export async function DELETE(
 
     const decoded = await verifyToken(token)
     if (!decoded || decoded.role !== 'ADMIN') {
-      return NextResponse.json({ error: 'Admin access required' }, { status: 403 })
+      return NextResponse.json(
+        { error: 'Admin access required' },
+        { status: 403 }
+      )
     }
 
     const { id } = params
@@ -154,9 +158,8 @@ export async function DELETE(
     return NextResponse.json({
       success: true,
       message: 'HASS exercise deleted successfully',
-      exercise: deletedExercise
+      exercise: deletedExercise,
     })
-
   } catch (error) {
     console.error('Error deleting HASS exercise:', error)
     return NextResponse.json(

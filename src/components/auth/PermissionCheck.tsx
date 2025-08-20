@@ -12,17 +12,17 @@ interface PermissionCheckProps {
   user: User | null
   children: ReactNode
   fallback?: ReactNode
-  
+
   // 权限检查选项
   requireAuth?: boolean
   requireRole?: UserRole
   requirePermission?: keyof typeof ROLE_PERMISSIONS.ADMIN
   requireAnyRole?: UserRole[]
   requireAnyPermission?: Array<keyof typeof ROLE_PERMISSIONS.ADMIN>
-  
+
   // 自定义检查函数
   customCheck?: (user: User) => boolean
-  
+
   // 显示选项
   showFallback?: boolean
   hideWhenNoAccess?: boolean
@@ -39,9 +39,8 @@ export default function PermissionCheck({
   requireAnyPermission,
   customCheck,
   showFallback = true,
-  hideWhenNoAccess = false
+  hideWhenNoAccess = false,
 }: PermissionCheckProps) {
-  
   // 如果需要认证但用户未登录
   if (requireAuth && !user) {
     if (hideWhenNoAccess) return null
@@ -98,10 +97,10 @@ export default function PermissionCheck({
 
   // 检查任意权限匹配
   if (requireAnyPermission) {
-    const hasAnyPermission = requireAnyPermission.some(permission => 
+    const hasAnyPermission = requireAnyPermission.some(permission =>
       permissionChecker.can(permission)
     )
-    
+
     if (!hasAnyPermission) {
       if (hideWhenNoAccess) return null
       if (showFallback && fallback) return <>{fallback}</>
@@ -140,11 +139,11 @@ export default function PermissionCheck({
 }
 
 // 便捷组件：仅管理员可见
-export function AdminOnly({ 
-  user, 
-  children, 
-  fallback, 
-  hideWhenNoAccess = false 
+export function AdminOnly({
+  user,
+  children,
+  fallback,
+  hideWhenNoAccess = false,
 }: {
   user: User | null
   children: ReactNode
@@ -164,11 +163,11 @@ export function AdminOnly({
 }
 
 // 便捷组件：家长和管理员可见
-export function ParentOrAdminOnly({ 
-  user, 
-  children, 
-  fallback, 
-  hideWhenNoAccess = false 
+export function ParentOrAdminOnly({
+  user,
+  children,
+  fallback,
+  hideWhenNoAccess = false,
 }: {
   user: User | null
   children: ReactNode
@@ -188,11 +187,11 @@ export function ParentOrAdminOnly({
 }
 
 // 便捷组件：学生专用
-export function StudentOnly({ 
-  user, 
-  children, 
-  fallback, 
-  hideWhenNoAccess = false 
+export function StudentOnly({
+  user,
+  children,
+  fallback,
+  hideWhenNoAccess = false,
 }: {
   user: User | null
   children: ReactNode
@@ -212,12 +211,12 @@ export function StudentOnly({
 }
 
 // 便捷组件：需要特定权限
-export function RequirePermission({ 
-  user, 
+export function RequirePermission({
+  user,
   permission,
-  children, 
-  fallback, 
-  hideWhenNoAccess = false 
+  children,
+  fallback,
+  hideWhenNoAccess = false,
 }: {
   user: User | null
   permission: keyof typeof ROLE_PERMISSIONS.ADMIN

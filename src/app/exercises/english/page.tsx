@@ -7,15 +7,15 @@ import { ReadingExercise as ReadingExerciseComponent } from '@/components/exerci
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { 
-  BookOpen, 
-  Clock, 
-  Target, 
-  Filter, 
+import {
+  BookOpen,
+  Clock,
+  Target,
+  Filter,
   Search,
   Trophy,
   Users,
-  Zap
+  Zap,
 } from 'lucide-react'
 
 export default function EnglishReadingPage() {
@@ -38,14 +38,18 @@ export default function EnglishReadingPage() {
         }
 
         const params = new URLSearchParams()
-        if (filterYearLevel) params.append('yearLevel', filterYearLevel.toString())
+        if (filterYearLevel)
+          params.append('yearLevel', filterYearLevel.toString())
         if (filterDifficulty) params.append('difficulty', filterDifficulty)
 
-        const response = await fetch(`/api/exercises/english?${params.toString()}`, {
-          headers: {
-            'Authorization': `Bearer ${token}`
+        const response = await fetch(
+          `/api/exercises/english?${params.toString()}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           }
-        })
+        )
 
         if (!response.ok) {
           throw new Error('Failed to load exercises')
@@ -59,7 +63,9 @@ export default function EnglishReadingPage() {
         }
       } catch (err) {
         console.error('Error loading exercises:', err)
-        setError(err instanceof Error ? err.message : 'Failed to load exercises')
+        setError(
+          err instanceof Error ? err.message : 'Failed to load exercises'
+        )
       } finally {
         setLoading(false)
       }
@@ -90,15 +96,15 @@ export default function EnglishReadingPage() {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="mb-6">
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             onClick={() => setSelectedExercise(null)}
             className="mb-4"
           >
             ← Back to Exercises
           </Button>
         </div>
-        <ReadingExerciseComponent 
+        <ReadingExerciseComponent
           exerciseId={selectedExercise}
           onComplete={() => {
             // Optional: refresh exercises or show success message
@@ -118,7 +124,8 @@ export default function EnglishReadingPage() {
           <h1 className="text-3xl font-bold">English Reading Exercises</h1>
         </div>
         <p className="text-muted-foreground">
-          Practice reading comprehension with IELTS GT style questions designed for Australian students
+          Practice reading comprehension with IELTS GT style questions designed
+          for Australian students
         </p>
       </div>
 
@@ -142,18 +149,14 @@ export default function EnglishReadingPage() {
             <div className="text-2xl font-bold text-green-600">
               Year {user?.yearLevel || 'All'}
             </div>
-            <div className="text-sm text-muted-foreground">
-              Your Level
-            </div>
+            <div className="text-sm text-muted-foreground">Your Level</div>
           </CardContent>
         </Card>
 
         <Card>
           <CardContent className="p-4 text-center">
             <Zap className="h-6 w-6 text-purple-600 mx-auto mb-2" />
-            <div className="text-2xl font-bold text-purple-600">
-              5 Types
-            </div>
+            <div className="text-2xl font-bold text-purple-600">5 Types</div>
             <div className="text-sm text-muted-foreground">
               Question Formats
             </div>
@@ -175,16 +178,20 @@ export default function EnglishReadingPage() {
               <span className="text-sm font-medium">Year Level:</span>
               <div className="flex space-x-2">
                 <Button
-                  variant={filterYearLevel === 3 ? "default" : "outline"}
+                  variant={filterYearLevel === 3 ? 'default' : 'outline'}
                   size="sm"
-                  onClick={() => setFilterYearLevel(filterYearLevel === 3 ? null : 3)}
+                  onClick={() =>
+                    setFilterYearLevel(filterYearLevel === 3 ? null : 3)
+                  }
                 >
                   Year 3
                 </Button>
                 <Button
-                  variant={filterYearLevel === 6 ? "default" : "outline"}
+                  variant={filterYearLevel === 6 ? 'default' : 'outline'}
                   size="sm"
-                  onClick={() => setFilterYearLevel(filterYearLevel === 6 ? null : 6)}
+                  onClick={() =>
+                    setFilterYearLevel(filterYearLevel === 6 ? null : 6)
+                  }
                 >
                   Year 6
                 </Button>
@@ -194,12 +201,18 @@ export default function EnglishReadingPage() {
             <div className="flex items-center space-x-2">
               <span className="text-sm font-medium">Difficulty:</span>
               <div className="flex space-x-2">
-                {['easy', 'medium', 'hard'].map((difficulty) => (
+                {['easy', 'medium', 'hard'].map(difficulty => (
                   <Button
                     key={difficulty}
-                    variant={filterDifficulty === difficulty ? "default" : "outline"}
+                    variant={
+                      filterDifficulty === difficulty ? 'default' : 'outline'
+                    }
                     size="sm"
-                    onClick={() => setFilterDifficulty(filterDifficulty === difficulty ? null : difficulty)}
+                    onClick={() =>
+                      setFilterDifficulty(
+                        filterDifficulty === difficulty ? null : difficulty
+                      )
+                    }
                   >
                     {difficulty.charAt(0).toUpperCase() + difficulty.slice(1)}
                   </Button>
@@ -208,11 +221,7 @@ export default function EnglishReadingPage() {
             </div>
 
             {(filterYearLevel || filterDifficulty) && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={resetFilters}
-              >
+              <Button variant="ghost" size="sm" onClick={resetFilters}>
                 Clear Filters
               </Button>
             )}
@@ -233,9 +242,7 @@ export default function EnglishReadingPage() {
               <p className="text-lg font-semibold">Error Loading Exercises</p>
               <p>{error}</p>
             </div>
-            <Button onClick={() => window.location.reload()}>
-              Try Again
-            </Button>
+            <Button onClick={() => window.location.reload()}>Try Again</Button>
           </CardContent>
         </Card>
       ) : exercises.length === 0 ? (
@@ -246,16 +253,14 @@ export default function EnglishReadingPage() {
             <p className="text-muted-foreground mb-4">
               Try adjusting your filters or check back later for new content.
             </p>
-            <Button onClick={resetFilters}>
-              Clear All Filters
-            </Button>
+            <Button onClick={resetFilters}>Clear All Filters</Button>
           </CardContent>
         </Card>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {exercises.map((exercise) => (
-            <Card 
-              key={exercise.id} 
+          {exercises.map(exercise => (
+            <Card
+              key={exercise.id}
               className="hover:shadow-md transition-shadow cursor-pointer"
               onClick={() => setSelectedExercise(exercise.id)}
             >
@@ -268,8 +273,8 @@ export default function EnglishReadingPage() {
                     <Badge variant="outline" className="text-xs">
                       Year {exercise.yearLevel}
                     </Badge>
-                    <Badge 
-                      variant="outline" 
+                    <Badge
+                      variant="outline"
                       className={`text-xs ${getDifficultyColor(exercise.article.difficulty)}`}
                     >
                       {exercise.article.difficulty}
@@ -309,7 +314,11 @@ export default function EnglishReadingPage() {
                   {/* Tags */}
                   <div className="flex flex-wrap gap-1">
                     {exercise.tags.slice(0, 3).map((tag, index) => (
-                      <Badge key={index} variant="secondary" className="text-xs">
+                      <Badge
+                        key={index}
+                        variant="secondary"
+                        className="text-xs"
+                      >
                         {tag}
                       </Badge>
                     ))}
@@ -320,9 +329,7 @@ export default function EnglishReadingPage() {
                     )}
                   </div>
 
-                  <Button className="w-full">
-                    Start Exercise
-                  </Button>
+                  <Button className="w-full">Start Exercise</Button>
                 </div>
               </CardContent>
             </Card>

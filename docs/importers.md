@@ -7,11 +7,13 @@ The Family Learning Web platform supports bulk content import via CSV files to e
 ## 2. Supported Import Types
 
 ### 2.1 Question Bank Import
+
 Import educational questions across all subjects and grade levels.
 
 **File**: `questions-import-template.csv`
 
 **Required Columns**:
+
 - `id`: Unique identifier (optional, will be generated if empty)
 - `type`: Question type (multiple_choice, true_false, matching, fill_blank)
 - `subject`: Subject area (english, mathematics, hass, science)
@@ -27,6 +29,7 @@ Import educational questions across all subjects and grade levels.
 - `curriculumCode`: ACARA curriculum descriptor code (optional)
 
 **Example CSV Format**:
+
 ```csv
 id,type,subject,yearLevel,difficulty,title,instruction,content,answerKey,explanation,estimatedTime,tags,curriculumCode
 q001,multiple_choice,mathematics,3,easy,Basic Addition,"Choose the correct answer","What is 5 + 3?||A) 6||B) 7||C) 8||D) 9","{""correct"": [""C""]}","5 + 3 = 8. Count on your fingers to verify.",30,"addition,basic-math",ACMNA055
@@ -34,11 +37,13 @@ q002,true_false,english,3,medium,Australian Geography,"Decide if this statement 
 ```
 
 ### 2.2 Vocabulary Import
+
 Import vocabulary lists for specific grade levels and topics.
 
 **File**: `vocabulary-import-template.csv`
 
 **Required Columns**:
+
 - `word`: The vocabulary word
 - `definition`: Word definition
 - `yearLevel`: Target year level (3-12)
@@ -53,6 +58,7 @@ Import vocabulary lists for specific grade levels and topics.
 - `curriculumCode`: ACARA curriculum descriptor code (optional)
 
 **Example CSV Format**:
+
 ```csv
 word,definition,yearLevel,subject,difficulty,pronunciation,partOfSpeech,exampleSentence,synonyms,antonyms,topic,curriculumCode
 kangaroo,A large Australian marsupial with strong hind legs for hopping,3,english,easy,/ˈkæŋɡəruː/,noun,"The kangaroo hopped across the field.",roo,,australian-animals,ACELA1459
@@ -60,11 +66,13 @@ enormous,Extremely large in size,4,english,medium,/ɪˈnɔːməs/,adjective,"The
 ```
 
 ### 2.3 User Import
+
 Bulk import student and parent accounts.
 
 **File**: `users-import-template.csv`
 
 **Required Columns**:
+
 - `email`: User email address (must be unique)
 - `displayName`: Full display name
 - `role`: User role (student, parent, admin, teacher)
@@ -77,6 +85,7 @@ Bulk import student and parent accounts.
 - `isActive`: Account status (true/false)
 
 **Example CSV Format**:
+
 ```csv
 email,displayName,role,yearLevel,parentEmail,childEmails,dateOfBirth,grade,school,isActive
 emma.student@school.edu.au,Emma Johnson,student,3,grace.parent@email.com,,2016-08-15,3A,Brisbane Primary School,true
@@ -85,11 +94,13 @@ michael.student@school.edu.au,Michael Johnson,student,6,grace.parent@email.com,,
 ```
 
 ### 2.4 Assignment Template Import
+
 Import pre-configured assignment templates.
 
 **File**: `assignments-import-template.csv`
 
 **Required Columns**:
+
 - `title`: Assignment title
 - `subject`: Subject area
 - `yearLevel`: Target year level
@@ -103,6 +114,7 @@ Import pre-configured assignment templates.
 - `unlockRules`: JSON format unlock rules (optional)
 
 **Example CSV Format**:
+
 ```csv
 title,subject,yearLevel,description,estimatedTime,questionIds,tags,isTemplate,maxAttempts,passingScore,unlockRules
 Year 3 Math Review,mathematics,3,Basic arithmetic review covering addition and subtraction,20,"q001,q002,q003,q004,q005","math,review,year3",true,3,70,"{""minScore"": 70, ""unlockMinutes"": 15}"
@@ -134,6 +146,7 @@ Australian Animals Reading,english,3,Reading comprehension about native Australi
 ### 3.2 Import Steps
 
 1. **Access Import Interface**
+
    ```
    Admin Panel → Content Management → Import Tools → [Select Type]
    ```
@@ -191,6 +204,7 @@ The import process provides real-time feedback:
 ## 4. Data Validation Rules
 
 ### 4.1 Question Import Validation
+
 - **ID Format**: Must be unique, alphanumeric with hyphens/underscores
 - **Question Type**: Must be one of: multiple_choice, true_false, matching, fill_blank
 - **Subject**: Must match predefined subjects: english, mathematics, hass, science
@@ -200,6 +214,7 @@ The import process provides real-time feedback:
 - **Estimated Time**: Must be positive integer (seconds)
 
 ### 4.2 Vocabulary Import Validation
+
 - **Word**: Must be non-empty string, no numbers or special characters
 - **Definition**: Must be non-empty string, minimum 10 characters
 - **Year Level**: Must be integer between 3-12
@@ -208,6 +223,7 @@ The import process provides real-time feedback:
 - **Example Sentence**: Must contain the vocabulary word
 
 ### 4.3 User Import Validation
+
 - **Email Format**: Must be valid email address format
 - **Email Uniqueness**: No duplicate email addresses allowed
 - **Display Name**: Must be non-empty, minimum 2 characters
@@ -216,6 +232,7 @@ The import process provides real-time feedback:
 - **Parent-Child Relationships**: Parent emails must exist for student records
 
 ### 4.4 Assignment Import Validation
+
 - **Title Uniqueness**: Assignment titles must be unique within subject/year level
 - **Question IDs**: All referenced question IDs must exist in the system
 - **Time Estimates**: Must be positive integers
@@ -227,6 +244,7 @@ The import process provides real-time feedback:
 ### 5.1 Common Import Errors
 
 #### Validation Errors
+
 ```
 Error Type: INVALID_EMAIL_FORMAT
 Row: 15
@@ -237,6 +255,7 @@ Resolution: Correct email format (user@domain.com)
 ```
 
 #### Data Type Errors
+
 ```
 Error Type: INVALID_YEAR_LEVEL
 Row: 23
@@ -247,6 +266,7 @@ Resolution: Change to numeric value (3)
 ```
 
 #### Foreign Key Errors
+
 ```
 Error Type: PARENT_NOT_FOUND
 Row: 8
@@ -259,21 +279,25 @@ Resolution: Ensure parent record exists or import parents first
 ### 5.2 Troubleshooting Guide
 
 #### High Error Rate
+
 - **Cause**: Template format mismatch
 - **Solution**: Re-download template and verify column headers match exactly
 - **Prevention**: Always use the latest template from the system
 
 #### Import Timeout
+
 - **Cause**: File too large or complex validation
 - **Solution**: Split large files into smaller batches (< 1000 records)
 - **Prevention**: Use batch processing for large datasets
 
 #### Encoding Issues
+
 - **Cause**: Non-UTF-8 file encoding
 - **Solution**: Save CSV with UTF-8 encoding in your spreadsheet software
 - **Prevention**: Always specify UTF-8 when saving CSV files
 
 #### Memory Errors
+
 - **Cause**: Large file or complex JSON data
 - **Solution**: Reduce batch size in import settings
 - **Prevention**: Optimize JSON content structure
@@ -281,12 +305,14 @@ Resolution: Ensure parent record exists or import parents first
 ### 5.3 Recovery Procedures
 
 #### Partial Import Failure
+
 1. Download the error report
 2. Fix the identified issues in your source data
 3. Filter out successfully imported records
 4. Re-import the corrected subset
 
 #### Complete Import Failure
+
 1. Check system logs for detailed error information
 2. Verify file format and template compliance
 3. Test with a small subset of data first
@@ -295,6 +321,7 @@ Resolution: Ensure parent record exists or import parents first
 ## 6. Best Practices
 
 ### 6.1 Data Preparation
+
 - **Start Small**: Test with 5-10 records before importing large datasets
 - **Backup First**: Export existing data before major imports
 - **Clean Data**: Remove duplicates and validate formats in your source system
@@ -302,12 +329,14 @@ Resolution: Ensure parent record exists or import parents first
 - **Incremental Imports**: Import in logical batches rather than all at once
 
 ### 6.2 Quality Assurance
+
 - **Review Sample**: Always preview your data before final import
 - **Cross-Reference**: Verify relationships between imported data types
 - **Test Functionality**: Verify imported content works correctly in the system
 - **User Acceptance**: Have end-users test imported content before going live
 
 ### 6.3 Scheduling and Planning
+
 - **Off-Peak Hours**: Perform large imports during low-usage periods
 - **Maintenance Windows**: Schedule imports during planned maintenance
 - **Communication**: Notify users of any system downtime during imports
@@ -316,14 +345,18 @@ Resolution: Ensure parent record exists or import parents first
 ## 7. Advanced Features
 
 ### 7.1 Bulk Update Operations
+
 Update existing records by including their ID in the import file:
+
 ```csv
 id,title,subject,yearLevel,difficulty
 q001,Updated Question Title,mathematics,3,medium
 ```
 
 ### 7.2 Conditional Imports
+
 Use import rules to conditionally process records:
+
 ```json
 {
   "importRules": {
@@ -336,48 +369,58 @@ Use import rules to conditionally process records:
 ```
 
 ### 7.3 Automated Imports
+
 Set up scheduled imports for regular content updates:
+
 1. Upload CSV to designated folder
 2. Configure import schedule (daily, weekly, monthly)
 3. Set notification preferences for success/failure
 4. Monitor via automated reports
 
 ### 7.4 API-Based Imports
+
 For developers, programmatic imports are available via REST API:
+
 ```javascript
 // Example API import
-const formData = new FormData();
-formData.append('file', csvFile);
-formData.append('type', 'questions');
-formData.append('options', JSON.stringify({
-  updateMode: 'create',
-  batchSize: 100
-}));
+const formData = new FormData()
+formData.append('file', csvFile)
+formData.append('type', 'questions')
+formData.append(
+  'options',
+  JSON.stringify({
+    updateMode: 'create',
+    batchSize: 100,
+  })
+)
 
 const response = await fetch('/api/admin/import', {
   method: 'POST',
   headers: {
-    'Authorization': `Bearer ${token}`,
+    Authorization: `Bearer ${token}`,
   },
-  body: formData
-});
+  body: formData,
+})
 ```
 
 ## 8. Security and Compliance
 
 ### 8.1 Data Security
+
 - All uploads are scanned for malware
 - CSV content is validated and sanitized
 - Import logs are audited for compliance
 - Access is restricted to authorized administrators
 
 ### 8.2 Privacy Considerations
+
 - Personal data is handled according to Australian Privacy Act
 - Student data requires parental consent
 - Data retention policies apply to imported content
 - Audit trails maintain record of all imports
 
 ### 8.3 Backup and Recovery
+
 - Automatic backups before major imports
 - Point-in-time recovery capabilities
 - Import rollback functionality
@@ -386,21 +429,27 @@ const response = await fetch('/api/admin/import', {
 ## 9. Monitoring and Reporting
 
 ### 9.1 Import Analytics
+
 Track import performance and success rates:
+
 - Import success rate by type and date
 - Average processing time per record type
 - Most common validation errors
 - User activity and import frequency
 
 ### 9.2 Content Analytics
+
 Monitor imported content usage:
+
 - Question usage statistics
 - Vocabulary learning progress
 - Assignment completion rates
 - Content quality feedback
 
 ### 9.3 System Health
+
 Monitor system impact of imports:
+
 - Database performance during imports
 - Memory and CPU usage patterns
 - Error rates and recovery times
@@ -409,18 +458,21 @@ Monitor system impact of imports:
 ## 10. Support and Resources
 
 ### 10.1 Documentation
+
 - [Question DSL Reference](./dsl.md)
 - [User Management Guide](./user-management.md)
 - [Curriculum Alignment Guide](./curriculum.md)
 - [API Documentation](./api/)
 
 ### 10.2 Training Resources
+
 - Import tool video tutorials
 - CSV template workshops
 - Best practices webinars
 - Troubleshooting guides
 
 ### 10.3 Support Channels
+
 - **Technical Support**: support@familylearningweb.com.au
 - **Training Requests**: training@familylearningweb.com.au
 - **Emergency Support**: emergency@familylearningweb.com.au

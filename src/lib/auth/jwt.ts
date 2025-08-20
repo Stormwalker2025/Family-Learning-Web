@@ -15,13 +15,13 @@ export function generateAccessToken(user: User): string {
     userId: user.id,
     username: user.username,
     role: user.role,
-    familyId: user.familyId
+    familyId: user.familyId,
   }
 
   return jwt.sign(payload, JWT_CONFIG.secret, {
     issuer: JWT_CONFIG.issuer,
     audience: JWT_CONFIG.audience,
-    expiresIn: JWT_CONFIG.accessTokenExpiry
+    expiresIn: JWT_CONFIG.accessTokenExpiry,
   })
 }
 
@@ -34,13 +34,13 @@ export function generateRefreshToken(user: User): string {
   const payload = {
     userId: user.id,
     username: user.username,
-    type: 'refresh'
+    type: 'refresh',
   }
 
   return jwt.sign(payload, JWT_CONFIG.secret, {
     issuer: JWT_CONFIG.issuer,
     audience: JWT_CONFIG.audience,
-    expiresIn: JWT_CONFIG.refreshTokenExpiry
+    expiresIn: JWT_CONFIG.refreshTokenExpiry,
   })
 }
 
@@ -53,7 +53,7 @@ export function verifyToken(token: string): JWTPayload | null {
   try {
     const decoded = jwt.verify(token, JWT_CONFIG.secret, {
       issuer: JWT_CONFIG.issuer,
-      audience: JWT_CONFIG.audience
+      audience: JWT_CONFIG.audience,
     }) as JWTPayload
 
     return decoded
@@ -94,7 +94,7 @@ export function isTokenExpiringSoon(
   const bufferTime = bufferMinutes * 60 * 1000 // 缓冲时间（毫秒）
   const currentTime = Date.now()
 
-  return (expiryTime - currentTime) <= bufferTime
+  return expiryTime - currentTime <= bufferTime
 }
 
 /**
@@ -126,7 +126,7 @@ export function refreshAccessToken(
   try {
     const payload = jwt.verify(refreshToken, JWT_CONFIG.secret, {
       issuer: JWT_CONFIG.issuer,
-      audience: JWT_CONFIG.audience
+      audience: JWT_CONFIG.audience,
     }) as any
 
     // 验证令牌类型和用户ID
@@ -156,7 +156,7 @@ export function createTokenBlacklistEntry(token: string): {
 
   return {
     jti: payload.userId + '_' + payload.iat,
-    exp: payload.exp
+    exp: payload.exp,
   }
 }
 
@@ -175,9 +175,11 @@ export function isValidJWTFormat(token: string): boolean {
  * @param authHeader Authorization头部值
  * @returns 提取的令牌或null
  */
-export function extractBearerToken(authHeader: string | undefined): string | null {
+export function extractBearerToken(
+  authHeader: string | undefined
+): string | null {
   if (!authHeader) return null
-  
+
   const parts = authHeader.split(' ')
   if (parts.length !== 2 || parts[0] !== 'Bearer') {
     return null
@@ -201,12 +203,12 @@ export function generateApiKey(
     service,
     permissions,
     type: 'api_key',
-    iat: Math.floor(Date.now() / 1000)
+    iat: Math.floor(Date.now() / 1000),
   }
 
   return jwt.sign(payload, JWT_CONFIG.secret, {
     issuer: JWT_CONFIG.issuer,
     audience: 'api',
-    noTimestamp: false
+    noTimestamp: false,
   })
 }

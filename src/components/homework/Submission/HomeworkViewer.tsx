@@ -5,20 +5,24 @@ import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
-import { 
-  BookOpen, 
-  Clock, 
-  Users, 
+import {
+  BookOpen,
+  Clock,
+  Users,
   Calendar,
   AlertTriangle,
   CheckCircle,
   Play,
   Pause,
   RotateCcw,
-  Send
+  Send,
 } from 'lucide-react'
 import { useAuth } from '@/hooks/auth/useAuth'
-import { HomeworkAssignmentFull, HomeworkSubmissionFull, Exercise } from '@/types'
+import {
+  HomeworkAssignmentFull,
+  HomeworkSubmissionFull,
+  Exercise,
+} from '@/types'
 import AnswerInput from './AnswerInput'
 
 interface HomeworkViewerProps {
@@ -27,14 +31,16 @@ interface HomeworkViewerProps {
   onSave?: (submission: Partial<HomeworkSubmissionFull>) => void
 }
 
-export default function HomeworkViewer({ 
-  homeworkId, 
-  onSubmit, 
-  onSave 
+export default function HomeworkViewer({
+  homeworkId,
+  onSubmit,
+  onSave,
 }: HomeworkViewerProps) {
   const { user } = useAuth()
   const [homework, setHomework] = useState<HomeworkAssignmentFull | null>(null)
-  const [submission, setSubmission] = useState<HomeworkSubmissionFull | null>(null)
+  const [submission, setSubmission] = useState<HomeworkSubmissionFull | null>(
+    null
+  )
   const [currentExercise, setCurrentExercise] = useState<Exercise | null>(null)
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0)
   const [answers, setAnswers] = useState<Record<string, string>>({})
@@ -46,7 +52,7 @@ export default function HomeworkViewer({
   // 计时器
   useEffect(() => {
     let interval: NodeJS.Timeout
-    
+
     if (!isPaused && submission?.status === 'IN_PROGRESS') {
       interval = setInterval(() => {
         setTimeSpent(prev => prev + 1)
@@ -66,29 +72,35 @@ export default function HomeworkViewer({
   const fetchHomeworkData = async () => {
     try {
       setLoading(true)
-      
+
       // 获取作业详情
-      const homeworkResponse = await fetch(`/api/homework/assignments/${homeworkId}`, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+      const homeworkResponse = await fetch(
+        `/api/homework/assignments/${homeworkId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
         }
-      })
+      )
 
       if (homeworkResponse.ok) {
         const homeworkData = await homeworkResponse.json()
         setHomework(homeworkData.data)
 
         // 获取用户提交记录
-        const submissionResponse = await fetch(`/api/homework/submissions?homeworkId=${homeworkId}`, {
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
+        const submissionResponse = await fetch(
+          `/api/homework/submissions?homeworkId=${homeworkId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`,
+            },
           }
-        })
+        )
 
         if (submissionResponse.ok) {
           const submissionData = await submissionResponse.json()
           const userSubmission = submissionData.data[0]
-          
+
           if (userSubmission) {
             setSubmission(userSubmission)
             setTimeSpent(userSubmission.totalTimeSpent || 0)
@@ -112,12 +124,12 @@ export default function HomeworkViewer({
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
         body: JSON.stringify({
           action: 'start',
-          homeworkId
-        })
+          homeworkId,
+        }),
       })
 
       if (response.ok) {
@@ -142,8 +154,8 @@ export default function HomeworkViewer({
     try {
       const response = await fetch(`/api/exercises/${exerciseId}`, {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
       })
 
       if (response.ok) {
@@ -159,12 +171,12 @@ export default function HomeworkViewer({
   const saveAnswer = (questionId: string, answer: string) => {
     const newAnswers = { ...answers, [questionId]: answer }
     setAnswers(newAnswers)
-    
+
     // 自动保存到服务器
     if (onSave && submission) {
       onSave({
         ...submission,
-        answers: newAnswers
+        answers: newAnswers,
       })
     }
   }
@@ -192,20 +204,20 @@ export default function HomeworkViewer({
       const exerciseSubmissions = homework.exercises.map(exerciseConfig => ({
         exerciseId: exerciseConfig.exerciseId,
         submissionId: submission.id,
-        timeSpent: Math.floor(timeSpent)
+        timeSpent: Math.floor(timeSpent),
       }))
 
       const response = await fetch('/api/homework/submissions', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
         body: JSON.stringify({
           action: 'submit',
           homeworkId,
-          exerciseSubmissions
-        })
+          exerciseSubmissions,
+        }),
       })
 
       if (response.ok) {
@@ -236,7 +248,9 @@ export default function HomeworkViewer({
   const getProgress = (): number => {
     if (!homework) return 0
     const totalExercises = homework.exercises.length
-    return totalExercises > 0 ? ((currentExerciseIndex + 1) / totalExercises) * 100 : 0
+    return totalExercises > 0
+      ? ((currentExerciseIndex + 1) / totalExercises) * 100
+      : 0
   }
 
   // 检查是否超时
@@ -272,12 +286,16 @@ export default function HomeworkViewer({
             <h1 className="text-2xl font-bold text-gray-900 mb-2">
               {homework.title}
             </h1>
-            <p className="text-gray-600">
-              {homework.description}
-            </p>
+            <p className="text-gray-600">{homework.description}</p>
           </div>
           <div className="flex flex-col items-end gap-2">
-            <Badge className={isOverdue() ? 'bg-red-100 text-red-800' : 'bg-blue-100 text-blue-800'}>
+            <Badge
+              className={
+                isOverdue()
+                  ? 'bg-red-100 text-red-800'
+                  : 'bg-blue-100 text-blue-800'
+              }
+            >
               {submission.status}
             </Badge>
             {isOverdue() && (
@@ -312,10 +330,9 @@ export default function HomeworkViewer({
           <div className="flex items-center gap-2">
             <Calendar size={16} className="text-gray-500" />
             <span className="text-sm text-gray-600">
-              {homework.dueDate 
+              {homework.dueDate
                 ? new Date(homework.dueDate).toLocaleDateString('zh-CN')
-                : '无截止日期'
-              }
+                : '无截止日期'}
             </span>
           </div>
         </div>
@@ -384,17 +401,17 @@ export default function HomeworkViewer({
             exercise={currentExercise}
             answers={answers}
             onAnswerChange={saveAnswer}
-            disabled={submission.status === 'SUBMITTED' || submission.status === 'COMPLETED'}
+            disabled={
+              submission.status === 'SUBMITTED' ||
+              submission.status === 'COMPLETED'
+            }
           />
         </Card>
       )}
 
       {/* 操作按钮 */}
       <div className="flex justify-between">
-        <Button
-          variant="outline"
-          onClick={() => window.history.back()}
-        >
+        <Button variant="outline" onClick={() => window.history.back()}>
           返回
         </Button>
 
@@ -407,7 +424,7 @@ export default function HomeworkViewer({
             <RotateCcw size={16} className="mr-2" />
             重新加载
           </Button>
-          
+
           {submission.status === 'IN_PROGRESS' && (
             <Button
               onClick={submitHomework}
@@ -418,8 +435,9 @@ export default function HomeworkViewer({
               {submitting ? '提交中...' : '提交作业'}
             </Button>
           )}
-          
-          {(submission.status === 'SUBMITTED' || submission.status === 'COMPLETED') && (
+
+          {(submission.status === 'SUBMITTED' ||
+            submission.status === 'COMPLETED') && (
             <div className="flex items-center gap-2 px-4 py-2 bg-green-100 text-green-800 rounded-lg">
               <CheckCircle size={16} />
               <span>已提交</span>

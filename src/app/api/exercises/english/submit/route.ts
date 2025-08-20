@@ -7,7 +7,7 @@ import { year6ReadingExercises } from '@/data/reading-exercises/year6-examples'
 // Combined mock data for validation
 const mockReadingExercises = [
   ...year3ReadingExercises,
-  ...year6ReadingExercises
+  ...year6ReadingExercises,
 ]
 
 // POST /api/exercises/english/submit - Submit reading exercise answers
@@ -38,10 +38,7 @@ export async function POST(request: NextRequest) {
     // Find the exercise
     const exercise = mockReadingExercises.find(ex => ex.id === exerciseId)
     if (!exercise) {
-      return NextResponse.json(
-        { error: 'Exercise not found' },
-        { status: 404 }
-      )
+      return NextResponse.json({ error: 'Exercise not found' }, { status: 404 })
     }
 
     // Grade the submission
@@ -51,8 +48,12 @@ export async function POST(request: NextRequest) {
 
     exercise.questions.forEach(question => {
       const userAnswer = answers[question.id]
-      const isCorrect = checkAnswer(question.correctAnswer, userAnswer, question.type)
-      
+      const isCorrect = checkAnswer(
+        question.correctAnswer,
+        userAnswer,
+        question.type
+      )
+
       if (isCorrect) {
         score += question.points
         correctAnswers++
@@ -65,7 +66,7 @@ export async function POST(request: NextRequest) {
         userAnswer,
         correctAnswer: question.correctAnswer,
         explanation: getExplanation(question.id),
-        skillTested: getSkillTested(question.type as any)
+        skillTested: getSkillTested(question.type as any),
       })
     })
 
@@ -91,7 +92,7 @@ export async function POST(request: NextRequest) {
       timeSpent: timeSpent || 0,
       startedAt: new Date(startedAt),
       submittedAt: new Date(),
-      feedback
+      feedback,
     }
 
     // In production, this would save to database
@@ -100,9 +101,8 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: true,
       submission,
-      feedback
+      feedback,
     })
-
   } catch (error) {
     console.error('Error submitting reading exercise:', error)
     return NextResponse.json(
@@ -113,9 +113,13 @@ export async function POST(request: NextRequest) {
 }
 
 // Helper function to check if answer is correct
-function checkAnswer(correctAnswer: string, userAnswer: string, questionType: string): boolean {
+function checkAnswer(
+  correctAnswer: string,
+  userAnswer: string,
+  questionType: string
+): boolean {
   if (!userAnswer) return false
-  
+
   const correct = correctAnswer.toLowerCase().trim()
   const user = userAnswer.toLowerCase().trim()
 
@@ -126,17 +130,20 @@ function checkAnswer(correctAnswer: string, userAnswer: string, questionType: st
 
     case 'short-answer':
       // Allow for some flexibility in short answers
-      return correct === user || correct.includes(user) || user.includes(correct)
+      return (
+        correct === user || correct.includes(user) || user.includes(correct)
+      )
 
     case 'sentence-completion':
       // Split by commas and check each part
       const correctParts = correct.split(',').map(p => p.trim())
       const userParts = user.split(',').map(p => p.trim())
-      
+
       if (correctParts.length !== userParts.length) return false
-      
-      return correctParts.every((part, index) => 
-        part === userParts[index] || part.includes(userParts[index])
+
+      return correctParts.every(
+        (part, index) =>
+          part === userParts[index] || part.includes(userParts[index])
       )
 
     default:
@@ -147,10 +154,10 @@ function checkAnswer(correctAnswer: string, userAnswer: string, questionType: st
 // Get explanation for each question
 function getExplanation(questionId: string): string {
   const explanations: Record<string, string> = {
-    'q1': 'The text states that kangaroos can hop at speeds of up to 60 kilometres per hour.',
-    'q2': 'The text clearly states that koalas are not bears, they are marsupials.',
-    'q3': 'According to the text, koalas eat only eucalyptus leaves.',
-    'q4': 'These are the three characteristics mentioned in the text about the platypus.'
+    q1: 'The text states that kangaroos can hop at speeds of up to 60 kilometres per hour.',
+    q2: 'The text clearly states that koalas are not bears, they are marsupials.',
+    q3: 'According to the text, koalas eat only eucalyptus leaves.',
+    q4: 'These are the three characteristics mentioned in the text about the platypus.',
   }
   return explanations[questionId] || 'No explanation available.'
 }
@@ -162,7 +169,7 @@ function getSkillTested(questionType: string): string {
     'true-false': 'fact verification',
     'short-answer': 'information retrieval',
     'sentence-completion': 'detail comprehension and text analysis',
-    'matching': 'relationship understanding'
+    matching: 'relationship understanding',
   }
   return skills[questionType] || 'reading comprehension'
 }
@@ -176,14 +183,14 @@ function generateFeedback(
   questionAnalysis: QuestionAnalysis[]
 ): ReadingFeedback {
   const percentage = Math.round((score / maxScore) * 100)
-  
+
   const strengths: string[] = []
   const improvements: string[] = []
   const recommendations: string[] = []
 
   // Analyze performance by question type
   const typePerformance: Record<string, { correct: number; total: number }> = {}
-  
+
   questionAnalysis.forEach(analysis => {
     const type = analysis.questionType
     if (!typePerformance[type]) {
@@ -198,13 +205,17 @@ function generateFeedback(
   // Generate strengths and improvements based on performance
   Object.entries(typePerformance).forEach(([type, perf]) => {
     const typePercentage = (perf.correct / perf.total) * 100
-    
+
     if (typePercentage >= 80) {
-      strengths.push(`Excellent performance on ${type.replace('-', ' ')} questions`)
+      strengths.push(
+        `Excellent performance on ${type.replace('-', ' ')} questions`
+      )
     } else if (typePercentage >= 60) {
       strengths.push(`Good understanding of ${type.replace('-', ' ')} concepts`)
     } else {
-      improvements.push(`Need more practice with ${type.replace('-', ' ')} questions`)
+      improvements.push(
+        `Need more practice with ${type.replace('-', ' ')} questions`
+      )
     }
   })
 
@@ -220,16 +231,26 @@ function generateFeedback(
     recommendations.push('Practice active reading strategies like note-taking')
   } else {
     improvements.push('Reading comprehension needs significant improvement')
-    recommendations.push('Start with shorter, simpler texts and gradually increase difficulty')
+    recommendations.push(
+      'Start with shorter, simpler texts and gradually increase difficulty'
+    )
     recommendations.push('Practice vocabulary building exercises')
   }
 
   // Specific recommendations based on question types missed
-  if (typePerformance['true-false']?.correct / typePerformance['true-false']?.total < 0.7) {
+  if (
+    typePerformance['true-false']?.correct /
+      typePerformance['true-false']?.total <
+    0.7
+  ) {
     recommendations.push('Practice distinguishing between facts and inferences')
   }
-  
-  if (typePerformance['short-answer']?.correct / typePerformance['short-answer']?.total < 0.7) {
+
+  if (
+    typePerformance['short-answer']?.correct /
+      typePerformance['short-answer']?.total <
+    0.7
+  ) {
     recommendations.push('Practice finding specific information in texts')
   }
 
@@ -238,6 +259,6 @@ function generateFeedback(
     strengths,
     improvements,
     questionAnalysis,
-    recommendations
+    recommendations,
   }
 }

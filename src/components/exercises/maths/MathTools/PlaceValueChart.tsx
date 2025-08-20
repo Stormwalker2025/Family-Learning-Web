@@ -31,7 +31,7 @@ export const PlaceValueChart: React.FC<PlaceValueChartProps> = ({
   highlightPlaces = [],
   className = '',
   onNumberChange,
-  onPlaceValueSelect
+  onPlaceValueSelect,
 }) => {
   const [currentNumber, setCurrentNumber] = useState(initialNumber)
   const [selectedPlace, setSelectedPlace] = useState<string | null>(null)
@@ -39,7 +39,11 @@ export const PlaceValueChart: React.FC<PlaceValueChartProps> = ({
 
   const placeNames = [
     { place: 'millions', name: 'Millions', multiplier: 1000000 },
-    { place: 'hundred-thousands', name: 'Hundred Thousands', multiplier: 100000 },
+    {
+      place: 'hundred-thousands',
+      name: 'Hundred Thousands',
+      multiplier: 100000,
+    },
     { place: 'ten-thousands', name: 'Ten Thousands', multiplier: 10000 },
     { place: 'thousands', name: 'Thousands', multiplier: 1000 },
     { place: 'hundreds', name: 'Hundreds', multiplier: 100 },
@@ -47,18 +51,18 @@ export const PlaceValueChart: React.FC<PlaceValueChartProps> = ({
     { place: 'ones', name: 'Ones', multiplier: 1 },
     { place: 'tenths', name: 'Tenths', multiplier: 0.1 },
     { place: 'hundredths', name: 'Hundredths', multiplier: 0.01 },
-    { place: 'thousandths', name: 'Thousandths', multiplier: 0.001 }
+    { place: 'thousandths', name: 'Thousandths', multiplier: 0.001 },
   ]
 
   const parseNumber = (numberString: string): PlaceValue[] => {
     const cleanNumber = numberString.replace(/[^0-9.-]/g, '')
     const [wholePart = '0', decimalPart = ''] = cleanNumber.split('.')
-    
+
     const wholeDigits = wholePart.padStart(7, '0').split('').reverse()
     const decimalDigits = decimalPart.padEnd(3, '0').split('')
-    
+
     const placeValues: PlaceValue[] = []
-    
+
     // Whole number places (ones, tens, hundreds, etc.)
     const wholePlaces = placeNames.filter(p => p.multiplier >= 1).reverse()
     wholePlaces.forEach((placeInfo, index) => {
@@ -67,10 +71,10 @@ export const PlaceValueChart: React.FC<PlaceValueChartProps> = ({
         place: placeInfo.place,
         name: placeInfo.name,
         value: parseInt(digit) * placeInfo.multiplier,
-        digit: digit
+        digit: digit,
       })
     })
-    
+
     // Decimal places
     if (showDecimals) {
       const decimalPlaces = placeNames.filter(p => p.multiplier < 1)
@@ -80,11 +84,11 @@ export const PlaceValueChart: React.FC<PlaceValueChartProps> = ({
           place: placeInfo.place,
           name: placeInfo.name,
           value: parseInt(digit) * placeInfo.multiplier,
-          digit: digit
+          digit: digit,
         })
       })
     }
-    
+
     return placeValues.reverse() // Display from largest to smallest
   }
 
@@ -97,7 +101,7 @@ export const PlaceValueChart: React.FC<PlaceValueChartProps> = ({
 
   const handlePlaceClick = (placeValue: PlaceValue) => {
     if (!allowInteraction) return
-    
+
     setSelectedPlace(placeValue.place)
     if (onPlaceValueSelect) {
       onPlaceValueSelect(placeValue.place, placeValue.digit, placeValue.value)
@@ -105,23 +109,24 @@ export const PlaceValueChart: React.FC<PlaceValueChartProps> = ({
   }
 
   const updateDigitInPlace = (place: string, newDigit: string) => {
-    if (!allowInteraction || newDigit.length > 1 || !/^[0-9]$/.test(newDigit)) return
-    
+    if (!allowInteraction || newDigit.length > 1 || !/^[0-9]$/.test(newDigit))
+      return
+
     const placeValues = parseNumber(currentNumber)
     const placeIndex = placeValues.findIndex(pv => pv.place === place)
     if (placeIndex === -1) return
-    
+
     // Reconstruct number with new digit
     let newNumberParts = currentNumber.split('.')
     let wholePart = newNumberParts[0] || '0'
     let decimalPart = newNumberParts[1] || ''
-    
+
     const wholeMultipliers = [1000000, 100000, 10000, 1000, 100, 10, 1]
     const decimalMultipliers = [0.1, 0.01, 0.001]
-    
+
     const placeInfo = placeNames.find(p => p.place === place)
     if (!placeInfo) return
-    
+
     if (placeInfo.multiplier >= 1) {
       // Update whole number part
       const wholeArray = wholePart.padStart(7, '0').split('')
@@ -139,7 +144,7 @@ export const PlaceValueChart: React.FC<PlaceValueChartProps> = ({
         decimalPart = decimalArray.join('').replace(/0+$/, '')
       }
     }
-    
+
     const newNumber = decimalPart ? `${wholePart}.${decimalPart}` : wholePart
     updateNumber(newNumber)
   }
@@ -147,9 +152,9 @@ export const PlaceValueChart: React.FC<PlaceValueChartProps> = ({
   const generateExpandedForm = (): string => {
     const placeValues = parseNumber(currentNumber)
     const nonZeroPlaces = placeValues.filter(pv => pv.value > 0)
-    
+
     if (nonZeroPlaces.length === 0) return '0'
-    
+
     return nonZeroPlaces
       .map(pv => {
         if (pv.multiplier >= 1) {
@@ -172,23 +177,23 @@ export const PlaceValueChart: React.FC<PlaceValueChartProps> = ({
           <Input
             type="text"
             value={currentNumber}
-            onChange={(e) => updateNumber(e.target.value)}
+            onChange={e => updateNumber(e.target.value)}
             className="text-lg font-mono"
             placeholder="Enter a number..."
             disabled={!allowInteraction}
           />
-          
+
           <div className="flex gap-2">
-            <Button 
-              size="sm" 
+            <Button
+              size="sm"
               variant="outline"
               onClick={() => setShowExpandedForm(!showExpandedForm)}
             >
               {showExpandedForm ? 'Hide' : 'Show'} Expanded
             </Button>
-            
-            <Button 
-              size="sm" 
+
+            <Button
+              size="sm"
               variant="outline"
               onClick={() => updateNumber('0')}
               disabled={!allowInteraction}
@@ -202,7 +207,9 @@ export const PlaceValueChart: React.FC<PlaceValueChartProps> = ({
         {showExpandedForm && (
           <div className="p-4 bg-green-50 rounded-lg border-2 border-green-200">
             <div className="text-center">
-              <div className="text-sm font-medium text-green-800 mb-2">Expanded Form:</div>
+              <div className="text-sm font-medium text-green-800 mb-2">
+                Expanded Form:
+              </div>
               <div className="text-lg font-mono text-green-900">
                 {generateExpandedForm()}
               </div>
@@ -215,8 +222,8 @@ export const PlaceValueChart: React.FC<PlaceValueChartProps> = ({
           <div className="min-w-full">
             {/* Headers */}
             <div className="grid grid-cols-10 gap-1 mb-2">
-              {placeValues.map((pv) => (
-                <div 
+              {placeValues.map(pv => (
+                <div
                   key={pv.place}
                   className={`
                     p-2 text-center text-xs font-medium border-2 rounded-t
@@ -227,7 +234,9 @@ export const PlaceValueChart: React.FC<PlaceValueChartProps> = ({
                 >
                   {pv.name}
                   <div className="text-xs text-gray-500 mt-1">
-                    {pv.multiplier >= 1 ? pv.multiplier.toLocaleString() : pv.multiplier}
+                    {pv.multiplier >= 1
+                      ? pv.multiplier.toLocaleString()
+                      : pv.multiplier}
                   </div>
                 </div>
               ))}
@@ -235,13 +244,15 @@ export const PlaceValueChart: React.FC<PlaceValueChartProps> = ({
 
             {/* Digits */}
             <div className="grid grid-cols-10 gap-1 mb-2">
-              {placeValues.map((pv) => (
+              {placeValues.map(pv => (
                 <div key={`digit-${pv.place}`}>
                   {allowInteraction ? (
                     <Input
                       type="text"
                       value={pv.digit}
-                      onChange={(e) => updateDigitInPlace(pv.place, e.target.value)}
+                      onChange={e =>
+                        updateDigitInPlace(pv.place, e.target.value)
+                      }
                       onClick={() => handlePlaceClick(pv)}
                       className={`
                         text-center text-2xl font-bold h-16 
@@ -253,7 +264,7 @@ export const PlaceValueChart: React.FC<PlaceValueChartProps> = ({
                       maxLength={1}
                     />
                   ) : (
-                    <div 
+                    <div
                       className={`
                         h-16 flex items-center justify-center text-2xl font-bold border-2 rounded cursor-pointer
                         ${selectedPlace === pv.place ? 'ring-2 ring-blue-400 bg-blue-50' : ''}
@@ -273,8 +284,8 @@ export const PlaceValueChart: React.FC<PlaceValueChartProps> = ({
 
             {/* Values */}
             <div className="grid grid-cols-10 gap-1">
-              {placeValues.map((pv) => (
-                <div 
+              {placeValues.map(pv => (
+                <div
                   key={`value-${pv.place}`}
                   className={`
                     p-2 text-center text-sm border-2 rounded-b
@@ -284,7 +295,9 @@ export const PlaceValueChart: React.FC<PlaceValueChartProps> = ({
                   `}
                 >
                   <div className="font-semibold">
-                    {pv.value >= 1 ? pv.value.toLocaleString() : pv.value.toFixed(3).replace(/\.?0+$/, '')}
+                    {pv.value >= 1
+                      ? pv.value.toLocaleString()
+                      : pv.value.toFixed(3).replace(/\.?0+$/, '')}
                   </div>
                 </div>
               ))}
@@ -310,22 +323,46 @@ export const PlaceValueChart: React.FC<PlaceValueChartProps> = ({
           <div className="p-4 bg-blue-50 rounded-lg border-2 border-blue-200">
             <div className="text-center">
               {(() => {
-                const selectedPV = placeValues.find(pv => pv.place === selectedPlace)
+                const selectedPV = placeValues.find(
+                  pv => pv.place === selectedPlace
+                )
                 if (!selectedPV) return null
-                
+
                 return (
                   <div>
                     <div className="text-lg font-semibold text-blue-900">
                       {selectedPV.name} Place
                     </div>
                     <div className="text-sm text-blue-700 mt-2 space-y-1">
-                      <div>Digit: <span className="font-bold text-2xl">{selectedPV.digit}</span></div>
-                      <div>Place Value: {selectedPV.multiplier >= 1 ? selectedPV.multiplier.toLocaleString() : selectedPV.multiplier}</div>
-                      <div>Actual Value: <span className="font-bold">
-                        {selectedPV.value >= 1 ? selectedPV.value.toLocaleString() : selectedPV.value.toFixed(3).replace(/\.?0+$/, '')}
-                      </span></div>
+                      <div>
+                        Digit:{' '}
+                        <span className="font-bold text-2xl">
+                          {selectedPV.digit}
+                        </span>
+                      </div>
+                      <div>
+                        Place Value:{' '}
+                        {selectedPV.multiplier >= 1
+                          ? selectedPV.multiplier.toLocaleString()
+                          : selectedPV.multiplier}
+                      </div>
+                      <div>
+                        Actual Value:{' '}
+                        <span className="font-bold">
+                          {selectedPV.value >= 1
+                            ? selectedPV.value.toLocaleString()
+                            : selectedPV.value.toFixed(3).replace(/\.?0+$/, '')}
+                        </span>
+                      </div>
                       <div className="text-xs text-blue-600 mt-2">
-                        {selectedPV.digit} × {selectedPV.multiplier >= 1 ? selectedPV.multiplier.toLocaleString() : selectedPV.multiplier} = {selectedPV.value >= 1 ? selectedPV.value.toLocaleString() : selectedPV.value.toFixed(3).replace(/\.?0+$/, '')}
+                        {selectedPV.digit} ×{' '}
+                        {selectedPV.multiplier >= 1
+                          ? selectedPV.multiplier.toLocaleString()
+                          : selectedPV.multiplier}{' '}
+                        ={' '}
+                        {selectedPV.value >= 1
+                          ? selectedPV.value.toLocaleString()
+                          : selectedPV.value.toFixed(3).replace(/\.?0+$/, '')}
                       </div>
                     </div>
                   </div>
@@ -337,11 +374,19 @@ export const PlaceValueChart: React.FC<PlaceValueChartProps> = ({
 
         {/* Quick Numbers */}
         <div className="space-y-2">
-          <div className="text-sm font-medium text-center">Quick Number Examples:</div>
+          <div className="text-sm font-medium text-center">
+            Quick Number Examples:
+          </div>
           <div className="flex flex-wrap justify-center gap-2">
             {[
-              '2457', '35628', '146789', '2457.5', '35.42', '3.142', '0.075'
-            ].map((num) => (
+              '2457',
+              '35628',
+              '146789',
+              '2457.5',
+              '35.42',
+              '3.142',
+              '0.075',
+            ].map(num => (
               <Button
                 key={num}
                 variant="outline"
@@ -361,9 +406,15 @@ export const PlaceValueChart: React.FC<PlaceValueChartProps> = ({
           <ul className="mt-1 space-y-1">
             <li>• Enter any number to see its place value breakdown</li>
             <li>• Click on digits to edit them individually</li>
-            <li>• Yellow column shows the "ones" place (decimal point reference)</li>
-            <li>• Blue columns are whole numbers, green columns are decimals</li>
-            <li>• "Show Expanded" displays the number as sum of place values</li>
+            <li>
+              • Yellow column shows the "ones" place (decimal point reference)
+            </li>
+            <li>
+              • Blue columns are whole numbers, green columns are decimals
+            </li>
+            <li>
+              • "Show Expanded" displays the number as sum of place values
+            </li>
           </ul>
         </div>
       </div>

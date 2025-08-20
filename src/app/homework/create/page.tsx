@@ -18,10 +18,7 @@ export default function CreateHomeworkPage() {
   return (
     <AuthGuard requiredRoles={['PARENT', 'ADMIN']}>
       <div className="container mx-auto px-4 py-8">
-        <HomeworkBuilder 
-          onSave={handleSave}
-          onCancel={handleCancel}
-        />
+        <HomeworkBuilder onSave={handleSave} onCancel={handleCancel} />
       </div>
     </AuthGuard>
   )

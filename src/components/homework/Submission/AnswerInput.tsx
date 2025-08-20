@@ -7,14 +7,14 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Label } from '@/components/ui/label'
-import { 
-  CheckSquare, 
+import {
+  CheckSquare,
   Square,
   Circle,
   CheckCircle,
   AlertCircle,
   Clock,
-  Save
+  Save,
 } from 'lucide-react'
 import { Exercise, Question } from '@/types'
 
@@ -25,11 +25,11 @@ interface AnswerInputProps {
   disabled?: boolean
 }
 
-export default function AnswerInput({ 
-  exercise, 
-  answers, 
-  onAnswerChange, 
-  disabled = false 
+export default function AnswerInput({
+  exercise,
+  answers,
+  onAnswerChange,
+  disabled = false,
 }: AnswerInputProps) {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
   const [savedAnswers, setSavedAnswers] = useState<Record<string, boolean>>({})
@@ -43,7 +43,7 @@ export default function AnswerInput({
       if (currentQuestion && answers[currentQuestion.id]) {
         setSavedAnswers(prev => ({
           ...prev,
-          [currentQuestion.id]: true
+          [currentQuestion.id]: true,
         }))
       }
     }, 1000)
@@ -68,22 +68,22 @@ export default function AnswerInput({
     switch (currentQuestion.type) {
       case 'MULTIPLE_CHOICE':
         return renderMultipleChoice(answer)
-      
+
       case 'TRUE_FALSE':
         return renderTrueFalse(answer)
-      
+
       case 'SHORT_ANSWER':
         return renderShortAnswer(answer)
-      
+
       case 'LONG_ANSWER':
         return renderLongAnswer(answer)
-      
+
       case 'MATCHING':
         return renderMatching(answer)
-      
+
       case 'FILL_IN_BLANK':
         return renderFillInBlank(answer)
-      
+
       default:
         return renderGenericInput(answer)
     }
@@ -92,19 +92,21 @@ export default function AnswerInput({
   // 选择题
   const renderMultipleChoice = (answer: string) => {
     const options = currentQuestion.options || []
-    
+
     return (
       <div className="space-y-3">
         <RadioGroup
           value={answer}
-          onValueChange={(value) => !disabled && onAnswerChange(currentQuestion.id, value)}
+          onValueChange={value =>
+            !disabled && onAnswerChange(currentQuestion.id, value)
+          }
           disabled={disabled}
         >
           {options.map((option, index) => (
             <div key={index} className="flex items-center space-x-2">
               <RadioGroupItem value={option} id={`option-${index}`} />
-              <Label 
-                htmlFor={`option-${index}`} 
+              <Label
+                htmlFor={`option-${index}`}
                 className={`cursor-pointer ${disabled ? 'text-gray-500' : ''}`}
               >
                 {String.fromCharCode(65 + index)}. {option}
@@ -122,18 +124,26 @@ export default function AnswerInput({
       <div className="space-y-3">
         <RadioGroup
           value={answer}
-          onValueChange={(value) => !disabled && onAnswerChange(currentQuestion.id, value)}
+          onValueChange={value =>
+            !disabled && onAnswerChange(currentQuestion.id, value)
+          }
           disabled={disabled}
         >
           <div className="flex items-center space-x-2">
             <RadioGroupItem value="true" id="true" />
-            <Label htmlFor="true" className={`cursor-pointer ${disabled ? 'text-gray-500' : ''}`}>
+            <Label
+              htmlFor="true"
+              className={`cursor-pointer ${disabled ? 'text-gray-500' : ''}`}
+            >
               正确
             </Label>
           </div>
           <div className="flex items-center space-x-2">
             <RadioGroupItem value="false" id="false" />
-            <Label htmlFor="false" className={`cursor-pointer ${disabled ? 'text-gray-500' : ''}`}>
+            <Label
+              htmlFor="false"
+              className={`cursor-pointer ${disabled ? 'text-gray-500' : ''}`}
+            >
               错误
             </Label>
           </div>
@@ -147,7 +157,9 @@ export default function AnswerInput({
     return (
       <Input
         value={answer}
-        onChange={(e) => !disabled && onAnswerChange(currentQuestion.id, e.target.value)}
+        onChange={e =>
+          !disabled && onAnswerChange(currentQuestion.id, e.target.value)
+        }
         placeholder="请输入您的答案"
         disabled={disabled}
         className="text-base"
@@ -160,7 +172,9 @@ export default function AnswerInput({
     return (
       <Textarea
         value={answer}
-        onChange={(e) => !disabled && onAnswerChange(currentQuestion.id, e.target.value)}
+        onChange={e =>
+          !disabled && onAnswerChange(currentQuestion.id, e.target.value)
+        }
         placeholder="请输入您的详细答案"
         rows={6}
         disabled={disabled}
@@ -183,7 +197,10 @@ export default function AnswerInput({
             <div className="space-y-2">
               {leftItems.map((item, index) => (
                 <Card key={index} className="p-3 bg-blue-50">
-                  <span className="font-medium">{String.fromCharCode(65 + index)}.</span> {item}
+                  <span className="font-medium">
+                    {String.fromCharCode(65 + index)}.
+                  </span>{' '}
+                  {item}
                 </Card>
               ))}
             </div>
@@ -200,10 +217,14 @@ export default function AnswerInput({
           </div>
         </div>
         <div>
-          <h4 className="font-medium mb-3">请输入连线答案 (格式: A-1, B-2, ...)</h4>
+          <h4 className="font-medium mb-3">
+            请输入连线答案 (格式: A-1, B-2, ...)
+          </h4>
           <Input
             value={answer}
-            onChange={(e) => !disabled && onAnswerChange(currentQuestion.id, e.target.value)}
+            onChange={e =>
+              !disabled && onAnswerChange(currentQuestion.id, e.target.value)
+            }
             placeholder="例如: A-1, B-3, C-2"
             disabled={disabled}
           />
@@ -227,10 +248,13 @@ export default function AnswerInput({
                 <Input
                   key={`blank-${index}`}
                   value={answers[index] || ''}
-                  onChange={(e) => {
+                  onChange={e => {
                     if (!disabled) {
                       const newAnswers = { ...answers, [index]: e.target.value }
-                      onAnswerChange(currentQuestion.id, JSON.stringify(newAnswers))
+                      onAnswerChange(
+                        currentQuestion.id,
+                        JSON.stringify(newAnswers)
+                      )
                     }
                   }}
                   className="inline-block w-32 mx-2"
@@ -249,7 +273,9 @@ export default function AnswerInput({
     return (
       <Textarea
         value={answer}
-        onChange={(e) => !disabled && onAnswerChange(currentQuestion.id, e.target.value)}
+        onChange={e =>
+          !disabled && onAnswerChange(currentQuestion.id, e.target.value)
+        }
         placeholder="请输入您的答案"
         rows={4}
         disabled={disabled}
@@ -263,7 +289,7 @@ export default function AnswerInput({
     const question = questions[questionIndex]
     const hasAnswer = answers[question.id] && answers[question.id].trim() !== ''
     const isSaved = savedAnswers[question.id]
-    
+
     if (hasAnswer && isSaved) {
       return 'completed'
     } else if (hasAnswer) {
@@ -299,16 +325,19 @@ export default function AnswerInput({
             {questions.map((question, index) => {
               const status = getAnswerStatus(index)
               const isCurrent = index === currentQuestionIndex
-              
+
               return (
                 <Button
                   key={question.id}
-                  variant={isCurrent ? "default" : "outline"}
+                  variant={isCurrent ? 'default' : 'outline'}
                   size="sm"
                   onClick={() => setCurrentQuestionIndex(index)}
                   className={`flex items-center justify-center ${
-                    status === 'completed' ? 'border-green-500' : 
-                    status === 'answered' ? 'border-yellow-500' : ''
+                    status === 'completed'
+                      ? 'border-green-500'
+                      : status === 'answered'
+                        ? 'border-yellow-500'
+                        : ''
                   }`}
                 >
                   <span className="mr-1">{index + 1}</span>
@@ -338,16 +367,16 @@ export default function AnswerInput({
                 </div>
               )}
             </div>
-            
+
             <div className="mb-6">
               <div className="text-base leading-relaxed mb-4">
                 {currentQuestion.question}
               </div>
-              
+
               {currentQuestion.image && (
                 <div className="mb-4">
-                  <img 
-                    src={currentQuestion.image} 
+                  <img
+                    src={currentQuestion.image}
                     alt="题目图片"
                     className="max-w-full h-auto rounded-lg border"
                   />
@@ -363,7 +392,7 @@ export default function AnswerInput({
               )}
             </div>
           </div>
-          
+
           {currentQuestion.timeLimit && (
             <div className="flex items-center gap-1 text-sm text-gray-500">
               <Clock size={14} />
@@ -373,15 +402,15 @@ export default function AnswerInput({
         </div>
 
         {/* 答题区域 */}
-        <div className="mb-6">
-          {renderAnswerInput()}
-        </div>
+        <div className="mb-6">{renderAnswerInput()}</div>
 
         {/* 题目操作按钮 */}
         <div className="flex justify-between">
           <Button
             variant="outline"
-            onClick={() => setCurrentQuestionIndex(Math.max(0, currentQuestionIndex - 1))}
+            onClick={() =>
+              setCurrentQuestionIndex(Math.max(0, currentQuestionIndex - 1))
+            }
             disabled={currentQuestionIndex === 0}
           >
             上一题
@@ -394,7 +423,7 @@ export default function AnswerInput({
                 onClick={() => {
                   setSavedAnswers(prev => ({
                     ...prev,
-                    [currentQuestion.id]: true
+                    [currentQuestion.id]: true,
                   }))
                 }}
                 disabled={!answers[currentQuestion.id]?.trim()}
@@ -403,11 +432,13 @@ export default function AnswerInput({
                 保存答案
               </Button>
             )}
-            
+
             <Button
-              onClick={() => setCurrentQuestionIndex(
-                Math.min(questions.length - 1, currentQuestionIndex + 1)
-              )}
+              onClick={() =>
+                setCurrentQuestionIndex(
+                  Math.min(questions.length - 1, currentQuestionIndex + 1)
+                )
+              }
               disabled={currentQuestionIndex === questions.length - 1}
             >
               下一题
@@ -427,7 +458,8 @@ export default function AnswerInput({
           </div>
           <div>
             <div className="text-2xl font-bold text-yellow-600">
-              {Object.keys(answers).length - Object.values(savedAnswers).filter(Boolean).length}
+              {Object.keys(answers).length -
+                Object.values(savedAnswers).filter(Boolean).length}
             </div>
             <div className="text-sm text-gray-600">已作答</div>
           </div>

@@ -36,12 +36,14 @@ export const ShapeDrawer: React.FC<ShapeDrawerProps> = ({
   showMeasurements = true,
   className = '',
   onShapeCreate,
-  onAreaCalculated
+  onAreaCalculated,
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [shapes, setShapes] = useState<Shape[]>([])
   const [selectedShape, setSelectedShape] = useState<Shape | null>(null)
-  const [drawingMode, setDrawingMode] = useState<Shape['type'] | 'select'>('select')
+  const [drawingMode, setDrawingMode] = useState<Shape['type'] | 'select'>(
+    'select'
+  )
   const [isDrawing, setIsDrawing] = useState(false)
   const [startPos, setStartPos] = useState({ x: 0, y: 0 })
   const [shapeColor, setShapeColor] = useState('#3B82F6')
@@ -82,9 +84,9 @@ export const ShapeDrawer: React.FC<ShapeDrawerProps> = ({
   const drawGrid = (ctx: CanvasRenderingContext2D) => {
     ctx.strokeStyle = '#E5E7EB'
     ctx.lineWidth = 0.5
-    
+
     const gridSize = 20
-    
+
     // Vertical lines
     for (let x = 0; x <= width; x += gridSize) {
       ctx.beginPath()
@@ -92,7 +94,7 @@ export const ShapeDrawer: React.FC<ShapeDrawerProps> = ({
       ctx.lineTo(x, height)
       ctx.stroke()
     }
-    
+
     // Horizontal lines
     for (let y = 0; y <= height; y += gridSize) {
       ctx.beginPath()
@@ -102,7 +104,11 @@ export const ShapeDrawer: React.FC<ShapeDrawerProps> = ({
     }
   }
 
-  const drawShape = (ctx: CanvasRenderingContext2D, shape: Shape, isSelected: boolean) => {
+  const drawShape = (
+    ctx: CanvasRenderingContext2D,
+    shape: Shape,
+    isSelected: boolean
+  ) => {
     ctx.fillStyle = shape.color
     ctx.strokeStyle = isSelected ? '#EF4444' : shape.strokeColor
     ctx.lineWidth = isSelected ? 3 : 2
@@ -113,7 +119,7 @@ export const ShapeDrawer: React.FC<ShapeDrawerProps> = ({
         ctx.fillRect(shape.x, shape.y, shape.width, shape.height)
         ctx.strokeRect(shape.x, shape.y, shape.width, shape.height)
         break
-      
+
       case 'circle':
         const radius = Math.min(shape.width, shape.height) / 2
         ctx.beginPath()
@@ -121,7 +127,7 @@ export const ShapeDrawer: React.FC<ShapeDrawerProps> = ({
         ctx.fill()
         ctx.stroke()
         break
-      
+
       case 'triangle':
         ctx.beginPath()
         ctx.moveTo(shape.x + shape.width / 2, shape.y) // Top center
@@ -138,7 +144,11 @@ export const ShapeDrawer: React.FC<ShapeDrawerProps> = ({
       ctx.fillStyle = '#1F2937'
       ctx.font = '12px Arial'
       ctx.textAlign = 'center'
-      ctx.fillText(shape.label, shape.x + shape.width / 2, shape.y + shape.height / 2)
+      ctx.fillText(
+        shape.label,
+        shape.x + shape.width / 2,
+        shape.y + shape.height / 2
+      )
     }
   }
 
@@ -161,8 +171,8 @@ export const ShapeDrawer: React.FC<ShapeDrawerProps> = ({
         ctx.lineTo(shape.x + shape.width, shape.y - 15)
         ctx.stroke()
         ctx.fillText(
-          `${shape.width}px`, 
-          shape.x + shape.width / 2, 
+          `${shape.width}px`,
+          shape.x + shape.width / 2,
           shape.y - 20
         )
 
@@ -186,8 +196,8 @@ export const ShapeDrawer: React.FC<ShapeDrawerProps> = ({
         ctx.lineTo(shape.x + shape.width, shape.y + radius)
         ctx.stroke()
         ctx.fillText(
-          `r = ${radius.toFixed(1)}px`, 
-          shape.x + radius + radius / 2, 
+          `r = ${radius.toFixed(1)}px`,
+          shape.x + radius + radius / 2,
           shape.y + radius - 5
         )
         break
@@ -195,8 +205,16 @@ export const ShapeDrawer: React.FC<ShapeDrawerProps> = ({
 
     // Display area and perimeter
     ctx.textAlign = 'left'
-    ctx.fillText(`Area: ${area.toFixed(1)} px²`, shape.x, shape.y + shape.height + 20)
-    ctx.fillText(`Perimeter: ${perimeter.toFixed(1)} px`, shape.x, shape.y + shape.height + 35)
+    ctx.fillText(
+      `Area: ${area.toFixed(1)} px²`,
+      shape.x,
+      shape.y + shape.height + 20
+    )
+    ctx.fillText(
+      `Perimeter: ${perimeter.toFixed(1)} px`,
+      shape.x,
+      shape.y + shape.height + 35
+    )
   }
 
   const calculateAreaAndPerimeter = (shape: Shape) => {
@@ -209,18 +227,20 @@ export const ShapeDrawer: React.FC<ShapeDrawerProps> = ({
         area = shape.width * shape.height
         perimeter = 2 * (shape.width + shape.height)
         break
-      
+
       case 'circle':
         const radius = Math.min(shape.width, shape.height) / 2
         area = Math.PI * radius * radius
         perimeter = 2 * Math.PI * radius
         break
-      
+
       case 'triangle':
         // Assuming equilateral triangle for simplicity
         area = (shape.width * shape.height) / 2
         // This is a simplified perimeter calculation
-        const sideLength = Math.sqrt(Math.pow(shape.width / 2, 2) + Math.pow(shape.height, 2))
+        const sideLength = Math.sqrt(
+          Math.pow(shape.width / 2, 2) + Math.pow(shape.height, 2)
+        )
         perimeter = shape.width + 2 * sideLength
         break
     }
@@ -239,9 +259,12 @@ export const ShapeDrawer: React.FC<ShapeDrawerProps> = ({
 
     if (drawingMode === 'select') {
       // Check if clicking on existing shape
-      const clickedShape = shapes.find(shape => 
-        x >= shape.x && x <= shape.x + shape.width &&
-        y >= shape.y && y <= shape.y + shape.height
+      const clickedShape = shapes.find(
+        shape =>
+          x >= shape.x &&
+          x <= shape.x + shape.width &&
+          y >= shape.y &&
+          y <= shape.y + shape.height
       )
       setSelectedShape(clickedShape || null)
     } else {
@@ -269,7 +292,7 @@ export const ShapeDrawer: React.FC<ShapeDrawerProps> = ({
       height: Math.abs(endY - startPos.y),
       color: shapeColor + '80', // Add transparency
       strokeColor: strokeColor,
-      label: `${drawingMode} ${shapes.length + 1}`
+      label: `${drawingMode} ${shapes.length + 1}`,
     }
 
     // Ensure minimum size
@@ -308,7 +331,7 @@ export const ShapeDrawer: React.FC<ShapeDrawerProps> = ({
       height: drawingMode === 'square' ? dimensions.width : dimensions.height,
       color: shapeColor + '80',
       strokeColor: strokeColor,
-      label: `${drawingMode} ${shapes.length + 1}`
+      label: `${drawingMode} ${shapes.length + 1}`,
     }
 
     setShapes(prev => [...prev, newShape])
@@ -342,7 +365,9 @@ export const ShapeDrawer: React.FC<ShapeDrawerProps> = ({
           <div className="flex items-center gap-2">
             <label className="text-sm font-medium">Mode:</label>
             <div className="flex gap-1">
-              {(['select', 'rectangle', 'square', 'triangle', 'circle'] as const).map(mode => (
+              {(
+                ['select', 'rectangle', 'square', 'triangle', 'circle'] as const
+              ).map(mode => (
                 <Button
                   key={mode}
                   size="sm"
@@ -350,10 +375,15 @@ export const ShapeDrawer: React.FC<ShapeDrawerProps> = ({
                   onClick={() => setDrawingMode(mode)}
                   disabled={!allowDrawing && mode !== 'select'}
                 >
-                  {mode === 'select' ? '🖱️' : 
-                   mode === 'rectangle' ? '▭' :
-                   mode === 'square' ? '□' :
-                   mode === 'triangle' ? '△' : '○'}
+                  {mode === 'select'
+                    ? '🖱️'
+                    : mode === 'rectangle'
+                      ? '▭'
+                      : mode === 'square'
+                        ? '□'
+                        : mode === 'triangle'
+                          ? '△'
+                          : '○'}
                   {mode}
                 </Button>
               ))}
@@ -365,7 +395,7 @@ export const ShapeDrawer: React.FC<ShapeDrawerProps> = ({
             <input
               type="color"
               value={shapeColor}
-              onChange={(e) => setShapeColor(e.target.value)}
+              onChange={e => setShapeColor(e.target.value)}
               className="w-8 h-8 rounded border"
               disabled={!allowDrawing}
             />
@@ -376,7 +406,7 @@ export const ShapeDrawer: React.FC<ShapeDrawerProps> = ({
             <input
               type="color"
               value={strokeColor}
-              onChange={(e) => setStrokeColor(e.target.value)}
+              onChange={e => setStrokeColor(e.target.value)}
               className="w-8 h-8 rounded border"
               disabled={!allowDrawing}
             />
@@ -409,7 +439,12 @@ export const ShapeDrawer: React.FC<ShapeDrawerProps> = ({
               <Input
                 type="number"
                 value={dimensions.width}
-                onChange={(e) => setDimensions(prev => ({ ...prev, width: parseInt(e.target.value) || 100 }))}
+                onChange={e =>
+                  setDimensions(prev => ({
+                    ...prev,
+                    width: parseInt(e.target.value) || 100,
+                  }))
+                }
                 className="w-20 h-8"
                 min="20"
                 max="200"
@@ -421,7 +456,12 @@ export const ShapeDrawer: React.FC<ShapeDrawerProps> = ({
                 <Input
                   type="number"
                   value={dimensions.height}
-                  onChange={(e) => setDimensions(prev => ({ ...prev, height: parseInt(e.target.value) || 60 }))}
+                  onChange={e =>
+                    setDimensions(prev => ({
+                      ...prev,
+                      height: parseInt(e.target.value) || 60,
+                    }))
+                  }
                   className="w-20 h-8"
                   min="20"
                   max="200"
@@ -455,15 +495,22 @@ export const ShapeDrawer: React.FC<ShapeDrawerProps> = ({
                 <h3 className="font-semibold mb-2">Shape Information</h3>
                 <div className="text-sm space-y-1">
                   <div>Type: {selectedShape.type}</div>
-                  <div>Position: ({selectedShape.x.toFixed(0)}, {selectedShape.y.toFixed(0)})</div>
-                  <div>Size: {selectedShape.width.toFixed(0)} × {selectedShape.height.toFixed(0)}</div>
+                  <div>
+                    Position: ({selectedShape.x.toFixed(0)},{' '}
+                    {selectedShape.y.toFixed(0)})
+                  </div>
+                  <div>
+                    Size: {selectedShape.width.toFixed(0)} ×{' '}
+                    {selectedShape.height.toFixed(0)}
+                  </div>
                 </div>
               </div>
               <div>
                 <h3 className="font-semibold mb-2">Calculations</h3>
                 <div className="text-sm space-y-1">
                   {(() => {
-                    const { area, perimeter } = calculateAreaAndPerimeter(selectedShape)
+                    const { area, perimeter } =
+                      calculateAreaAndPerimeter(selectedShape)
                     return (
                       <>
                         <div>Area: {area.toFixed(1)} px²</div>
@@ -476,7 +523,11 @@ export const ShapeDrawer: React.FC<ShapeDrawerProps> = ({
             </div>
             {allowDrawing && (
               <div className="mt-3 flex gap-2">
-                <Button size="sm" variant="destructive" onClick={deleteSelectedShape}>
+                <Button
+                  size="sm"
+                  variant="destructive"
+                  onClick={deleteSelectedShape}
+                >
                   Delete Shape
                 </Button>
               </div>

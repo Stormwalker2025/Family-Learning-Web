@@ -5,8 +5,16 @@ import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
 import { Badge } from '@/components/ui/badge'
-import { MathExercise as MathExerciseType, MathQuestion, MathSubmission } from '@/types'
-import { PlaceValueQuestion, FractionQuestion, AreaPerimeterQuestion } from './QuestionTypes'
+import {
+  MathExercise as MathExerciseType,
+  MathQuestion,
+  MathSubmission,
+} from '@/types'
+import {
+  PlaceValueQuestion,
+  FractionQuestion,
+  AreaPerimeterQuestion,
+} from './QuestionTypes'
 
 interface MathExerciseProps {
   exercise: MathExerciseType
@@ -23,7 +31,7 @@ interface Answer {
 export const MathExercise: React.FC<MathExerciseProps> = ({
   exercise,
   onComplete,
-  className = ''
+  className = '',
 }) => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
   const [answers, setAnswers] = useState<Record<string, any>>({})
@@ -65,35 +73,52 @@ export const MathExercise: React.FC<MathExerciseProps> = ({
 
     switch (question.type) {
       case 'multiple-choice':
-        return String(userAnswer).toLowerCase().trim() === String(correctAnswer).toLowerCase().trim()
-      
+        return (
+          String(userAnswer).toLowerCase().trim() ===
+          String(correctAnswer).toLowerCase().trim()
+        )
+
       case 'true-false':
         return Boolean(userAnswer) === Boolean(correctAnswer)
-      
+
       case 'input-answer':
       case 'calculation':
         // Handle numeric answers with tolerance
         if (question.tolerance && question.tolerance > 0) {
-          const userNum = parseFloat(String(userAnswer).replace(/[^0-9.-]/g, ''))
-          const correctNum = parseFloat(String(correctAnswer).replace(/[^0-9.-]/g, ''))
+          const userNum = parseFloat(
+            String(userAnswer).replace(/[^0-9.-]/g, '')
+          )
+          const correctNum = parseFloat(
+            String(correctAnswer).replace(/[^0-9.-]/g, '')
+          )
           return Math.abs(userNum - correctNum) <= question.tolerance
         }
-        return String(userAnswer).toLowerCase().trim() === String(correctAnswer).toLowerCase().trim()
-      
+        return (
+          String(userAnswer).toLowerCase().trim() ===
+          String(correctAnswer).toLowerCase().trim()
+        )
+
       case 'drag-drop':
         return JSON.stringify(userAnswer) === JSON.stringify(correctAnswer)
-      
+
       case 'place-value-builder':
         return JSON.stringify(userAnswer) === JSON.stringify(correctAnswer)
-      
+
       case 'unit-conversion':
-        const userConverted = parseFloat(String(userAnswer).replace(/[^0-9.-]/g, ''))
-        const correctConverted = parseFloat(String(correctAnswer).replace(/[^0-9.-]/g, ''))
+        const userConverted = parseFloat(
+          String(userAnswer).replace(/[^0-9.-]/g, '')
+        )
+        const correctConverted = parseFloat(
+          String(correctAnswer).replace(/[^0-9.-]/g, '')
+        )
         const tolerance = question.tolerance || 0.01
         return Math.abs(userConverted - correctConverted) <= tolerance
-      
+
       default:
-        return String(userAnswer).toLowerCase().trim() === String(correctAnswer).toLowerCase().trim()
+        return (
+          String(userAnswer).toLowerCase().trim() ===
+          String(correctAnswer).toLowerCase().trim()
+        )
     }
   }
 
@@ -119,14 +144,14 @@ export const MathExercise: React.FC<MathExerciseProps> = ({
 
   const handleSubmit = () => {
     const totalTimeMinutes = Math.round((Date.now() - startTime) / (1000 * 60))
-    
+
     const submission: Partial<MathSubmission> = {
       exerciseId: exercise.id,
       answers,
       startedAt: new Date(startTime),
       submittedAt: new Date(),
       timeSpent: totalTimeMinutes,
-      toolUsage: {} // This would be tracked by individual tools
+      toolUsage: {}, // This would be tracked by individual tools
     }
 
     onComplete(submission)
@@ -139,21 +164,26 @@ export const MathExercise: React.FC<MathExerciseProps> = ({
           {exercise.conceptIntro.title}
         </h2>
         <Badge variant="outline" className="mb-4">
-          {exercise.topic.replace('-', ' ').toUpperCase()} • Year {exercise.yearLevel}
+          {exercise.topic.replace('-', ' ').toUpperCase()} • Year{' '}
+          {exercise.yearLevel}
         </Badge>
       </div>
 
       <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
         <h3 className="font-semibold text-blue-900 mb-3">What you'll learn:</h3>
-        <p className="text-blue-800 mb-4">{exercise.conceptIntro.explanation}</p>
-        
+        <p className="text-blue-800 mb-4">
+          {exercise.conceptIntro.explanation}
+        </p>
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <h4 className="font-medium text-blue-900 mb-2">Key Terms:</h4>
             <ul className="space-y-2">
               {exercise.conceptIntro.keyTerms.slice(0, 3).map((term, index) => (
                 <li key={index} className="text-sm">
-                  <span className="font-medium text-blue-800">{term.term}:</span>
+                  <span className="font-medium text-blue-800">
+                    {term.term}:
+                  </span>
                   <span className="text-blue-700 ml-1">{term.definition}</span>
                 </li>
               ))}
@@ -163,9 +193,13 @@ export const MathExercise: React.FC<MathExerciseProps> = ({
           <div>
             <h4 className="font-medium text-blue-900 mb-2">Real-world uses:</h4>
             <ul className="space-y-1">
-              {exercise.conceptIntro.realWorldApplications.slice(0, 3).map((app, index) => (
-                <li key={index} className="text-sm text-blue-700">• {app}</li>
-              ))}
+              {exercise.conceptIntro.realWorldApplications
+                .slice(0, 3)
+                .map((app, index) => (
+                  <li key={index} className="text-sm text-blue-700">
+                    • {app}
+                  </li>
+                ))}
             </ul>
           </div>
         </div>
@@ -176,10 +210,12 @@ export const MathExercise: React.FC<MathExerciseProps> = ({
           <h3 className="font-semibold text-green-900 mb-3">Example:</h3>
           <div className="space-y-3">
             <div className="text-green-800">
-              <strong>Problem:</strong> {exercise.conceptIntro.examples[0].problem}
+              <strong>Problem:</strong>{' '}
+              {exercise.conceptIntro.examples[0].problem}
             </div>
             <div className="text-green-700">
-              <strong>Solution:</strong> {exercise.conceptIntro.examples[0].solution}
+              <strong>Solution:</strong>{' '}
+              {exercise.conceptIntro.examples[0].solution}
             </div>
             {exercise.conceptIntro.examples[0].steps && (
               <div className="space-y-2">
@@ -188,7 +224,9 @@ export const MathExercise: React.FC<MathExerciseProps> = ({
                   <div key={index} className="text-sm text-green-700 ml-4">
                     {step.stepNumber}. {step.description}
                     {step.calculation && (
-                      <div className="font-mono text-green-600 ml-4">{step.calculation}</div>
+                      <div className="font-mono text-green-600 ml-4">
+                        {step.calculation}
+                      </div>
                     )}
                   </div>
                 ))}
@@ -216,18 +254,18 @@ export const MathExercise: React.FC<MathExerciseProps> = ({
       onAnswer: handleAnswer,
       showFeedback,
       isCorrect,
-      className: "mb-6"
+      className: 'mb-6',
     }
 
     // Route to appropriate question component based on topic and type
     if (exercise.topic === 'place-value') {
       return <PlaceValueQuestion {...questionProps} />
     }
-    
+
     if (exercise.topic === 'fractions') {
       return <FractionQuestion {...questionProps} />
     }
-    
+
     if (exercise.topic === 'area' || exercise.topic === 'perimeter') {
       return <AreaPerimeterQuestion {...questionProps} />
     }
@@ -237,10 +275,13 @@ export const MathExercise: React.FC<MathExerciseProps> = ({
       <Card className="p-6 mb-6">
         <div className="space-y-4">
           <div className="text-lg font-medium">{currentQuestion.question}</div>
-          <div className="text-sm text-gray-600">{currentQuestion.instructions}</div>
+          <div className="text-sm text-gray-600">
+            {currentQuestion.instructions}
+          </div>
           <div className="p-4 bg-yellow-50 border border-yellow-200 rounded">
             <div className="text-sm text-yellow-800">
-              Question type "{currentQuestion.type}" not yet implemented for topic "{exercise.topic}"
+              Question type "{currentQuestion.type}" not yet implemented for
+              topic "{exercise.topic}"
             </div>
           </div>
         </div>
@@ -282,7 +323,7 @@ export const MathExercise: React.FC<MathExerciseProps> = ({
               )}
             </div>
           </div>
-          
+
           <Button
             variant="outline"
             onClick={() => setShowConceptIntro(true)}
@@ -295,7 +336,9 @@ export const MathExercise: React.FC<MathExerciseProps> = ({
         {/* Progress */}
         <div className="space-y-2">
           <div className="flex justify-between text-sm text-gray-600">
-            <span>Question {currentQuestionIndex + 1} of {exercise.questions.length}</span>
+            <span>
+              Question {currentQuestionIndex + 1} of {exercise.questions.length}
+            </span>
             <span>{Math.round(progress)}% Complete</span>
           </div>
           <Progress value={progress} className="h-2" />
@@ -320,7 +363,7 @@ export const MathExercise: React.FC<MathExerciseProps> = ({
             <div className="text-sm text-gray-600">
               Question {currentQuestionIndex + 1} of {exercise.questions.length}
             </div>
-            
+
             {answers[currentQuestion.id] && (
               <Badge variant={isCorrect ? 'default' : 'destructive'}>
                 {isCorrect ? '✓ Correct' : '✗ Try again'}
@@ -347,13 +390,17 @@ export const MathExercise: React.FC<MathExerciseProps> = ({
             </div>
             <div className="text-sm text-gray-600">Answered</div>
           </div>
-          
+
           <div>
             <div className="text-2xl font-bold text-green-600">
-              {Object.entries(answers).filter(([questionId, answer]) => {
-                const question = exercise.questions.find(q => q.id === questionId)
-                return question && checkAnswer(question, answer)
-              }).length}
+              {
+                Object.entries(answers).filter(([questionId, answer]) => {
+                  const question = exercise.questions.find(
+                    q => q.id === questionId
+                  )
+                  return question && checkAnswer(question, answer)
+                }).length
+              }
             </div>
             <div className="text-sm text-gray-600">Correct</div>
           </div>

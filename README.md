@@ -3,16 +3,19 @@
 Australian Family Learning & Homework Platform for Year 3 and Year 6 students.
 
 ## Students
+
 - **August** (Year 3) - Primary learning activities
 - **Michael** (Year 6) - Advanced studies and exercises
 
-## Parents/Administrators  
+## Parents/Administrators
+
 - **Grace** - Parent access
 - **Dan** - System administrator
 
 ## Features
 
 ### Core Learning Modules
+
 - 🇦🇺 **English Reading Practice** (IELTS GT style)
 - 🔢 **Mathematics Exercises** (place value, fractions, area, perimeter, decimals)
 - 📚 **HASS** (Humanities and Social Sciences) articles + questions
@@ -22,6 +25,7 @@ Australian Family Learning & Homework Platform for Year 3 and Year 6 students.
 - 🎮 **iPad Unlock Time Rules** based on performance
 
 ### Technical Stack
+
 - **Framework**: Next.js 14+ with App Router
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS
@@ -32,29 +36,34 @@ Australian Family Learning & Homework Platform for Year 3 and Year 6 students.
 ## Getting Started
 
 ### Prerequisites
-- Node.js 18+ 
+
+- Node.js 18+
 - npm or yarn
 
 ### Installation
 
 1. Clone the repository
 2. Install dependencies:
+
    ```bash
    npm install
    ```
 
 3. Set up environment variables:
+
    ```bash
    cp .env.example .env
    ```
 
 4. Set up the database:
+
    ```bash
    npm run db:push
    npm run db:generate
    ```
 
 5. Run the development server:
+
    ```bash
    npm run dev
    ```
@@ -99,18 +108,21 @@ src/
 ## Development Priorities
 
 ### Phase 1 - MVP Foundation
+
 - ✅ Project setup and configuration
 - ⏳ User authentication system
 - ⏳ Basic dashboard layouts
 - ⏳ Database schema implementation
 
 ### Phase 2 - Core Features
+
 - ⏳ English reading exercises
 - ⏳ Mathematics practice modules
 - ⏳ Vocabulary management
 - ⏳ Basic homework system
 
-### Phase 3 - Advanced Features  
+### Phase 3 - Advanced Features
+
 - ⏳ HASS content integration
 - ⏳ Progress tracking & analytics
 - ⏳ iPad unlock rules engine

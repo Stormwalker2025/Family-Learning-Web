@@ -7,18 +7,18 @@ import { year6MathExercises } from '@/data/math-exercises/year6-examples'
 // Combined mock data for demonstration - in production this would come from database
 const mockMathExercises: MathExercise[] = [
   ...year3MathExercises,
-  ...year6MathExercises
+  ...year6MathExercises,
 ]
 
 // Valid math topics
 const validTopics: MathTopic[] = [
   'place-value',
-  'fractions', 
+  'fractions',
   'area',
   'perimeter',
   'decimals',
   'measurement',
-  'money'
+  'money',
 ]
 
 // GET /api/exercises/maths/topics/[topic] - Get math exercises by topic
@@ -43,10 +43,10 @@ export async function GET(
     // Validate topic
     if (!validTopics.includes(topic)) {
       return NextResponse.json(
-        { 
+        {
           error: 'Invalid topic',
           validTopics: validTopics,
-          message: `Topic '${topic}' is not supported. Valid topics are: ${validTopics.join(', ')}`
+          message: `Topic '${topic}' is not supported. Valid topics are: ${validTopics.join(', ')}`,
         },
         { status: 400 }
       )
@@ -89,8 +89,13 @@ export async function GET(
       if (a.yearLevel !== b.yearLevel) {
         return a.yearLevel - b.yearLevel
       }
-      
-      const difficultyOrder = { foundation: 1, developing: 2, proficient: 3, advanced: 4 }
+
+      const difficultyOrder = {
+        foundation: 1,
+        developing: 2,
+        proficient: 3,
+        advanced: 4,
+      }
       return difficultyOrder[a.difficulty] - difficultyOrder[b.difficulty]
     })
 
@@ -102,10 +107,9 @@ export async function GET(
       filters: {
         yearLevel: yearLevel ? parseInt(yearLevel) : null,
         difficulty: difficulty || null,
-        limit: limit ? parseInt(limit) : null
-      }
+        limit: limit ? parseInt(limit) : null,
+      },
     })
-
   } catch (error) {
     console.error('Error fetching math exercises by topic:', error)
     return NextResponse.json(
@@ -118,14 +122,15 @@ export async function GET(
 // Helper function to get topic descriptions
 function getTopicDescription(topic: MathTopic): string {
   const descriptions = {
-    'place-value': 'Understanding the value of digits in numbers and decimal numbers',
-    'fractions': 'Working with fractions, equivalence, and fraction operations',
-    'area': 'Calculating area of rectangles, triangles, and composite shapes',
-    'perimeter': 'Measuring and calculating perimeter of various shapes',
-    'decimals': 'Understanding and working with decimal numbers and money',
-    'measurement': 'Units of measurement and conversions in the metric system',
-    'money': 'Australian currency - counting, adding, and making change'
+    'place-value':
+      'Understanding the value of digits in numbers and decimal numbers',
+    fractions: 'Working with fractions, equivalence, and fraction operations',
+    area: 'Calculating area of rectangles, triangles, and composite shapes',
+    perimeter: 'Measuring and calculating perimeter of various shapes',
+    decimals: 'Understanding and working with decimal numbers and money',
+    measurement: 'Units of measurement and conversions in the metric system',
+    money: 'Australian currency - counting, adding, and making change',
   }
-  
+
   return descriptions[topic] || 'Mathematical concept and problem solving'
 }

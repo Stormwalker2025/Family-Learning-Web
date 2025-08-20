@@ -9,42 +9,56 @@ const prisma = new PrismaClient()
 const gradingConfigSchema = z.object({
   submissionId: z.string().optional(),
   homeworkId: z.string().optional(),
-  autoGradeSettings: z.object({
-    enabled: z.boolean(),
-    subjectSettings: z.record(z.object({
-      autoGradeEnabled: z.boolean(),
-      reviewThreshold: z.number().min(0).max(100),
-      questionTypes: z.record(z.object({
-        method: z.enum(['exact-match', 'fuzzy-match', 'keyword-match', 'numeric-tolerance', 'manual']),
-        tolerance: z.number().optional(),
-        keyWords: z.array(z.string()).optional(),
-        fuzzyThreshold: z.number().optional(),
-        caseSensitive: z.boolean().optional(),
-        ignoreWhitespace: z.boolean().optional(),
-        partialCredit: z.boolean().optional()
-      }))
-    })),
-    generalSettings: z.object({
-      autoFeedbackEnabled: z.boolean(),
-      detailedAnalysis: z.boolean(),
-      instantResults: z.boolean(),
-      gradingDelay: z.number().optional()
+  autoGradeSettings: z
+    .object({
+      enabled: z.boolean(),
+      subjectSettings: z.record(
+        z.object({
+          autoGradeEnabled: z.boolean(),
+          reviewThreshold: z.number().min(0).max(100),
+          questionTypes: z.record(
+            z.object({
+              method: z.enum([
+                'exact-match',
+                'fuzzy-match',
+                'keyword-match',
+                'numeric-tolerance',
+                'manual',
+              ]),
+              tolerance: z.number().optional(),
+              keyWords: z.array(z.string()).optional(),
+              fuzzyThreshold: z.number().optional(),
+              caseSensitive: z.boolean().optional(),
+              ignoreWhitespace: z.boolean().optional(),
+              partialCredit: z.boolean().optional(),
+            })
+          ),
+        })
+      ),
+      generalSettings: z.object({
+        autoFeedbackEnabled: z.boolean(),
+        detailedAnalysis: z.boolean(),
+        instantResults: z.boolean(),
+        gradingDelay: z.number().optional(),
+      }),
     })
-  }).optional()
+    .optional(),
 })
 
 // 手动批改模式
 const manualGradingSchema = z.object({
   submissionId: z.string(),
-  questionGrades: z.array(z.object({
-    questionId: z.string(),
-    score: z.number(),
-    maxScore: z.number(),
-    feedback: z.string().optional(),
-    explanation: z.string().optional()
-  })),
+  questionGrades: z.array(
+    z.object({
+      questionId: z.string(),
+      score: z.number(),
+      maxScore: z.number(),
+      feedback: z.string().optional(),
+      explanation: z.string().optional(),
+    })
+  ),
   overallFeedback: z.string().optional(),
-  recommendations: z.array(z.string()).optional()
+  recommendations: z.array(z.string()).optional(),
 })
 
 // GET - 获取批改队列或批改结果
@@ -77,13 +91,9 @@ export async function GET(request: NextRequest) {
         { status: 400 }
       )
     }
-
   } catch (error) {
     console.error('获取批改信息失败:', error)
-    return NextResponse.json(
-      { error: '获取批改信息失败' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: '获取批改信息失败' }, { status: 500 })
   }
 }
 
@@ -108,18 +118,11 @@ export async function POST(request: NextRequest) {
     } else if (action === 'manual-grade') {
       return await performManualGrading(body, payload)
     } else {
-      return NextResponse.json(
-        { error: '无效的批改操作' },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: '无效的批改操作' }, { status: 400 })
     }
-
   } catch (error) {
     console.error('执行批改失败:', error)
-    return NextResponse.json(
-      { error: '执行批改失败' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: '执行批改失败' }, { status: 500 })
   }
 }
 
@@ -131,7 +134,7 @@ async function getGradingQueue(payload: any, filters: any) {
   }
 
   const where: any = {}
-  
+
   if (filters.status) {
     // 根据状态过滤需要批改的提交
     if (filters.status === 'pending') {
@@ -153,11 +156,11 @@ async function getGradingQueue(payload: any, filters: any) {
           include: {
             members: {
               where: { role: 'STUDENT' },
-              select: { id: true }
-            }
-          }
-        }
-      }
+              select: { id: true },
+            },
+          },
+        },
+      },
     })
 
     if (family?.family?.members) {
@@ -180,24 +183,26 @@ async function getGradingQueue(payload: any, filters: any) {
             exercises: {
               include: {
                 exercise: {
-                  select: { id: true, title: true, subject: true }
-                }
-              }
-            }
-          }
+                  select: { id: true, title: true, subject: true },
+                },
+              },
+            },
+          },
         },
         user: {
-          select: { id: true, displayName: true, username: true, yearLevel: true }
-        }
+          select: {
+            id: true,
+            displayName: true,
+            username: true,
+            yearLevel: true,
+          },
+        },
       },
-      orderBy: [
-        { submittedAt: 'asc' },
-        { createdAt: 'asc' }
-      ],
+      orderBy: [{ submittedAt: 'asc' }, { createdAt: 'asc' }],
       skip,
-      take: filters.limit
+      take: filters.limit,
     }),
-    prisma.homeworkSubmission.count({ where })
+    prisma.homeworkSubmission.count({ where }),
   ])
 
   return NextResponse.json({
@@ -207,8 +212,8 @@ async function getGradingQueue(payload: any, filters: any) {
       page: filters.page,
       limit: filters.limit,
       total,
-      totalPages: Math.ceil(total / filters.limit)
-    }
+      totalPages: Math.ceil(total / filters.limit),
+    },
   })
 }
 
@@ -223,17 +228,17 @@ async function getGradingResults(payload: any, submissionId: string) {
             include: {
               exercise: {
                 include: {
-                  questions: true
-                }
-              }
-            }
-          }
-        }
+                  questions: true,
+                },
+              },
+            },
+          },
+        },
       },
       user: {
-        select: { id: true, displayName: true, username: true }
-      }
-    }
+        select: { id: true, displayName: true, username: true },
+      },
+    },
   })
 
   if (!submission) {
@@ -241,10 +246,11 @@ async function getGradingResults(payload: any, submissionId: string) {
   }
 
   // 权限检查
-  const hasAccess = 
+  const hasAccess =
     payload.role === 'ADMIN' ||
     submission.userId === payload.userId ||
-    (payload.role === 'PARENT' && await checkParentAccess(payload.userId, [submission.userId]))
+    (payload.role === 'PARENT' &&
+      (await checkParentAccess(payload.userId, [submission.userId])))
 
   if (!hasAccess) {
     return NextResponse.json({ error: '无权查看此批改结果' }, { status: 403 })
@@ -259,8 +265,8 @@ async function getGradingResults(payload: any, submissionId: string) {
       submission,
       gradingDetails: {
         // TODO: 添加详细的批改结果
-      }
-    }
+      },
+    },
   })
 }
 
@@ -286,14 +292,14 @@ async function performAutoGrading(body: any, payload: any) {
               include: {
                 exercise: {
                   include: {
-                    questions: true
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
+                    questions: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
     })
 
     if (!submission) {
@@ -307,7 +313,7 @@ async function performAutoGrading(body: any, payload: any) {
       where: {
         homeworkId: validatedData.homeworkId,
         status: 'SUBMITTED',
-        gradedAt: null
+        gradedAt: null,
       },
       include: {
         homework: {
@@ -316,14 +322,14 @@ async function performAutoGrading(body: any, payload: any) {
               include: {
                 exercise: {
                   include: {
-                    questions: true
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
+                    questions: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
     })
   } else {
     return NextResponse.json(
@@ -337,7 +343,10 @@ async function performAutoGrading(body: any, payload: any) {
   for (const submission of submissions) {
     try {
       // 执行自动批改逻辑
-      const result = await autoGradeSubmission(submission, validatedData.autoGradeSettings)
+      const result = await autoGradeSubmission(
+        submission,
+        validatedData.autoGradeSettings
+      )
       gradingResults.push(result)
 
       // 更新提交状态
@@ -345,16 +354,15 @@ async function performAutoGrading(body: any, payload: any) {
         where: { id: submission.id },
         data: {
           gradedAt: new Date(),
-          feedback: result.feedback
-        }
+          feedback: result.feedback,
+        },
       })
-
     } catch (error) {
       console.error(`批改提交 ${submission.id} 失败:`, error)
       gradingResults.push({
         submissionId: submission.id,
         success: false,
-        error: '批改失败'
+        error: '批改失败',
       })
     }
   }
@@ -362,7 +370,7 @@ async function performAutoGrading(body: any, payload: any) {
   return NextResponse.json({
     success: true,
     data: gradingResults,
-    message: `完成 ${gradingResults.filter(r => r.success).length}/${gradingResults.length} 个提交的批改`
+    message: `完成 ${gradingResults.filter(r => r.success).length}/${gradingResults.length} 个提交的批改`,
   })
 }
 
@@ -378,8 +386,8 @@ async function performManualGrading(body: any, payload: any) {
   const submission = await prisma.homeworkSubmission.findUnique({
     where: { id: validatedData.submissionId },
     include: {
-      homework: true
-    }
+      homework: true,
+    },
   })
 
   if (!submission) {
@@ -387,8 +395,14 @@ async function performManualGrading(body: any, payload: any) {
   }
 
   // 计算总分
-  const totalScore = validatedData.questionGrades.reduce((sum, grade) => sum + grade.score, 0)
-  const maxScore = validatedData.questionGrades.reduce((sum, grade) => sum + grade.maxScore, 0)
+  const totalScore = validatedData.questionGrades.reduce(
+    (sum, grade) => sum + grade.score,
+    0
+  )
+  const maxScore = validatedData.questionGrades.reduce(
+    (sum, grade) => sum + grade.maxScore,
+    0
+  )
   const percentage = maxScore > 0 ? (totalScore / maxScore) * 100 : 0
 
   // 更新提交记录
@@ -399,8 +413,8 @@ async function performManualGrading(body: any, payload: any) {
       percentage,
       feedback: validatedData.overallFeedback,
       gradedAt: new Date(),
-      gradedBy: payload.userId
-    }
+      gradedBy: payload.userId,
+    },
   })
 
   // TODO: 保存详细的题目批改结果
@@ -408,7 +422,7 @@ async function performManualGrading(body: any, payload: any) {
   return NextResponse.json({
     success: true,
     data: updatedSubmission,
-    message: '手动批改完成'
+    message: '手动批改完成',
   })
 }
 
@@ -421,26 +435,26 @@ async function autoGradeSubmission(submission: any, settings?: any) {
   // 遍历每个练习的每个题目进行批改
   for (const exerciseAssignment of submission.homework.exercises) {
     const exercise = exerciseAssignment.exercise
-    
+
     for (const question of exercise.questions) {
       try {
         // 获取学生答案
         const studentSubmission = await prisma.submission.findFirst({
           where: {
             userId: submission.userId,
-            exerciseId: exercise.id
+            exerciseId: exercise.id,
           },
           include: {
             answers: {
-              where: { questionId: question.id }
-            }
-          }
+              where: { questionId: question.id },
+            },
+          },
         })
 
         if (studentSubmission?.answers[0]) {
           const studentAnswer = studentSubmission.answers[0].answer
           const result = await gradeQuestion(question, studentAnswer, settings)
-          
+
           gradingResults.push(result)
           totalScore += result.score
           maxScore += result.maxScore
@@ -461,12 +475,16 @@ async function autoGradeSubmission(submission: any, settings?: any) {
     maxScore,
     percentage: maxScore > 0 ? (totalScore / maxScore) * 100 : 0,
     gradingResults,
-    feedback
+    feedback,
   }
 }
 
 // 题目批改逻辑
-async function gradeQuestion(question: any, studentAnswer: string, settings?: any) {
+async function gradeQuestion(
+  question: any,
+  studentAnswer: string,
+  settings?: any
+) {
   const result = {
     questionId: question.id,
     score: 0,
@@ -475,7 +493,7 @@ async function gradeQuestion(question: any, studentAnswer: string, settings?: an
     gradingMethod: 'automatic',
     confidence: 0,
     feedback: '',
-    needsManualReview: false
+    needsManualReview: false,
   }
 
   try {
@@ -483,14 +501,19 @@ async function gradeQuestion(question: any, studentAnswer: string, settings?: an
       case 'MULTIPLE_CHOICE':
       case 'TRUE_FALSE':
         // 精确匹配
-        result.isCorrect = studentAnswer.toLowerCase().trim() === question.correctAnswer.toLowerCase().trim()
+        result.isCorrect =
+          studentAnswer.toLowerCase().trim() ===
+          question.correctAnswer.toLowerCase().trim()
         result.score = result.isCorrect ? question.points : 0
         result.confidence = 100
         break
 
       case 'SHORT_ANSWER':
         // 可以实现模糊匹配或关键词匹配
-        const similarity = calculateStringSimilarity(studentAnswer, question.correctAnswer)
+        const similarity = calculateStringSimilarity(
+          studentAnswer,
+          question.correctAnswer
+        )
         if (similarity >= 0.8) {
           result.isCorrect = true
           result.score = question.points
@@ -507,7 +530,11 @@ async function gradeQuestion(question: any, studentAnswer: string, settings?: an
 
       case 'CALCULATION':
         // 数值计算题
-        const numericResult = gradeNumericAnswer(studentAnswer, question.correctAnswer, 0.01)
+        const numericResult = gradeNumericAnswer(
+          studentAnswer,
+          question.correctAnswer,
+          0.01
+        )
         result.isCorrect = numericResult.isCorrect
         result.score = numericResult.score
         result.confidence = numericResult.confidence
@@ -528,7 +555,6 @@ async function gradeQuestion(question: any, studentAnswer: string, settings?: an
     } else {
       result.feedback = `正确答案是：${question.correctAnswer}`
     }
-
   } catch (error) {
     console.error(`批改题目失败:`, error)
     result.needsManualReview = true
@@ -542,39 +568,44 @@ async function gradeQuestion(question: any, studentAnswer: string, settings?: an
 function calculateStringSimilarity(str1: string, str2: string): number {
   const s1 = str1.toLowerCase().trim()
   const s2 = str2.toLowerCase().trim()
-  
+
   if (s1 === s2) return 1
-  
+
   // 简单的字符包含检查
   if (s1.includes(s2) || s2.includes(s1)) {
     return 0.8
   }
-  
+
   // Levenshtein距离计算（简化版）
   const maxLength = Math.max(s1.length, s2.length)
   if (maxLength === 0) return 1
-  
+
   let matches = 0
   for (let i = 0; i < Math.min(s1.length, s2.length); i++) {
     if (s1[i] === s2[i]) matches++
   }
-  
+
   return matches / maxLength
 }
 
 // 数值答案批改
-function gradeNumericAnswer(studentAnswer: string, correctAnswer: string, tolerance: number = 0.01) {
+function gradeNumericAnswer(
+  studentAnswer: string,
+  correctAnswer: string,
+  tolerance: number = 0.01
+) {
   try {
     const studentNum = parseFloat(studentAnswer.replace(/[^\d.-]/g, ''))
     const correctNum = parseFloat(correctAnswer.replace(/[^\d.-]/g, ''))
-    
+
     if (isNaN(studentNum) || isNaN(correctNum)) {
       return { isCorrect: false, score: 0, confidence: 0 }
     }
-    
+
     const difference = Math.abs(studentNum - correctNum)
-    const relativeError = correctNum !== 0 ? difference / Math.abs(correctNum) : difference
-    
+    const relativeError =
+      correctNum !== 0 ? difference / Math.abs(correctNum) : difference
+
     if (relativeError <= tolerance) {
       return { isCorrect: true, score: 1, confidence: 100 }
     } else if (relativeError <= tolerance * 2) {
@@ -588,14 +619,18 @@ function gradeNumericAnswer(studentAnswer: string, correctAnswer: string, tolera
 }
 
 // 生成综合反馈
-function generateFeedback(gradingResults: any[], totalScore: number, maxScore: number): string {
+function generateFeedback(
+  gradingResults: any[],
+  totalScore: number,
+  maxScore: number
+): string {
   const percentage = maxScore > 0 ? (totalScore / maxScore) * 100 : 0
   const correctCount = gradingResults.filter(r => r.isCorrect).length
   const totalQuestions = gradingResults.length
-  
+
   let feedback = `本次作业得分：${totalScore}/${maxScore} (${percentage.toFixed(1)}%)\n`
   feedback += `正确题目：${correctCount}/${totalQuestions}\n\n`
-  
+
   if (percentage >= 90) {
     feedback += '优秀！您掌握得很好，继续保持！'
   } else if (percentage >= 80) {
@@ -605,12 +640,15 @@ function generateFeedback(gradingResults: any[], totalScore: number, maxScore: n
   } else {
     feedback += '需要更多练习，建议重点复习基础知识。'
   }
-  
+
   return feedback
 }
 
 // 检查家长权限的辅助函数
-async function checkParentAccess(parentId: string, studentIds: string[]): Promise<boolean> {
+async function checkParentAccess(
+  parentId: string,
+  studentIds: string[]
+): Promise<boolean> {
   const parent = await prisma.user.findUnique({
     where: { id: parentId },
     include: {
@@ -618,11 +656,11 @@ async function checkParentAccess(parentId: string, studentIds: string[]): Promis
         include: {
           members: {
             where: { role: 'STUDENT' },
-            select: { id: true }
-          }
-        }
-      }
-    }
+            select: { id: true },
+          },
+        },
+      },
+    },
   })
 
   if (!parent?.family?.members) {

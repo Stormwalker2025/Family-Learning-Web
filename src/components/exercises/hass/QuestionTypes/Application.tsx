@@ -19,7 +19,7 @@ export function ApplicationQuestion({
   question,
   answer,
   onAnswerChange,
-  onComplete
+  onComplete,
 }: ApplicationQuestionProps) {
   const [currentAnswer, setCurrentAnswer] = useState(answer?.content || '')
   const [confidence, setConfidence] = useState(answer?.confidence || 3)
@@ -29,12 +29,15 @@ export function ApplicationQuestion({
     onAnswerChange({
       content: value,
       confidence,
-      timeSpent: answer?.timeSpent || 0
+      timeSpent: answer?.timeSpent || 0,
     })
   }
 
   const getWordCount = (text: string) => {
-    return text.trim().split(/\s+/).filter(word => word.length > 0).length
+    return text
+      .trim()
+      .split(/\s+/)
+      .filter(word => word.length > 0).length
   }
 
   const wordCount = getWordCount(currentAnswer)
@@ -53,10 +56,10 @@ export function ApplicationQuestion({
             <Badge variant="secondary">{question.bloomsTaxonomy}</Badge>
           </div>
         </CardHeader>
-        
+
         <CardContent>
           <p className="text-base leading-relaxed">{question.question}</p>
-          
+
           {question.hints && question.hints.length > 0 && (
             <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-950/20 rounded-lg">
               <p className="text-sm font-medium mb-2">Consider:</p>
@@ -74,12 +77,12 @@ export function ApplicationQuestion({
         <CardHeader>
           <CardTitle>Your Application ({wordCount} words)</CardTitle>
         </CardHeader>
-        
+
         <CardContent>
           <Textarea
             placeholder="Apply the concepts to the new situation. Explain how you would use what you've learned..."
             value={currentAnswer}
-            onChange={(e) => handleAnswerChange(e.target.value)}
+            onChange={e => handleAnswerChange(e.target.value)}
             className="min-h-32"
           />
         </CardContent>
@@ -93,10 +96,12 @@ export function ApplicationQuestion({
             <AlertCircle className="h-5 w-5 text-yellow-600" />
           )}
           <span className="text-sm font-medium">
-            {hasMinimumAnswer ? 'Application ready' : 'Need more detailed application (30+ words)'}
+            {hasMinimumAnswer
+              ? 'Application ready'
+              : 'Need more detailed application (30+ words)'}
           </span>
         </div>
-        
+
         <Button onClick={onComplete} disabled={!hasMinimumAnswer}>
           Complete Application
         </Button>

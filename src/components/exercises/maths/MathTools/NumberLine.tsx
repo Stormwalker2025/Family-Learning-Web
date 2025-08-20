@@ -24,7 +24,7 @@ export const NumberLine: React.FC<NumberLineProps> = ({
   allowInteraction = true,
   highlightNumbers = [],
   className = '',
-  onNumberSelect
+  onNumberSelect,
 }) => {
   const [selectedNumber, setSelectedNumber] = useState<number | null>(null)
   const [customMin, setCustomMin] = useState(min.toString())
@@ -38,7 +38,7 @@ export const NumberLine: React.FC<NumberLineProps> = ({
 
   const handleNumberClick = (number: number) => {
     if (!allowInteraction) return
-    
+
     setSelectedNumber(number)
     if (onNumberSelect) {
       onNumberSelect(number)
@@ -48,7 +48,7 @@ export const NumberLine: React.FC<NumberLineProps> = ({
   const updateRange = () => {
     const newMin = parseFloat(customMin)
     const newMax = parseFloat(customMax)
-    
+
     if (!isNaN(newMin) && !isNaN(newMax) && newMin < newMax) {
       // This would trigger a re-render with new props in a real implementation
       console.log('Range updated:', { min: newMin, max: newMax })
@@ -65,7 +65,7 @@ export const NumberLine: React.FC<NumberLineProps> = ({
       if (decimal === 0.33) return `${Math.floor(num)} ⅓`
       if (decimal === 0.67) return `${Math.floor(num)} ⅔`
     }
-    
+
     return step >= 1 ? num.toString() : num.toFixed(1)
   }
 
@@ -89,39 +89,39 @@ export const NumberLine: React.FC<NumberLineProps> = ({
             <Input
               type="number"
               value={customMin}
-              onChange={(e) => setCustomMin(e.target.value)}
+              onChange={e => setCustomMin(e.target.value)}
               className="w-20"
               step={step}
             />
           </div>
-          
+
           <div className="flex items-center gap-2">
             <label className="text-sm font-medium">Max:</label>
             <Input
               type="number"
               value={customMax}
-              onChange={(e) => setCustomMax(e.target.value)}
+              onChange={e => setCustomMax(e.target.value)}
               className="w-20"
               step={step}
             />
           </div>
-          
+
           <Button size="sm" onClick={updateRange} variant="outline">
             Update Range
           </Button>
 
           <div className="flex items-center gap-2 ml-4">
             <label className="text-sm font-medium">Zoom:</label>
-            <Button 
-              size="sm" 
+            <Button
+              size="sm"
               variant="outline"
               onClick={() => setZoom(Math.max(0.5, zoom - 0.25))}
             >
               −
             </Button>
             <span className="text-sm w-12 text-center">{zoom}×</span>
-            <Button 
-              size="sm" 
+            <Button
+              size="sm"
               variant="outline"
               onClick={() => setZoom(Math.min(2, zoom + 0.25))}
             >
@@ -143,9 +143,12 @@ export const NumberLine: React.FC<NumberLineProps> = ({
 
         {/* Number Line */}
         <div className="relative overflow-x-auto">
-          <div className="relative" style={{ width: totalWidth, height: '120px' }}>
+          <div
+            className="relative"
+            style={{ width: totalWidth, height: '120px' }}
+          >
             {/* Main line */}
-            <div 
+            <div
               className="absolute top-12 bg-gray-400 h-1"
               style={{ width: totalWidth }}
             />
@@ -155,7 +158,7 @@ export const NumberLine: React.FC<NumberLineProps> = ({
               const position = index * spacing
               const isHighlighted = highlightNumbers.includes(number)
               const isSelected = selectedNumber === number
-              
+
               return (
                 <div
                   key={number}
@@ -163,13 +166,15 @@ export const NumberLine: React.FC<NumberLineProps> = ({
                   style={{ left: position - 20, top: 0, width: 40 }}
                 >
                   {/* Tick mark */}
-                  <div 
+                  <div
                     className={`w-0.5 bg-gray-600 mb-1 ${
                       number % (step * 5) === 0 ? 'h-6' : 'h-4'
                     }`}
-                    style={{ marginTop: number % (step * 5) === 0 ? '32px' : '36px' }}
+                    style={{
+                      marginTop: number % (step * 5) === 0 ? '32px' : '36px',
+                    }}
                   />
-                  
+
                   {/* Number label */}
                   <button
                     className={`
@@ -185,7 +190,7 @@ export const NumberLine: React.FC<NumberLineProps> = ({
                   >
                     {formatNumber(number)}
                   </button>
-                  
+
                   {/* Highlight indicator */}
                   {isHighlighted && (
                     <div className="w-2 h-2 bg-yellow-400 rounded-full mt-1" />
@@ -195,7 +200,7 @@ export const NumberLine: React.FC<NumberLineProps> = ({
             })}
 
             {/* Arrow at the end */}
-            <div 
+            <div
               className="absolute top-12 transform -translate-y-1/2"
               style={{ left: totalWidth - 10 }}
             >
@@ -212,13 +217,17 @@ export const NumberLine: React.FC<NumberLineProps> = ({
             <li>• Use the Min/Max controls to change the number range</li>
             <li>• Zoom in/out to make numbers easier to see</li>
             <li>• Yellow highlighted numbers show important values</li>
-            {showFractions && <li>• Fractions are shown as mixed numbers (e.g., 2½)</li>}
+            {showFractions && (
+              <li>• Fractions are shown as mixed numbers (e.g., 2½)</li>
+            )}
           </ul>
         </div>
 
         {/* Range Information */}
         <div className="flex justify-between text-sm text-gray-600 bg-gray-50 p-2 rounded">
-          <span>Range: {formatNumber(min)} to {formatNumber(max)}</span>
+          <span>
+            Range: {formatNumber(min)} to {formatNumber(max)}
+          </span>
           <span>Step: {step}</span>
           <span>Total: {numbers.length} numbers</span>
         </div>

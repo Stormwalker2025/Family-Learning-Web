@@ -3,154 +3,180 @@
  * 学习统计组件 - 详细的学习数据分析和可视化
  */
 
-'use client';
+'use client'
 
-import React, { useState, useEffect } from 'react';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
-import { Badge } from '@/components/ui/badge';
-import { 
-  TrendingUp, 
-  Calendar, 
-  Target, 
-  Clock, 
+import React, { useState, useEffect } from 'react'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Progress } from '@/components/ui/progress'
+import { Badge } from '@/components/ui/badge'
+import {
+  TrendingUp,
+  Calendar,
+  Target,
+  Clock,
   Star,
   BookOpen,
   Award,
   BarChart3,
   PieChart,
-  RefreshCw
-} from 'lucide-react';
+  RefreshCw,
+} from 'lucide-react'
 
 interface LearningStatsData {
   overview: {
-    totalWords: number;
-    learnedWords: number;
-    masteredWords: number;
-    averageMastery: number;
-    totalStudyTime: number; // 秒
-    studyStreak: number; // 连续学习天数
-    lastStudyDate: string;
-  };
+    totalWords: number
+    learnedWords: number
+    masteredWords: number
+    averageMastery: number
+    totalStudyTime: number // 秒
+    studyStreak: number // 连续学习天数
+    lastStudyDate: string
+  }
   phaseDistribution: {
-    [phase: string]: number;
-  };
+    [phase: string]: number
+  }
   difficultyProgress: {
     [difficulty: number]: {
-      total: number;
-      learned: number;
-      mastered: number;
-    };
-  };
+      total: number
+      learned: number
+      mastered: number
+    }
+  }
   categoryProgress: {
     [category: string]: {
-      total: number;
-      learned: number;
-      averageMastery: number;
-    };
-  };
+      total: number
+      learned: number
+      averageMastery: number
+    }
+  }
   weeklyStats: {
-    date: string;
-    wordsLearned: number;
-    studyTime: number;
-    accuracy: number;
-  }[];
+    date: string
+    wordsLearned: number
+    studyTime: number
+    accuracy: number
+  }[]
   achievements: {
-    id: string;
-    title: string;
-    description: string;
-    achieved: boolean;
-    progress: number;
-    target: number;
-    icon: string;
-  }[];
+    id: string
+    title: string
+    description: string
+    achieved: boolean
+    progress: number
+    target: number
+    icon: string
+  }[]
 }
 
 export function LearningStats() {
-  const [statsData, setStatsData] = useState<LearningStatsData | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [selectedPeriod, setSelectedPeriod] = useState<'week' | 'month' | 'all'>('week');
+  const [statsData, setStatsData] = useState<LearningStatsData | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [selectedPeriod, setSelectedPeriod] = useState<
+    'week' | 'month' | 'all'
+  >('week')
 
   // 获取统计数据
   useEffect(() => {
-    fetchStatsData();
-  }, [selectedPeriod]);
+    fetchStatsData()
+  }, [selectedPeriod])
 
   const fetchStatsData = async () => {
-    setLoading(true);
+    setLoading(true)
     try {
       const [progressResponse, scheduleResponse] = await Promise.all([
         fetch('/api/vocabulary/progress'),
-        fetch('/api/vocabulary/review-schedule')
-      ]);
+        fetch('/api/vocabulary/review-schedule'),
+      ])
 
       if (progressResponse.ok && scheduleResponse.ok) {
-        const progressData = await progressResponse.json();
-        const scheduleData = await scheduleResponse.json();
+        const progressData = await progressResponse.json()
+        const scheduleData = await scheduleResponse.json()
 
         // 处理统计数据
-        const processedStats = processStatsData(progressData, scheduleData);
-        setStatsData(processedStats);
+        const processedStats = processStatsData(progressData, scheduleData)
+        setStatsData(processedStats)
       }
     } catch (error) {
-      console.error('Failed to fetch stats data:', error);
+      console.error('Failed to fetch stats data:', error)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   // 处理原始数据
-  const processStatsData = (progressData: any, scheduleData: any): LearningStatsData => {
-    const progress = progressData.progress || [];
-    const statistics = progressData.statistics || {};
+  const processStatsData = (
+    progressData: any,
+    scheduleData: any
+  ): LearningStatsData => {
+    const progress = progressData.progress || []
+    const statistics = progressData.statistics || {}
 
     // 概览数据
     const overview = {
       totalWords: progress.length,
       learnedWords: progress.filter((p: any) => p.attempts > 0).length,
       masteredWords: progress.filter((p: any) => p.isMemorized).length,
-      averageMastery: progress.length > 0 
-        ? Math.round(progress.reduce((sum: number, p: any) => sum + p.masteryLevel, 0) / progress.length)
-        : 0,
-      totalStudyTime: progress.reduce((sum: number, p: any) => sum + p.totalStudyTime, 0),
+      averageMastery:
+        progress.length > 0
+          ? Math.round(
+              progress.reduce(
+                (sum: number, p: any) => sum + p.masteryLevel,
+                0
+              ) / progress.length
+            )
+          : 0,
+      totalStudyTime: progress.reduce(
+        (sum: number, p: any) => sum + p.totalStudyTime,
+        0
+      ),
       studyStreak: calculateStudyStreak(progress),
-      lastStudyDate: getLastStudyDate(progress)
-    };
+      lastStudyDate: getLastStudyDate(progress),
+    }
 
     // 阶段分布
-    const phaseDistribution = statistics.phaseDistribution || {};
+    const phaseDistribution = statistics.phaseDistribution || {}
 
     // 难度进度
-    const difficultyProgress: any = {};
-    [1, 2, 3, 4, 5].forEach(difficulty => {
-      const wordsOfDifficulty = progress.filter((p: any) => p.word.difficulty === difficulty);
+    const difficultyProgress: any = {}
+    ;[1, 2, 3, 4, 5].forEach(difficulty => {
+      const wordsOfDifficulty = progress.filter(
+        (p: any) => p.word.difficulty === difficulty
+      )
       difficultyProgress[difficulty] = {
         total: wordsOfDifficulty.length,
         learned: wordsOfDifficulty.filter((p: any) => p.attempts > 0).length,
-        mastered: wordsOfDifficulty.filter((p: any) => p.isMemorized).length
-      };
-    });
+        mastered: wordsOfDifficulty.filter((p: any) => p.isMemorized).length,
+      }
+    })
 
     // 分类进度
-    const categoryProgress: any = {};
-    const categories = [...new Set(progress.map((p: any) => p.word.category).filter(Boolean))];
+    const categoryProgress: any = {}
+    const categories = [
+      ...new Set(progress.map((p: any) => p.word.category).filter(Boolean)),
+    ]
     categories.forEach(category => {
-      const wordsOfCategory = progress.filter((p: any) => p.word.category === category);
+      const wordsOfCategory = progress.filter(
+        (p: any) => p.word.category === category
+      )
       categoryProgress[category] = {
         total: wordsOfCategory.length,
         learned: wordsOfCategory.filter((p: any) => p.attempts > 0).length,
-        averageMastery: wordsOfCategory.length > 0
-          ? Math.round(wordsOfCategory.reduce((sum: number, p: any) => sum + p.masteryLevel, 0) / wordsOfCategory.length)
-          : 0
-      };
-    });
+        averageMastery:
+          wordsOfCategory.length > 0
+            ? Math.round(
+                wordsOfCategory.reduce(
+                  (sum: number, p: any) => sum + p.masteryLevel,
+                  0
+                ) / wordsOfCategory.length
+              )
+            : 0,
+      }
+    })
 
     // 生成模拟的周统计数据
-    const weeklyStats = generateWeeklyStats(progress);
+    const weeklyStats = generateWeeklyStats(progress)
 
     // 生成成就
-    const achievements = generateAchievements(overview, progress);
+    const achievements = generateAchievements(overview, progress)
 
     return {
       overview,
@@ -158,44 +184,47 @@ export function LearningStats() {
       difficultyProgress,
       categoryProgress,
       weeklyStats,
-      achievements
-    };
-  };
+      achievements,
+    }
+  }
 
   // 计算学习连续天数
   const calculateStudyStreak = (progress: any[]): number => {
     // 简化实现，实际应该根据学习记录计算
-    return Math.floor(Math.random() * 15) + 1;
-  };
+    return Math.floor(Math.random() * 15) + 1
+  }
 
   // 获取最后学习日期
   const getLastStudyDate = (progress: any[]): string => {
-    if (progress.length === 0) return '';
+    if (progress.length === 0) return ''
     const lastDate = progress.reduce((latest: string, p: any) => {
-      return p.lastSeen > latest ? p.lastSeen : latest;
-    }, '');
-    return lastDate ? new Date(lastDate).toLocaleDateString() : '';
-  };
+      return p.lastSeen > latest ? p.lastSeen : latest
+    }, '')
+    return lastDate ? new Date(lastDate).toLocaleDateString() : ''
+  }
 
   // 生成周统计数据
   const generateWeeklyStats = (progress: any[]) => {
-    const stats = [];
-    const today = new Date();
-    
+    const stats = []
+    const today = new Date()
+
     for (let i = 6; i >= 0; i--) {
-      const date = new Date(today);
-      date.setDate(date.getDate() - i);
-      
+      const date = new Date(today)
+      date.setDate(date.getDate() - i)
+
       stats.push({
-        date: date.toLocaleDateString('zh-CN', { month: 'short', day: 'numeric' }),
+        date: date.toLocaleDateString('zh-CN', {
+          month: 'short',
+          day: 'numeric',
+        }),
         wordsLearned: Math.floor(Math.random() * 20),
         studyTime: Math.floor(Math.random() * 60) + 10,
-        accuracy: Math.floor(Math.random() * 30) + 70
-      });
+        accuracy: Math.floor(Math.random() * 30) + 70,
+      })
     }
-    
-    return stats;
-  };
+
+    return stats
+  }
 
   // 生成成就
   const generateAchievements = (overview: any, progress: any[]) => {
@@ -207,7 +236,7 @@ export function LearningStats() {
         achieved: overview.learnedWords > 0,
         progress: Math.min(overview.learnedWords, 1),
         target: 1,
-        icon: '🎯'
+        icon: '🎯',
       },
       {
         id: 'ten_words',
@@ -216,7 +245,7 @@ export function LearningStats() {
         achieved: overview.learnedWords >= 10,
         progress: Math.min(overview.learnedWords, 10),
         target: 10,
-        icon: '📚'
+        icon: '📚',
       },
       {
         id: 'fifty_words',
@@ -225,7 +254,7 @@ export function LearningStats() {
         achieved: overview.learnedWords >= 50,
         progress: Math.min(overview.learnedWords, 50),
         target: 50,
-        icon: '🎓'
+        icon: '🎓',
       },
       {
         id: 'first_mastery',
@@ -234,7 +263,7 @@ export function LearningStats() {
         achieved: overview.masteredWords > 0,
         progress: Math.min(overview.masteredWords, 1),
         target: 1,
-        icon: '⭐'
+        icon: '⭐',
       },
       {
         id: 'study_streak',
@@ -243,7 +272,7 @@ export function LearningStats() {
         achieved: overview.studyStreak >= 7,
         progress: Math.min(overview.studyStreak, 7),
         target: 7,
-        icon: '🔥'
+        icon: '🔥',
       },
       {
         id: 'high_accuracy',
@@ -252,28 +281,28 @@ export function LearningStats() {
         achieved: overview.averageMastery >= 80,
         progress: Math.min(overview.averageMastery, 80),
         target: 80,
-        icon: '🎯'
-      }
-    ];
-  };
+        icon: '🎯',
+      },
+    ]
+  }
 
   // 格式化学习时间
   const formatStudyTime = (seconds: number): string => {
-    const hours = Math.floor(seconds / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
-    
+    const hours = Math.floor(seconds / 3600)
+    const minutes = Math.floor((seconds % 3600) / 60)
+
     if (hours > 0) {
-      return `${hours}小时${minutes}分钟`;
+      return `${hours}小时${minutes}分钟`
     }
-    return `${minutes}分钟`;
-  };
+    return `${minutes}分钟`
+  }
 
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
       </div>
-    );
+    )
   }
 
   if (!statsData) {
@@ -286,7 +315,7 @@ export function LearningStats() {
           刷新数据
         </Button>
       </div>
-    );
+    )
   }
 
   return (
@@ -297,21 +326,21 @@ export function LearningStats() {
           学习统计
         </h2>
         <div className="flex items-center space-x-2">
-          <Button 
+          <Button
             variant={selectedPeriod === 'week' ? 'default' : 'outline'}
             size="sm"
             onClick={() => setSelectedPeriod('week')}
           >
             本周
           </Button>
-          <Button 
+          <Button
             variant={selectedPeriod === 'month' ? 'default' : 'outline'}
             size="sm"
             onClick={() => setSelectedPeriod('month')}
           >
             本月
           </Button>
-          <Button 
+          <Button
             variant={selectedPeriod === 'all' ? 'default' : 'outline'}
             size="sm"
             onClick={() => setSelectedPeriod('all')}
@@ -328,7 +357,9 @@ export function LearningStats() {
             <BookOpen className="h-8 w-8 text-blue-500" />
             <div>
               <p className="text-sm text-gray-600">已学词汇</p>
-              <p className="text-2xl font-bold">{statsData.overview.learnedWords}</p>
+              <p className="text-2xl font-bold">
+                {statsData.overview.learnedWords}
+              </p>
               <p className="text-xs text-gray-500">
                 共 {statsData.overview.totalWords} 个
               </p>
@@ -341,11 +372,19 @@ export function LearningStats() {
             <Star className="h-8 w-8 text-yellow-500" />
             <div>
               <p className="text-sm text-gray-600">已掌握</p>
-              <p className="text-2xl font-bold">{statsData.overview.masteredWords}</p>
+              <p className="text-2xl font-bold">
+                {statsData.overview.masteredWords}
+              </p>
               <p className="text-xs text-gray-500">
-                掌握率 {statsData.overview.totalWords > 0 
-                  ? Math.round((statsData.overview.masteredWords / statsData.overview.totalWords) * 100)
-                  : 0}%
+                掌握率{' '}
+                {statsData.overview.totalWords > 0
+                  ? Math.round(
+                      (statsData.overview.masteredWords /
+                        statsData.overview.totalWords) *
+                        100
+                    )
+                  : 0}
+                %
               </p>
             </div>
           </div>
@@ -360,7 +399,8 @@ export function LearningStats() {
                 {formatStudyTime(statsData.overview.totalStudyTime)}
               </p>
               <p className="text-xs text-gray-500">
-                {statsData.overview.lastStudyDate && `最后学习: ${statsData.overview.lastStudyDate}`}
+                {statsData.overview.lastStudyDate &&
+                  `最后学习: ${statsData.overview.lastStudyDate}`}
               </p>
             </div>
           </div>
@@ -371,7 +411,9 @@ export function LearningStats() {
             <Target className="h-8 w-8 text-purple-500" />
             <div>
               <p className="text-sm text-gray-600">平均掌握度</p>
-              <p className="text-2xl font-bold">{statsData.overview.averageMastery}%</p>
+              <p className="text-2xl font-bold">
+                {statsData.overview.averageMastery}%
+              </p>
               <p className="text-xs text-gray-500 flex items-center">
                 <Award className="h-3 w-3 mr-1" />
                 连续 {statsData.overview.studyStreak} 天
@@ -391,31 +433,37 @@ export function LearningStats() {
           {Object.entries(statsData.phaseDistribution).map(([phase, count]) => {
             const phaseNames: Record<string, string> = {
               RECOGNITION: '认识阶段',
-              UNDERSTANDING: '理解阶段', 
+              UNDERSTANDING: '理解阶段',
               APPLICATION: '应用阶段',
-              MASTERY: '掌握阶段'
-            };
-            
+              MASTERY: '掌握阶段',
+            }
+
             const colors: Record<string, string> = {
               RECOGNITION: 'bg-gray-100 text-gray-800',
               UNDERSTANDING: 'bg-blue-100 text-blue-800',
               APPLICATION: 'bg-yellow-100 text-yellow-800',
-              MASTERY: 'bg-green-100 text-green-800'
-            };
+              MASTERY: 'bg-green-100 text-green-800',
+            }
 
             return (
               <div key={phase} className="text-center">
                 <Badge className={`${colors[phase]} text-lg px-4 py-2 mb-2`}>
                   {count}
                 </Badge>
-                <p className="text-sm font-medium">{phaseNames[phase] || phase}</p>
+                <p className="text-sm font-medium">
+                  {phaseNames[phase] || phase}
+                </p>
                 <p className="text-xs text-gray-500">
-                  {statsData.overview.totalWords > 0 
-                    ? Math.round((count as number / statsData.overview.totalWords) * 100)
-                    : 0}%
+                  {statsData.overview.totalWords > 0
+                    ? Math.round(
+                        ((count as number) / statsData.overview.totalWords) *
+                          100
+                      )
+                    : 0}
+                  %
                 </p>
               </div>
-            );
+            )
           })}
         </div>
       </Card>
@@ -425,55 +473,64 @@ export function LearningStats() {
         <Card className="p-6">
           <h3 className="text-lg font-semibold mb-4">难度分布</h3>
           <div className="space-y-3">
-            {Object.entries(statsData.difficultyProgress).map(([difficulty, data]) => {
-              const progress = data.total > 0 ? (data.learned / data.total) * 100 : 0;
-              const masteryProgress = data.total > 0 ? (data.mastered / data.total) * 100 : 0;
-              
-              return (
-                <div key={difficulty} className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium">难度 {difficulty}</span>
-                    <span className="text-xs text-gray-500">
-                      {data.learned}/{data.total}
-                    </span>
-                  </div>
-                  <div className="space-y-1">
-                    <Progress value={progress} className="h-2" />
-                    <div className="flex justify-between text-xs text-gray-500">
-                      <span>学习进度 {progress.toFixed(0)}%</span>
-                      <span>掌握 {data.mastered} 个</span>
+            {Object.entries(statsData.difficultyProgress).map(
+              ([difficulty, data]) => {
+                const progress =
+                  data.total > 0 ? (data.learned / data.total) * 100 : 0
+                const masteryProgress =
+                  data.total > 0 ? (data.mastered / data.total) * 100 : 0
+
+                return (
+                  <div key={difficulty} className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium">
+                        难度 {difficulty}
+                      </span>
+                      <span className="text-xs text-gray-500">
+                        {data.learned}/{data.total}
+                      </span>
+                    </div>
+                    <div className="space-y-1">
+                      <Progress value={progress} className="h-2" />
+                      <div className="flex justify-between text-xs text-gray-500">
+                        <span>学习进度 {progress.toFixed(0)}%</span>
+                        <span>掌握 {data.mastered} 个</span>
+                      </div>
                     </div>
                   </div>
-                </div>
-              );
-            })}
+                )
+              }
+            )}
           </div>
         </Card>
 
         <Card className="p-6">
           <h3 className="text-lg font-semibold mb-4">主题分布</h3>
           <div className="space-y-3">
-            {Object.entries(statsData.categoryProgress).slice(0, 6).map(([category, data]) => {
-              const progress = data.total > 0 ? (data.learned / data.total) * 100 : 0;
-              
-              return (
-                <div key={category} className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium">{category}</span>
-                    <span className="text-xs text-gray-500">
-                      {data.learned}/{data.total}
-                    </span>
-                  </div>
-                  <div className="space-y-1">
-                    <Progress value={progress} className="h-2" />
-                    <div className="flex justify-between text-xs text-gray-500">
-                      <span>学习进度 {progress.toFixed(0)}%</span>
-                      <span>掌握度 {data.averageMastery}%</span>
+            {Object.entries(statsData.categoryProgress)
+              .slice(0, 6)
+              .map(([category, data]) => {
+                const progress =
+                  data.total > 0 ? (data.learned / data.total) * 100 : 0
+
+                return (
+                  <div key={category} className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-medium">{category}</span>
+                      <span className="text-xs text-gray-500">
+                        {data.learned}/{data.total}
+                      </span>
+                    </div>
+                    <div className="space-y-1">
+                      <Progress value={progress} className="h-2" />
+                      <div className="flex justify-between text-xs text-gray-500">
+                        <span>学习进度 {progress.toFixed(0)}%</span>
+                        <span>掌握度 {data.averageMastery}%</span>
+                      </div>
                     </div>
                   </div>
-                </div>
-              );
-            })}
+                )
+              })}
           </div>
         </Card>
       </div>
@@ -489,11 +546,11 @@ export function LearningStats() {
             {statsData.weeklyStats.map((day, index) => (
               <div key={index} className="text-center">
                 <p className="text-xs text-gray-500 mb-2">{day.date}</p>
-                <div 
+                <div
                   className="bg-blue-500 rounded-sm mx-auto"
                   style={{
                     height: `${Math.max(day.wordsLearned * 3, 4)}px`,
-                    width: '20px'
+                    width: '20px',
                   }}
                   title={`${day.wordsLearned} 个词汇`}
                 />
@@ -501,24 +558,39 @@ export function LearningStats() {
               </div>
             ))}
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4 pt-4 border-t">
             <div className="text-center">
               <p className="text-sm text-gray-600">本周学习</p>
               <p className="text-xl font-bold text-blue-600">
-                {statsData.weeklyStats.reduce((sum, day) => sum + day.wordsLearned, 0)} 个词汇
+                {statsData.weeklyStats.reduce(
+                  (sum, day) => sum + day.wordsLearned,
+                  0
+                )}{' '}
+                个词汇
               </p>
             </div>
             <div className="text-center">
               <p className="text-sm text-gray-600">本周用时</p>
               <p className="text-xl font-bold text-green-600">
-                {formatStudyTime(statsData.weeklyStats.reduce((sum, day) => sum + day.studyTime, 0) * 60)}
+                {formatStudyTime(
+                  statsData.weeklyStats.reduce(
+                    (sum, day) => sum + day.studyTime,
+                    0
+                  ) * 60
+                )}
               </p>
             </div>
             <div className="text-center">
               <p className="text-sm text-gray-600">平均准确率</p>
               <p className="text-xl font-bold text-purple-600">
-                {Math.round(statsData.weeklyStats.reduce((sum, day) => sum + day.accuracy, 0) / statsData.weeklyStats.length)}%
+                {Math.round(
+                  statsData.weeklyStats.reduce(
+                    (sum, day) => sum + day.accuracy,
+                    0
+                  ) / statsData.weeklyStats.length
+                )}
+                %
               </p>
             </div>
           </div>
@@ -532,32 +604,36 @@ export function LearningStats() {
           成就徽章
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {statsData.achievements.map((achievement) => (
-            <div 
-              key={achievement.id} 
+          {statsData.achievements.map(achievement => (
+            <div
+              key={achievement.id}
               className={`p-4 border rounded-lg ${
-                achievement.achieved 
-                  ? 'bg-yellow-50 border-yellow-200' 
+                achievement.achieved
+                  ? 'bg-yellow-50 border-yellow-200'
                   : 'bg-gray-50 border-gray-200'
               }`}
             >
               <div className="flex items-start space-x-3">
-                <div className={`text-2xl ${achievement.achieved ? '' : 'grayscale'}`}>
+                <div
+                  className={`text-2xl ${achievement.achieved ? '' : 'grayscale'}`}
+                >
                   {achievement.icon}
                 </div>
                 <div className="flex-1">
-                  <h4 className={`font-medium ${
-                    achievement.achieved ? 'text-yellow-800' : 'text-gray-600'
-                  }`}>
+                  <h4
+                    className={`font-medium ${
+                      achievement.achieved ? 'text-yellow-800' : 'text-gray-600'
+                    }`}
+                  >
                     {achievement.title}
                   </h4>
                   <p className="text-sm text-gray-600 mb-2">
                     {achievement.description}
                   </p>
-                  
+
                   <div className="space-y-1">
-                    <Progress 
-                      value={(achievement.progress / achievement.target) * 100} 
+                    <Progress
+                      value={(achievement.progress / achievement.target) * 100}
                       className="h-2"
                     />
                     <p className="text-xs text-gray-500">
@@ -582,5 +658,5 @@ export function LearningStats() {
         </Button>
       </div>
     </div>
-  );
+  )
 }
